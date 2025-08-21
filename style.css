@@ -1,0 +1,375 @@
+/*
+Theme Name: Hot News
+Theme URI: https://example.com/hot-news-theme/
+Author: Your Name
+Author URI: https://example.com/
+Description: A modern WordPress news theme based on Bootstrap with responsive design and clean layout. Perfect for news websites, magazines, and blogs.
+Requires at least: 5.0
+Tested up to: 6.4
+Requires PHP: 7.4
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: hot-news
+Tags: news, magazine, blog, responsive, bootstrap, two-columns, custom-menu, featured-images, threaded-comments, translation-ready
+Version: 1.0.0
+*/
+
+/* Import Bootstrap News Template Styles */
+@import url('assets/css/style.css');
+
+/* WordPress Core Styles */
+.alignnone {
+    margin: 5px 20px 20px 0;
+}
+
+.aligncenter,
+div.aligncenter {
+    display: block;
+    margin: 5px auto 5px auto;
+}
+
+.alignright {
+    float: right;
+    margin: 5px 0 20px 20px;
+}
+
+.alignleft {
+    float: left;
+    margin: 5px 20px 20px 0;
+}
+
+a img.alignright {
+    float: right;
+    margin: 5px 0 20px 20px;
+}
+
+a img.alignnone {
+    margin: 5px 20px 20px 0;
+}
+
+a img.alignleft {
+    float: left;
+    margin: 5px 20px 20px 0;
+}
+
+a img.aligncenter {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.wp-caption {
+    background: #fff;
+    border: 1px solid #f0f0f0;
+    max-width: 96%;
+    padding: 5px 3px 10px;
+    text-align: center;
+}
+
+.wp-caption.alignnone {
+    margin: 5px 20px 20px 0;
+}
+
+.wp-caption.alignleft {
+    margin: 5px 20px 20px 0;
+}
+
+.wp-caption.alignright {
+    margin: 5px 0 20px 20px;
+}
+
+.wp-caption img {
+    border: 0 none;
+    height: auto;
+    margin: 0;
+    max-width: 98.5%;
+    padding: 0;
+    width: auto;
+}
+
+.wp-caption p.wp-caption-text {
+    font-size: 11px;
+    line-height: 17px;
+    margin: 0;
+    padding: 0 4px 5px;
+}
+
+/* Screen reader text */
+.screen-reader-text {
+    border: 0;
+    clip: rect(1px, 1px, 1px, 1px);
+    clip-path: inset(50%);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute !important;
+    width: 1px;
+    word-wrap: normal !important;
+}
+
+.screen-reader-text:focus {
+    background-color: #f1f1f1;
+    border-radius: 3px;
+    box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.6);
+    clip: auto !important;
+    clip-path: none;
+    color: #21759b;
+    display: block;
+    font-size: 14px;
+    font-size: 0.875rem;
+    font-weight: bold;
+    height: auto;
+    left: 5px;
+    line-height: normal;
+    padding: 15px 23px 14px;
+    text-decoration: none;
+    top: 5px;
+    width: auto;
+    z-index: 100000;
+}
+
+/* WordPress Gallery */
+.gallery {
+    margin: 0 auto 1.5em;
+}
+
+.gallery-item {
+    display: inline-block;
+    text-align: center;
+    vertical-align: top;
+    width: 100%;
+}
+
+.gallery-columns-2 .gallery-item {
+    max-width: 50%;
+}
+
+.gallery-columns-3 .gallery-item {
+    max-width: 33.33%;
+}
+
+.gallery-columns-4 .gallery-item {
+    max-width: 25%;
+}
+
+.gallery-columns-5 .gallery-item {
+    max-width: 20%;
+}
+
+.gallery-columns-6 .gallery-item {
+    max-width: 16.66%;
+}
+
+.gallery-columns-7 .gallery-item {
+    max-width: 14.28%;
+}
+
+.gallery-columns-8 .gallery-item {
+    max-width: 12.5%;
+}
+
+.gallery-columns-9 .gallery-item {
+    max-width: 11.11%;
+}
+
+.gallery-caption {
+    display: block;
+}
+
+/* Sticky Post */
+.sticky {
+    position: relative;
+}
+
+.sticky::before {
+    content: "📌";
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #FF6F61;
+    color: white;
+    padding: 5px 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    z-index: 1;
+}
+
+/* Comments */
+.comments-area {
+    margin-top: 30px;
+    padding-top: 30px;
+    border-top: 1px solid #eee;
+}
+
+.comment-list {
+    list-style: none;
+    padding: 0;
+}
+
+.comment-list .comment {
+    margin-bottom: 20px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 5px;
+}
+
+.comment-author {
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.comment-meta {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.comment-content p {
+    margin-bottom: 10px;
+}
+
+.reply {
+    text-align: right;
+}
+
+.reply a {
+    font-size: 12px;
+    color: #FF6F61;
+}
+
+/* Pagination */
+.pagination {
+    margin: 30px 0;
+    text-align: center;
+}
+
+.page-numbers {
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 0 2px;
+    background: #fff;
+    border: 1px solid #ddd;
+    color: #333;
+    text-decoration: none;
+}
+
+.page-numbers:hover,
+.page-numbers.current {
+    background: #FF6F61;
+    color: #fff;
+    border-color: #FF6F61;
+}
+
+/* WordPress Blocks Support */
+.wp-block-image {
+    margin: 0 0 1em 0;
+}
+
+.wp-block-image figcaption {
+    color: #666;
+    font-size: 13px;
+    text-align: center;
+    margin-top: 0.5em;
+}
+
+.wp-block-quote {
+    border-left: 4px solid #FF6F61;
+    margin: 0 0 1.75em 0;
+    padding-left: 1em;
+}
+
+.wp-block-quote cite {
+    color: #666;
+    font-size: 13px;
+    position: relative;
+    font-style: normal;
+}
+
+.wp-block-pullquote {
+    border-top: 4px solid #FF6F61;
+    border-bottom: 4px solid #FF6F61;
+    margin: 0 0 1.75em 0;
+    padding: 1em 0;
+    text-align: center;
+}
+
+/* Custom Hot News Styles */
+.hot-news-badge {
+    background: linear-gradient(45deg, #FF6F61, #ff8a80);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+.breaking-news {
+    background: #dc3545;
+    color: white;
+    padding: 10px 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.8; }
+    100% { opacity: 1; }
+}
+
+.breaking-news::before {
+    content: "🔥 BREAKING: ";
+    font-weight: bold;
+}
+
+/* News Meta Information */
+.news-meta {
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+.news-meta .author::before {
+    content: "👤 ";
+}
+
+.news-meta .date::before {
+    content: "📅 ";
+}
+
+.news-meta .category::before {
+    content: "📂 ";
+}
+
+.news-meta span {
+    margin-right: 15px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hot-news-badge {
+        font-size: 10px;
+        padding: 1px 6px;
+    }
+    
+    .breaking-news {
+        padding: 8px 12px;
+        font-size: 14px;
+    }
+    
+    .news-meta {
+        font-size: 11px;
+    }
+    
+    .news-meta span {
+        margin-right: 10px;
+        display: block;
+        margin-bottom: 5px;
+    }
+}
