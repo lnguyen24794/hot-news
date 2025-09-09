@@ -30,14 +30,15 @@
                 <div class="col-md-6">
                     <div class="tb-contact">
                         <?php
-                        $contact_email = get_theme_mod('hot_news_contact_email', 'info@example.com');
-$contact_phone = get_theme_mod('hot_news_contact_phone', '+123 456 7890');
+                        $sample_contact = hot_news_get_sample_data('contact');
+                        $contact_email = get_theme_mod('hot_news_contact_email', $sample_contact['email']);
+                        $contact_phone = get_theme_mod('hot_news_contact_phone', $sample_contact['phone']);
 
-if ($contact_email) : ?>
+                        if ($contact_email) : ?>
                             <p><i class="fas fa-envelope"></i><?php echo esc_html($contact_email); ?></p>
                         <?php endif;
 
-if ($contact_phone) : ?>
+                        if ($contact_phone) : ?>
                             <p><i class="fas fa-phone-alt"></i><?php echo esc_html($contact_phone); ?></p>
                         <?php endif; ?>
                     </div>
@@ -55,11 +56,12 @@ wp_nav_menu(array(
 ));
 
 // Fallback menu if no menu is assigned
-if (!has_nav_menu('top-menu')) : ?>
-                            <a href="<?php echo esc_url(get_permalink(get_option('page_for_posts'))); ?>"><?php esc_html_e('Blog', 'hot-news'); ?></a>
-                            <a href="<?php echo esc_url(get_privacy_policy_url()); ?>"><?php esc_html_e('Privacy', 'hot-news'); ?></a>
-                            <a href="<?php echo esc_url(home_url('/contact')); ?>"><?php esc_html_e('Contact', 'hot-news'); ?></a>
-                        <?php endif; ?>
+if (!has_nav_menu('top-menu')) :
+    $sample_menu = hot_news_get_sample_data('menu');
+    foreach ($sample_menu as $title => $url) : ?>
+        <a href="<?php echo esc_url($url == '#' ? home_url('/') : $url); ?>"><?php echo esc_html($title); ?></a>
+    <?php endforeach;
+endif; ?>
                     </div>
                 </div>
             </div>

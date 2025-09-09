@@ -154,18 +154,26 @@ if (!is_active_sidebar('sidebar-1')) {
         
         <!-- Categories Widget -->
         <div class="sidebar-widget">
-            <h2 class="sw-title"><?php esc_html_e('News Categories', 'hot-news'); ?></h2>
+            <h2 class="sw-title"><?php esc_html_e('News Category', 'hot-news'); ?></h2>
             <div class="category">
                 <ul>
                     <?php
                     $categories = get_categories(array(
-        'orderby' => 'count',
-        'order'   => 'DESC',
-        'number'  => 7,
+                        'orderby' => 'count',
+                        'order'   => 'DESC',
+                        'number'  => 7,
                     ));
 
-        foreach ($categories as $category) {
-            echo '<li><a href="' . esc_url(get_category_link($category->term_id)) . '">' . esc_html($category->name) . '</a><span>(' . $category->count . ')</span></li>';
+        if (!empty($categories)) {
+            foreach ($categories as $category) {
+                echo '<li><a href="' . esc_url(get_category_link($category->term_id)) . '">' . esc_html($category->name) . '</a><span>(' . $category->count . ')</span></li>';
+            }
+        } else {
+            // Display sample categories if no real categories exist
+            $sample_categories = hot_news_get_sample_data('categories');
+            foreach ($sample_categories as $category) {
+                echo '<li><a href="#">' . esc_html($category['name']) . '</a><span>(' . $category['count'] . ')</span></li>';
+            }
         }
         ?>
                 </ul>
@@ -183,8 +191,16 @@ if (!is_active_sidebar('sidebar-1')) {
         'number'  => 10,
                 ));
 
-        foreach ($tags as $tag) {
-            echo '<a href="' . esc_url(get_tag_link($tag->term_id)) . '">' . esc_html($tag->name) . '</a>';
+        if (!empty($tags)) {
+            foreach ($tags as $tag) {
+                echo '<a href="' . esc_url(get_tag_link($tag->term_id)) . '">' . esc_html($tag->name) . '</a>';
+            }
+        } else {
+            // Display sample tags if no real tags exist
+            $sample_tags = hot_news_get_sample_data('tags');
+            foreach ($sample_tags as $tag) {
+                echo '<a href="#">' . esc_html($tag) . '</a>';
+            }
         }
         ?>
             </div>

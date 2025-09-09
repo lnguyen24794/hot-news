@@ -15,7 +15,7 @@ get_header();
     <div class="container">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="<?php echo esc_url(home_url('/')); ?>"><?php esc_html_e('Home', 'hot-news'); ?></a></li>
+                <li class="breadcrumb-item"><a href="<?php echo esc_url(home_url('/')); ?>"><?php esc_html_e('Trang chủ', 'hot-news'); ?></a></li>
                 <li class="breadcrumb-item active" aria-current="page"><?php esc_html_e('404 Error', 'hot-news'); ?></li>
             </ol>
         </nav>
