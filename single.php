@@ -69,7 +69,7 @@ while (have_posts()) :
                         <!-- Post Tags -->
                         <?php
                         $post_tags = get_the_tags();
-                        if ($post_tags) : ?>
+    if ($post_tags) : ?>
                             <div class="post-tags">
                                 <h4><i class="fas fa-tags"></i> Thẻ từ khóa:</h4>
                                 <div class="tags-list">
@@ -87,8 +87,8 @@ while (have_posts()) :
                             <div class="row">
                                 <div class="col-md-6">
                                     <?php
-                                    $prev_post = get_previous_post();
-                                    if ($prev_post) : ?>
+                $prev_post = get_previous_post();
+    if ($prev_post) : ?>
                                         <div class="nav-post nav-prev">
                                             <a href="<?php echo get_permalink($prev_post->ID); ?>" class="nav-link">
                                                 <span class="nav-direction">
@@ -101,8 +101,8 @@ while (have_posts()) :
                                 </div>
                                 <div class="col-md-6">
                                     <?php
-                                    $next_post = get_next_post();
-                                    if ($next_post) : ?>
+    $next_post = get_next_post();
+    if ($next_post) : ?>
                                         <div class="nav-post nav-next">
                                             <a href="<?php echo get_permalink($next_post->ID); ?>" class="nav-link">
                                                 <span class="nav-direction">
@@ -122,7 +122,7 @@ while (have_posts()) :
                 <?php
                 // Related posts section
                 $related_posts = hot_news_get_related_posts(get_the_ID(), 3);
-                if (!empty($related_posts)) : ?>
+    if (!empty($related_posts)) : ?>
                     <div class="related-posts-section">
                         <div class="widget-card">
                             <h3 class="widget-title">
@@ -158,7 +158,7 @@ while (have_posts()) :
                                         </div>
                                     </div>
                                 <?php endforeach;
-                wp_reset_postdata(); ?>
+    wp_reset_postdata(); ?>
                             </div>
                         </div>
                     </div>
@@ -173,27 +173,30 @@ endwhile; // End of the loop.
             <div class="col-lg-4">
                 <div class="advertisement-sidebar">
                     <div class="sticky-ads">
-                        <!-- Advertisement Banner -->
+                        <!-- Google AdSense Single Sidebar Ad -->
                         <div class="ad-banner mb-4">
                             <div class="ad-label">Quảng cáo</div>
                             <?php
-                            $sidebar_ad_image = get_theme_mod('hot_news_sidebar_ad_image');
-                            $sidebar_ad_url = get_theme_mod('hot_news_sidebar_ad_url');
+                            $fallback_html = '';
+$sidebar_ad_image = get_theme_mod('hot_news_sidebar_ad_image');
+$sidebar_ad_url = get_theme_mod('hot_news_sidebar_ad_url');
 
-                            if ($sidebar_ad_image) :
-                                if ($sidebar_ad_url) : ?>
-                                    <a href="<?php echo esc_url($sidebar_ad_url); ?>" target="_blank" rel="noopener">
-                                        <img src="<?php echo esc_url($sidebar_ad_image); ?>" alt="<?php esc_attr_e('Advertisement', 'hot-news'); ?>" class="img-fluid">
-                                    </a>
-                                <?php else : ?>
-                                    <img src="<?php echo esc_url($sidebar_ad_image); ?>" alt="<?php esc_attr_e('Advertisement', 'hot-news'); ?>" class="img-fluid">
-                                <?php endif;
-                            else : ?>
-                                <a href="#" target="_blank" rel="noopener">
-                                    <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/ads-1.jpg'); ?>" 
-                                         alt="Quảng cáo" class="img-fluid">
-                                </a>
-                            <?php endif; ?>
+if ($sidebar_ad_image) {
+    if ($sidebar_ad_url) {
+        $fallback_html = '<a href="' . esc_url($sidebar_ad_url) . '" target="_blank" rel="noopener">';
+        $fallback_html .= '<img src="' . esc_url($sidebar_ad_image) . '" alt="' . esc_attr__('Advertisement', 'hot-news') . '" class="img-fluid">';
+        $fallback_html .= '</a>';
+    } else {
+        $fallback_html = '<img src="' . esc_url($sidebar_ad_image) . '" alt="' . esc_attr__('Advertisement', 'hot-news') . '" class="img-fluid">';
+    }
+} else {
+    $fallback_html = '<a href="#" target="_blank" rel="noopener">';
+    $fallback_html .= '<img src="' . esc_url(get_template_directory_uri() . '/assets/images/ads-1.jpg') . '" alt="Quảng cáo" class="img-fluid">';
+    $fallback_html .= '</a>';
+}
+
+hot_news_display_ad('single_sidebar_ad', $fallback_html);
+?>
                         </div>
                         
                         <!-- Tab News Widget -->
@@ -214,9 +217,9 @@ endwhile; // End of the loop.
                                 <div class="tab-content">
                                     <div id="single-featured" class="tab-pane active">
                                         <?php
-                                        $featured_posts = hot_news_get_featured_posts(5);
-                                        foreach ($featured_posts as $post) :
-                                            setup_postdata($post); ?>
+            $featured_posts = hot_news_get_featured_posts(5);
+foreach ($featured_posts as $post) :
+    setup_postdata($post); ?>
                                             <div class="tab-news-item">
                                                 <div class="row no-gutters">
                                                     <div class="col-4">
@@ -244,13 +247,13 @@ endwhile; // End of the loop.
                                                 </div>
                                             </div>
                                         <?php endforeach;
-                                        wp_reset_postdata(); ?>
+wp_reset_postdata(); ?>
                                     </div>
                                     <div id="single-popular" class="tab-pane fade">
                                         <?php
-                                        $popular_posts = hot_news_get_popular_posts(5);
-                                        foreach ($popular_posts as $post) :
-                                            setup_postdata($post); ?>
+$popular_posts = hot_news_get_popular_posts(5);
+foreach ($popular_posts as $post) :
+    setup_postdata($post); ?>
                                             <div class="tab-news-item">
                                                 <div class="row no-gutters">
                                                     <div class="col-4">
@@ -278,13 +281,13 @@ endwhile; // End of the loop.
                                                 </div>
                                             </div>
                                         <?php endforeach;
-                                        wp_reset_postdata(); ?>
+wp_reset_postdata(); ?>
                                     </div>
                                     <div id="single-latest" class="tab-pane fade">
                                         <?php
-                                        $latest_posts = get_posts(array('posts_per_page' => 5));
-                                        foreach ($latest_posts as $post) :
-                                            setup_postdata($post); ?>
+$latest_posts = get_posts(array('posts_per_page' => 5));
+foreach ($latest_posts as $post) :
+    setup_postdata($post); ?>
                                             <div class="tab-news-item">
                                                 <div class="row no-gutters">
                                                     <div class="col-4">
@@ -312,7 +315,7 @@ endwhile; // End of the loop.
                                                 </div>
                                             </div>
                                         <?php endforeach;
-                                        wp_reset_postdata(); ?>
+wp_reset_postdata(); ?>
                                     </div>
                                 </div>
                             </div>
@@ -327,18 +330,18 @@ endwhile; // End of the loop.
                                 <div class="categories-list">
                                     <?php
                                     $categories = get_categories(array(
-                                        'orderby' => 'count',
-                                        'order'   => 'DESC',
-                                        'number'  => 8,
+'orderby' => 'count',
+'order'   => 'DESC',
+'number'  => 8,
                                     ));
 
-                                    foreach ($categories as $category) {
-                                        echo '<a href="' . esc_url(get_category_link($category->term_id)) . '" class="category-link">';
-                                        echo '<span class="category-name">' . esc_html($category->name) . '</span>';
-                                        echo '<span class="category-count">' . $category->count . '</span>';
-                                        echo '</a>';
-                                    }
-                                    ?>
+foreach ($categories as $category) {
+    echo '<a href="' . esc_url(get_category_link($category->term_id)) . '" class="category-link">';
+    echo '<span class="category-name">' . esc_html($category->name) . '</span>';
+    echo '<span class="category-count">' . $category->count . '</span>';
+    echo '</a>';
+}
+?>
                                 </div>
                             </div>
                         </div>
@@ -351,24 +354,24 @@ endwhile; // End of the loop.
                                 </h4>
                                 <div class="tags-list">
                                     <?php
-                                    $current_post_tags = get_the_tags();
-                                    if ($current_post_tags) {
-                                        foreach ($current_post_tags as $tag) {
-                                            echo '<a href="' . esc_url(get_tag_link($tag->term_id)) . '" class="tag-link">' . esc_html($tag->name) . '</a>';
-                                        }
-                                    } else {
-                                        // Show general tags if post has no tags
-                                        $tags = get_tags(array(
-                                            'orderby' => 'count',
-                                            'order'   => 'DESC',
-                                            'number'  => 12,
-                                        ));
+$current_post_tags = get_the_tags();
+if ($current_post_tags) {
+    foreach ($current_post_tags as $tag) {
+        echo '<a href="' . esc_url(get_tag_link($tag->term_id)) . '" class="tag-link">' . esc_html($tag->name) . '</a>';
+    }
+} else {
+    // Show general tags if post has no tags
+    $tags = get_tags(array(
+        'orderby' => 'count',
+        'order'   => 'DESC',
+        'number'  => 12,
+    ));
 
-                                        foreach ($tags as $tag) {
-                                            echo '<a href="' . esc_url(get_tag_link($tag->term_id)) . '" class="tag-link">' . esc_html($tag->name) . '</a>';
-                                        }
-                                    }
-                                    ?>
+    foreach ($tags as $tag) {
+        echo '<a href="' . esc_url(get_tag_link($tag->term_id)) . '" class="tag-link">' . esc_html($tag->name) . '</a>';
+    }
+}
+?>
                                 </div>
                             </div>
                         </div>

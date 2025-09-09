@@ -31,14 +31,14 @@
                     <div class="tb-contact">
                         <?php
                         $sample_contact = hot_news_get_sample_data('contact');
-                        $contact_email = get_theme_mod('hot_news_contact_email', $sample_contact['email']);
-                        $contact_phone = get_theme_mod('hot_news_contact_phone', $sample_contact['phone']);
+$contact_email = get_theme_mod('hot_news_contact_email', $sample_contact['email']);
+$contact_phone = get_theme_mod('hot_news_contact_phone', $sample_contact['phone']);
 
-                        if ($contact_email) : ?>
+if ($contact_email) : ?>
                             <p><i class="fas fa-envelope"></i><?php echo esc_html($contact_email); ?></p>
                         <?php endif;
 
-                        if ($contact_phone) : ?>
+if ($contact_phone) : ?>
                             <p><i class="fas fa-phone-alt"></i><?php echo esc_html($contact_phone); ?></p>
                         <?php endif; ?>
                     </div>
@@ -99,24 +99,28 @@ if (has_custom_logo()) {
                 <div class="col-lg-6 col-md-4">
                     <div class="b-ads">
                         <?php
+                        // Hiển thị Google AdSense Header Ad hoặc fallback sang customizer
+                        $fallback_html = '';
 $header_ad_image = get_theme_mod('hot_news_header_ad_image');
 $header_ad_url = get_theme_mod('hot_news_header_ad_url');
 
-if ($header_ad_image) :
-    if ($header_ad_url) : ?>
-                                <a href="<?php echo esc_url($header_ad_url); ?>" target="_blank" rel="noopener">
-                                    <img src="<?php echo esc_url($header_ad_image); ?>" alt="<?php esc_attr_e('Advertisement', 'hot-news'); ?>">
-                                </a>
-                            <?php else : ?>
-                                <img src="<?php echo esc_url($header_ad_image); ?>" alt="<?php esc_attr_e('Advertisement', 'hot-news'); ?>">
-                            <?php endif;
-else : ?>
-                            <!-- Default advertisement placeholder -->
-                            <div class="ad-placeholder" style="background: #f5f5f5; padding: 20px; text-align: center; color: #666;">
-                                <p><?php esc_html_e('Advertisement Space', 'hot-news'); ?></p>
-                                <small><?php esc_html_e('Configure in Customizer > Hot News Settings > Header Settings', 'hot-news'); ?></small>
-                            </div>
-                        <?php endif; ?>
+if ($header_ad_image) {
+    if ($header_ad_url) {
+        $fallback_html = '<a href="' . esc_url($header_ad_url) . '" target="_blank" rel="noopener">';
+        $fallback_html .= '<img src="' . esc_url($header_ad_image) . '" alt="' . esc_attr__('Advertisement', 'hot-news') . '">';
+        $fallback_html .= '</a>';
+    } else {
+        $fallback_html = '<img src="' . esc_url($header_ad_image) . '" alt="' . esc_attr__('Advertisement', 'hot-news') . '">';
+    }
+} else {
+    $fallback_html = '<div class="ad-placeholder" style="background: #f5f5f5; padding: 20px; text-align: center; color: #666;">';
+    $fallback_html .= '<p>' . esc_html__('Advertisement Space', 'hot-news') . '</p>';
+    $fallback_html .= '<small>' . esc_html__('Configure in Google Ads Manager', 'hot-news') . '</small>';
+    $fallback_html .= '</div>';
+}
+
+hot_news_display_ad('header_ad_code', $fallback_html);
+?>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-4">

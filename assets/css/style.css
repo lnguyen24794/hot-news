@@ -754,7 +754,7 @@ button.btn:hover {
 }
 
 .breadcrumb-wrap .breadcrumb {
-    margin: 25px 0 0 0;
+    margin: 10px auto;
     padding: 0;
     background: none;
 }

@@ -1,0 +1,366 @@
+/**
+ * Admin CSS cho Google Ads Manager
+ */
+
+.hot-news-ads-admin {
+    max-width: 1200px;
+}
+
+/* Header Section */
+.ads-admin-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 25px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ads-mode-status .ads-mode {
+    display: inline-flex;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.ads-mode.auto-mode {
+    color: #4CAF50;
+}
+
+.ads-mode.manual-mode {
+    color: #FF9800;
+}
+
+.ads-mode .dashicons {
+    margin-right: 8px;
+    font-size: 20px;
+}
+
+.ads-mode-desc {
+    font-size: 14px;
+    opacity: 0.9;
+    margin: 0;
+    line-height: 1.4;
+}
+
+/* Toggle Switch */
+.ads-toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 32px;
+}
+
+.ads-toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.ads-toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 32px;
+}
+
+.ads-toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 24px;
+    width: 24px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.ads-toggle-switch input:checked + .ads-toggle-slider {
+    background-color: #4CAF50;
+}
+
+.ads-toggle-switch input:checked + .ads-toggle-slider:before {
+    transform: translateX(28px);
+}
+
+/* Tabs */
+.ads-tabs-wrapper {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.ads-nav-tabs {
+    border-bottom: 1px solid #ddd;
+    margin: 0;
+    padding: 0;
+    background: #f8f9fa;
+}
+
+.ads-nav-tabs .nav-tab {
+    border: none;
+    border-bottom: 3px solid transparent;
+    background: transparent;
+    color: #666;
+    font-weight: 500;
+    padding: 15px 20px;
+    margin: 0;
+    transition: all 0.3s ease;
+}
+
+.ads-nav-tabs .nav-tab:hover {
+    background: #e9ecef;
+    color: #333;
+}
+
+.ads-nav-tabs .nav-tab-active {
+    background: white;
+    color: #0073aa;
+    border-bottom-color: #0073aa;
+}
+
+.tab-content {
+    padding: 25px;
+}
+
+.ads-tab-pane {
+    display: none;
+}
+
+.ads-tab-pane.active {
+    display: block;
+}
+
+/* Form Styling */
+.hot-news-ads-admin .form-table th {
+    width: 200px;
+    font-weight: 600;
+    color: #333;
+    padding: 20px 10px;
+}
+
+.hot-news-ads-admin .form-table td {
+    padding: 20px 10px;
+}
+
+.hot-news-ads-admin textarea {
+    font-family: 'Monaco', 'Consolas', monospace;
+    font-size: 12px;
+    line-height: 1.4;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    padding: 12px;
+    transition: border-color 0.3s ease;
+}
+
+.hot-news-ads-admin textarea:focus {
+    border-color: #0073aa;
+    box-shadow: 0 0 5px rgba(0, 115, 170, 0.3);
+}
+
+.hot-news-ads-admin input[type="text"] {
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    padding: 10px 12px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.hot-news-ads-admin input[type="text"]:focus {
+    border-color: #0073aa;
+    box-shadow: 0 0 5px rgba(0, 115, 170, 0.3);
+}
+
+.hot-news-ads-admin .description {
+    color: #666;
+    font-size: 13px;
+    line-height: 1.4;
+    margin-top: 8px;
+    font-style: italic;
+}
+
+/* Save Button */
+.ads-save-button {
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%) !important;
+    border: none !important;
+    color: white !important;
+    padding: 12px 30px !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    border-radius: 6px !important;
+    cursor: pointer !important;
+    transition: transform 0.2s ease !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+}
+
+.ads-save-button:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Help Section */
+.ads-help-section {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 25px;
+    margin-top: 30px;
+}
+
+.ads-help-section h3 {
+    margin-top: 0;
+    color: #333;
+    font-size: 20px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #0073aa;
+    display: inline-block;
+}
+
+.ads-help-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.ads-help-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #0073aa;
+}
+
+.ads-help-card h4 {
+    margin-top: 0;
+    color: #0073aa;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.ads-help-card ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.ads-help-card li {
+    margin-bottom: 8px;
+    line-height: 1.4;
+    color: #555;
+}
+
+/* AdSense Container Styling */
+.hot-news-adsense-container {
+    margin: 20px 0;
+    text-align: center;
+    position: relative;
+}
+
+.hot-news-adsense-container:before {
+    content: "Advertisement";
+    display: block;
+    font-size: 11px;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+}
+
+.hot-news-adsense-container.ads-content-top {
+    margin-top: 0;
+    margin-bottom: 30px;
+}
+
+.hot-news-adsense-container.ads-content-middle {
+    margin: 30px 0;
+    padding: 20px 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
+.hot-news-adsense-container.ads-content-bottom {
+    margin-top: 30px;
+    margin-bottom: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .ads-help-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .ads-nav-tabs .nav-tab {
+        padding: 12px 15px;
+        font-size: 14px;
+    }
+    
+    .tab-content {
+        padding: 15px;
+    }
+    
+    .hot-news-ads-admin .form-table th {
+        width: auto;
+        display: block;
+        padding-bottom: 5px;
+    }
+    
+    .hot-news-ads-admin .form-table td {
+        display: block;
+        padding-top: 0;
+    }
+    
+    .ads-admin-header {
+        padding: 20px 15px;
+    }
+}
+
+/* Animation cho tab switching */
+.ads-tab-pane {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.ads-tab-pane.active {
+    opacity: 1;
+}
+
+/* Success/Error Messages */
+.ads-admin-notice {
+    padding: 12px 20px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.ads-admin-notice.success {
+    background: #d4edda;
+    color: #155724;
+    border-left: 4px solid #28a745;
+}
+
+.ads-admin-notice.error {
+    background: #f8d7da;
+    color: #721c24;
+    border-left: 4px solid #dc3545;
+}
+
+/* Code highlighting in textareas */
+.hot-news-ads-admin textarea.code-input {
+    background: #f8f8f8;
+    color: #333;
+}
+
+.hot-news-ads-admin textarea.code-input::placeholder {
+    color: #999;
+    font-style: italic;
+}

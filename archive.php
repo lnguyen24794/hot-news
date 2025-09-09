@@ -54,12 +54,12 @@ get_header();
                         <div id="news-feed-container" class="news-feed-items">
                             <?php
                             $post_count = 0;
-                            $posts_shown = 0;
-                            while (have_posts() && $posts_shown < 5) : // Only show first 5 posts initially
-                                the_post();
-                                $post_count++;
-                                $posts_shown++;
-                                ?>
+                        $posts_shown = 0;
+                        while (have_posts() && $posts_shown < 5) : // Only show first 5 posts initially
+                            the_post();
+                            $post_count++;
+                            $posts_shown++;
+                            ?>
                                 <div class="news-feed-item" data-post-id="<?php echo get_the_ID(); ?>">
                                     <div class="news-item-card">
                                         <div class="row">
@@ -93,9 +93,9 @@ get_header();
                                                         </a>
                                                         <div class="news-stats">
                                                             <?php
-                                                            $views = get_post_meta(get_the_ID(), '_post_views', true) ?: 0;
-                                                            $likes = get_post_meta(get_the_ID(), '_post_likes', true) ?: 0;
-                                                            ?>
+                                                        $views = get_post_meta(get_the_ID(), '_post_views', true) ?: 0;
+                            $likes = get_post_meta(get_the_ID(), '_post_likes', true) ?: 0;
+                            ?>
                                                             <span class="stat-item">
                                                                 <i class="fas fa-eye"></i> <?php echo number_format($views); ?>
                                                             </span>
@@ -110,8 +110,8 @@ get_header();
                                     </div>
                                 </div>
                                 <?php
-                            endwhile;
-                            ?>
+                        endwhile;
+?>
                         </div>
                         
                         <!-- Load More Button and Loading Indicator -->
@@ -162,13 +162,18 @@ get_header();
                 <div class="col-lg-4">
                     <div class="advertisement-sidebar">
                         <div class="sticky-ads">
-                            <!-- Advertisement Banner 1 -->
+                            <!-- Google AdSense Archive Sidebar Banner 1 -->
                             <div class="ad-banner mb-4">
                                 <div class="ad-label">Quảng cáo</div>
-                                <a href="#" target="_blank" rel="noopener">
-                                    <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/ads-1.jpg'); ?>" 
-                                         alt="Quảng cáo 1" class="img-fluid">
-                                </a>
+                                <?php
+    hot_news_display_ad(
+        'archive_sidebar_ad_1',
+        '<a href="#" target="_blank" rel="noopener">
+                                        <img src="' . esc_url(get_template_directory_uri() . '/assets/images/ads-1.jpg') . '" 
+                                             alt="Quảng cáo 1" class="img-fluid">
+                                    </a>'
+    );
+?>
                             </div>
                             
                             <!-- Newsletter Signup -->
@@ -194,13 +199,18 @@ get_header();
                                 </div>
                             </div>
                             
-                            <!-- Advertisement Banner 2 -->
+                            <!-- Google AdSense Archive Sidebar Banner 2 -->
                             <div class="ad-banner mb-4">
                                 <div class="ad-label">Quảng cáo</div>
-                                <a href="#" target="_blank" rel="noopener">
-                                    <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/ads-2.jpg'); ?>" 
-                                         alt="Quảng cáo 2" class="img-fluid">
-                                </a>
+                                <?php
+hot_news_display_ad(
+    'archive_sidebar_ad_2',
+    '<a href="#" target="_blank" rel="noopener">
+                                        <img src="' . esc_url(get_template_directory_uri() . '/assets/images/ads-2.jpg') . '" 
+                                             alt="Quảng cáo 2" class="img-fluid">
+                                    </a>'
+);
+?>
                             </div>
                             
                             <!-- Popular Posts Widget -->
@@ -210,9 +220,9 @@ get_header();
                                         <i class="fas fa-fire"></i> Tin nổi bật
                                     </h4>
                                     <?php
-                                    $popular_posts = hot_news_get_popular_posts(5);
-                                    if (!empty($popular_posts)) :
-                                        ?>
+    $popular_posts = hot_news_get_popular_posts(5);
+if (!empty($popular_posts)) :
+    ?>
                                         <div class="popular-posts-list">
                                             <?php foreach ($popular_posts as $popular_post) : ?>
                                                 <div class="popular-post-item">
@@ -242,8 +252,8 @@ get_header();
                                             <?php endforeach; ?>
                                         </div>
                                         <?php
-                                    endif;
-                                    ?>
+endif;
+?>
                                 </div>
                             </div>
                             

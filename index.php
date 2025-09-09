@@ -232,13 +232,18 @@ wp_reset_postdata(); ?>
                     </div>
                     
                     <div class="col-md-6">
-                         <!-- Advertisement Banner 1 -->
+                         <!-- Google AdSense Tab News Ad -->
                          <div class="ad-banner mb-4">
                             <div class="ad-label">Quảng cáo</div>
-                            <a href="#" target="_blank" rel="noopener">
-                                <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/ads-1.jpg'); ?>" 
-                                        alt="Quảng cáo 1" class="img-fluid">
-                            </a>
+                            <?php
+                            hot_news_display_ad(
+                                'tab_news_ad_code',
+                                '<a href="#" target="_blank" rel="noopener">
+                                    <img src="' . esc_url(get_template_directory_uri() . '/assets/images/ads-1.jpg') . '" 
+                                            alt="Quảng cáo 1" class="img-fluid">
+                                </a>'
+                            );
+?>
                         </div>
                     </div>
                 </div>
@@ -257,9 +262,9 @@ wp_reset_postdata(); ?>
                     <div class="row">
                         <?php
                         $main_posts = get_posts(array(
-                            'posts_per_page' => 9,
-                            'post_status' => 'publish',
-                            'meta_query' => array(
+'posts_per_page' => 9,
+'post_status' => 'publish',
+'meta_query' => array(
 'relation' => 'OR',
 array(
     'key' => '_featured_post',
@@ -270,7 +275,7 @@ array(
     'value' => '1',
     'compare' => '!='
 )
-                            )
+)
                         ));
 
         foreach ($main_posts as $post) :
@@ -412,13 +417,18 @@ the_posts_pagination(array(
                 <div class="col-lg-4">
                     <div class="advertisement-sidebar">
                         <div class="sticky-ads">
-                            <!-- Advertisement Banner 1 -->
+                            <!-- Google AdSense Sidebar Ad -->
                             <div class="ad-banner mb-4">
                                 <div class="ad-label">Quảng cáo</div>
-                                <a href="#" target="_blank" rel="noopener">
-                                    <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/ads-1.jpg'); ?>" 
-                                         alt="Quảng cáo 1" class="img-fluid">
-                                </a>
+                                <?php
+                                hot_news_display_ad(
+                                    'sidebar_ad_code',
+                                    '<a href="#" target="_blank" rel="noopener">
+                                        <img src="' . esc_url(get_template_directory_uri() . '/assets/images/ads-1.jpg') . '" 
+                                             alt="Quảng cáo 1" class="img-fluid">
+                                    </a>'
+                                );
+?>
                             </div>
                             
                             <!-- Newsletter Signup -->

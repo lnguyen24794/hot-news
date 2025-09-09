@@ -48,27 +48,31 @@ if (!is_active_sidebar('sidebar-1')) {
             </div>
         </div>
         
-        <!-- Advertisement Widget -->
+        <!-- Google AdSense General Sidebar Widget -->
         <div class="sidebar-widget">
             <div class="image">
                 <?php
+                $fallback_html = '';
         $sidebar_ad_image = get_theme_mod('hot_news_sidebar_ad_image');
         $sidebar_ad_url = get_theme_mod('hot_news_sidebar_ad_url');
 
-        if ($sidebar_ad_image) :
-            if ($sidebar_ad_url) : ?>
-                        <a href="<?php echo esc_url($sidebar_ad_url); ?>" target="_blank" rel="noopener">
-                            <img src="<?php echo esc_url($sidebar_ad_image); ?>" alt="<?php esc_attr_e('Advertisement', 'hot-news'); ?>">
-                        </a>
-                    <?php else : ?>
-                        <img src="<?php echo esc_url($sidebar_ad_image); ?>" alt="<?php esc_attr_e('Advertisement', 'hot-news'); ?>">
-                    <?php endif;
-        else : ?>
-                    <div class="ad-placeholder" style="background: #f5f5f5; padding: 40px 20px; text-align: center; color: #666; border: 2px dashed #ddd;">
-                        <p><?php esc_html_e('Advertisement Space', 'hot-news'); ?></p>
-                        <small><?php esc_html_e('Configure in Customizer', 'hot-news'); ?></small>
-                    </div>
-                <?php endif; ?>
+        if ($sidebar_ad_image) {
+            if ($sidebar_ad_url) {
+                $fallback_html = '<a href="' . esc_url($sidebar_ad_url) . '" target="_blank" rel="noopener">';
+                $fallback_html .= '<img src="' . esc_url($sidebar_ad_image) . '" alt="' . esc_attr__('Advertisement', 'hot-news') . '">';
+                $fallback_html .= '</a>';
+            } else {
+                $fallback_html = '<img src="' . esc_url($sidebar_ad_image) . '" alt="' . esc_attr__('Advertisement', 'hot-news') . '">';
+            }
+        } else {
+            $fallback_html = '<div class="ad-placeholder" style="background: #f5f5f5; padding: 40px 20px; text-align: center; color: #666; border: 2px dashed #ddd;">';
+            $fallback_html .= '<p>' . esc_html__('Advertisement Space', 'hot-news') . '</p>';
+            $fallback_html .= '<small>' . esc_html__('Configure in Google Ads Manager', 'hot-news') . '</small>';
+            $fallback_html .= '</div>';
+        }
+
+        hot_news_display_ad('sidebar_ad_code', $fallback_html);
+        ?>
             </div>
         </div>
         
@@ -90,7 +94,7 @@ if (!is_active_sidebar('sidebar-1')) {
                 <div class="tab-content">
                     <div id="sidebar-featured" class="container tab-pane active">
                         <?php
-                $featured_posts = hot_news_get_featured_posts(5);
+        $featured_posts = hot_news_get_featured_posts(5);
         foreach ($featured_posts as $post) :
             setup_postdata($post); ?>
                             <div class="tn-news">

@@ -439,7 +439,7 @@ function hot_news_add_meta_boxes()
         'side',
         'default'
     );
-    
+
     add_meta_box(
         'hot_news_post_stats',
         __('Thống kê bài viết', 'hot-news'),
@@ -481,7 +481,7 @@ function hot_news_featured_post_callback($post)
 function hot_news_post_stats_callback($post)
 {
     wp_nonce_field('hot_news_save_post_stats', 'hot_news_post_stats_nonce');
-    
+
     $views = get_post_meta($post->ID, '_post_views', true) ?: 0;
     $likes = get_post_meta($post->ID, '_post_likes', true) ?: 0;
     $dislikes = get_post_meta($post->ID, '_post_dislikes', true) ?: 0;
@@ -536,7 +536,7 @@ function hot_news_save_featured_post($post_id)
     } else {
         delete_post_meta($post_id, '_featured_post');
     }
-    
+
     // Save hot news field
     if (isset($_POST['hot_news_hot_post'])) {
         update_post_meta($post_id, '_hot_news', '1');
@@ -597,6 +597,16 @@ require get_template_directory() . '/setup-demo.php';
  * Include analytics
  */
 require get_template_directory() . '/analytics.php';
+
+/**
+ * Include Google Ads Manager
+ */
+require get_template_directory() . '/inc/admin/google-ads-manager.php';
+
+/**
+ * Include Affiliate Manager
+ */
+require get_template_directory() . '/inc/admin/affiliate-manager.php';
 
 /**
  * Add breaking news functionality
@@ -864,7 +874,7 @@ function hot_news_handle_like_dislike()
     global $wpdb;
     $visitor_id = hot_news_get_visitor_id();
     $table_interactions = $wpdb->prefix . 'hot_news_interactions';
-    
+
     $wpdb->insert(
         $table_interactions,
         array(
@@ -929,7 +939,7 @@ function hot_news_handle_track_interaction()
             wp_send_json_error('Invalid time on page');
             return;
         }
-        
+
         if ($scroll_depth < 0 || $scroll_depth > 100) {
             wp_send_json_error('Invalid scroll depth');
             return;
@@ -1069,10 +1079,10 @@ function hot_news_get_visitor_id()
 
     // Generate new visitor ID
     $visitor_id = md5(uniqid(rand(), true));
-    
+
     // Set cookie for 1 year
     setcookie('hot_news_visitor_id', $visitor_id, time() + (365 * 24 * 60 * 60), '/');
-    
+
     return $visitor_id;
 }
 
@@ -1131,7 +1141,7 @@ function hot_news_track_visitor()
 function hot_news_get_client_ip()
 {
     $ip_keys = array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'REMOTE_ADDR');
-    
+
     foreach ($ip_keys as $key) {
         if (array_key_exists($key, $_SERVER) === true) {
             foreach (explode(',', $_SERVER[$key]) as $ip) {
@@ -1142,7 +1152,7 @@ function hot_news_get_client_ip()
             }
         }
     }
-    
+
     return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '0.0.0.0';
 }
 
@@ -1153,10 +1163,10 @@ function hot_news_check_rate_limit($action = 'pageview', $limit = 60)
 {
     $ip = hot_news_get_client_ip();
     $cache_key = 'hot_news_rate_limit_' . $action . '_' . md5($ip);
-    
+
     // Get current count
     $current_count = get_transient($cache_key);
-    
+
     if ($current_count === false) {
         // First request in this minute
         set_transient($cache_key, 1, 60); // 60 seconds
@@ -1191,7 +1201,7 @@ function hot_news_track_pageview()
     $visitor_id = hot_news_get_visitor_id();
     $table_pageviews = $wpdb->prefix . 'hot_news_pageviews';
     $post_id = is_single() || is_page() ? get_the_ID() : 0;
-    
+
     // Check if this exact page was already tracked in the last 60 seconds
     $page_url = home_url(add_query_arg(array(), $GLOBALS['wp']->request));
     $recent_view = $wpdb->get_var($wpdb->prepare(
@@ -1202,7 +1212,7 @@ function hot_news_track_pageview()
         $visitor_id,
         $page_url
     ));
-    
+
     // Don't track if same page was viewed recently
     if ($recent_view) {
         return;
@@ -1270,14 +1280,14 @@ function hot_news_init_tracking()
     if (is_admin()) {
         return;
     }
-    
+
     // Prevent duplicate tracking in same request
     static $tracked = false;
     if ($tracked) {
         return;
     }
     $tracked = true;
-    
+
     hot_news_track_pageview();
 }
 add_action('wp_head', 'hot_news_init_tracking');
@@ -1301,7 +1311,7 @@ add_action('wp_dashboard_setup', 'hot_news_add_dashboard_widgets');
 function hot_news_redirect_dashboard_to_analytics()
 {
     global $pagenow;
-    
+
     // Only redirect for admin users on dashboard
     if ($pagenow === 'index.php' && current_user_can('manage_options') && !isset($_GET['redirect_disabled'])) {
         wp_redirect(admin_url('admin.php?page=hot-news-analytics'));
@@ -1323,12 +1333,12 @@ function hot_news_debug_tracking()
         echo '<p><strong>Page Type:</strong> ' . hot_news_get_page_type() . '</p>';
         echo '<p><strong>Post ID:</strong> ' . (is_single() ? get_the_ID() : 'N/A') . '</p>';
         echo '<p><strong>Visitor ID:</strong> ' . substr(hot_news_get_visitor_id(), 0, 8) . '...</p>';
-        
+
         global $wpdb;
         $table_pageviews = $wpdb->prefix . 'hot_news_pageviews';
         $recent_views = $wpdb->get_var("SELECT COUNT(*) FROM $table_pageviews WHERE visit_time > DATE_SUB(NOW(), INTERVAL 1 HOUR)");
         echo '<p><strong>Views (1h):</strong> ' . $recent_views . '</p>';
-        
+
         // Check for recent duplicate
         $visitor_id = hot_news_get_visitor_id();
         $page_url = home_url(add_query_arg(array('debug_tracking' => ''), $GLOBALS['wp']->request));
@@ -1341,7 +1351,7 @@ function hot_news_debug_tracking()
             $page_url
         ));
         echo '<p><strong>Recent duplicates:</strong> ' . $recent_duplicate . '</p>';
-        
+
         echo '<p><a href="' . remove_query_arg('debug_tracking') . '">❌ Close</a></p>';
         echo '</div>';
     }
@@ -1394,15 +1404,15 @@ function hot_news_load_more_posts()
     if (!empty($category)) {
         $args['category_name'] = $category;
     }
-    
+
     if (!empty($tag)) {
         $args['tag'] = $tag;
     }
-    
+
     if ($author > 0) {
         $args['author'] = $author;
     }
-    
+
     if ($year > 0) {
         $args['year'] = $year;
         if ($month > 0) {
@@ -1426,7 +1436,7 @@ function hot_news_load_more_posts()
     while ($query->have_posts()) {
         $query->the_post();
         $post_count++;
-        
+
         ob_start();
         ?>
         <div class="news-feed-item" data-post-id="<?php echo get_the_ID(); ?>">
@@ -1463,8 +1473,8 @@ function hot_news_load_more_posts()
                                 <div class="news-stats">
                                     <?php
                                     $views = get_post_meta(get_the_ID(), '_post_views', true) ?: 0;
-                                    $likes = get_post_meta(get_the_ID(), '_post_likes', true) ?: 0;
-                                    ?>
+        $likes = get_post_meta(get_the_ID(), '_post_likes', true) ?: 0;
+        ?>
                                     <span class="stat-item">
                                         <i class="fas fa-eye"></i> <?php echo number_format($views); ?>
                                     </span>
@@ -1503,35 +1513,35 @@ add_action('wp_ajax_nopriv_hot_news_load_more_posts', 'hot_news_load_more_posts'
 function hot_news_analytics_dashboard_widget()
 {
     global $wpdb;
-    
+
     $table_pageviews = $wpdb->prefix . 'hot_news_pageviews';
-    
+
     // Get today's stats
     $today = date('Y-m-d');
     $yesterday = date('Y-m-d', strtotime('-1 day'));
-    
+
     $today_views = $wpdb->get_var($wpdb->prepare(
         "SELECT COUNT(*) FROM $table_pageviews WHERE DATE(visit_time) = %s",
         $today
     ));
-    
+
     $yesterday_views = $wpdb->get_var($wpdb->prepare(
         "SELECT COUNT(*) FROM $table_pageviews WHERE DATE(visit_time) = %s",
         $yesterday
     ));
-    
+
     $today_visitors = $wpdb->get_var($wpdb->prepare(
         "SELECT COUNT(DISTINCT visitor_id) FROM $table_pageviews WHERE DATE(visit_time) = %s",
         $today
     ));
-    
+
     // Get this week's stats
     $week_start = date('Y-m-d', strtotime('monday this week'));
     $week_views = $wpdb->get_var($wpdb->prepare(
         "SELECT COUNT(*) FROM $table_pageviews WHERE DATE(visit_time) >= %s",
         $week_start
     ));
-    
+
     // Get most viewed post today
     $top_post = $wpdb->get_row($wpdb->prepare(
         "SELECT p.post_title, COUNT(*) as views 
@@ -1543,11 +1553,11 @@ function hot_news_analytics_dashboard_widget()
          LIMIT 1",
         $today
     ));
-    
+
     $change_percent = $yesterday_views > 0 ? round((($today_views - $yesterday_views) / $yesterday_views) * 100, 1) : 0;
     $change_class = $change_percent > 0 ? 'up' : ($change_percent < 0 ? 'down' : 'same');
     $change_icon = $change_percent > 0 ? '↗' : ($change_percent < 0 ? '↘' : '→');
-    
+
     ?>
     <div class="hot-news-analytics-widget">
         <style>

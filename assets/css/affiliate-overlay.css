@@ -1,0 +1,337 @@
+/**
+ * Affiliate Overlay Styles
+ * Simple fixed position overlay instead of Bootstrap modal
+ */
+
+/* Overlay Container */
+#affiliateOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    opacity: 1;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+#affiliateOverlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Dark Background */
+.affiliate-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+/* Centered Popup Content */
+.affiliate-popup-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+}
+
+/* Close Button */
+.affiliate-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.affiliate-close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+/* Content Animation */
+.affiliate-content {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+}
+
+.affiliate-content.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Image Container */
+.affiliate-image-container {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    overflow: hidden;
+}
+
+.affiliate-image-link {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.affiliate-image-link:hover {
+    text-decoration: none;
+}
+
+.affiliate-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.affiliate-image-link:hover .affiliate-image {
+    transform: scale(1.05);
+}
+
+/* Text Overlay on Image */
+.affiliate-text-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+    padding: 40px 30px 30px 30px;
+    color: white;
+    z-index: 2;
+}
+
+.affiliate-title {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.3;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    margin: 0 0 10px 0;
+}
+
+.affiliate-subtitle {
+    font-size: 14px;
+    opacity: 0.9;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    margin: 0;
+}
+
+/* Hover Effect for Text Overlay */
+.affiliate-image-link:hover .affiliate-text-overlay {
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.9));
+}
+
+.affiliate-image-link:hover .affiliate-title {
+    transform: translateY(-5px);
+    transition: transform 0.3s ease;
+}
+
+.affiliate-image-link:hover .affiliate-subtitle {
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+/* Click Effect */
+.affiliate-image-link::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.affiliate-image-link:hover::after {
+    opacity: 1;
+}
+
+/* Loading State */
+.affiliate-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+}
+
+.loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top: 4px solid white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.loading-text {
+    color: white;
+    font-size: 16px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Error State */
+.affiliate-error {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 300px;
+}
+
+.error-content {
+    text-align: center;
+    color: white;
+    padding: 40px 20px;
+}
+
+.error-icon {
+    font-size: 48px;
+    margin-bottom: 20px;
+}
+
+.error-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 15px 0;
+}
+
+.error-message {
+    font-size: 14px;
+    opacity: 0.8;
+    margin: 0;
+}
+
+/* Blur effect for main content */
+.site-main.content-blurred,
+.site-header.content-blurred,
+.site-footer.content-blurred {
+    filter: blur(5px);
+    transition: filter 0.3s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .affiliate-popup-content {
+        width: 95%;
+        max-width: none;
+        margin: 20px;
+    }
+    
+    .affiliate-image-container {
+        height: 300px;
+    }
+    
+    .affiliate-text-overlay {
+        padding: 30px 20px 20px 20px;
+    }
+    
+    .affiliate-title {
+        font-size: 20px;
+    }
+    
+    .affiliate-close-btn {
+        width: 35px;
+        height: 35px;
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .affiliate-popup-content {
+        margin: 10px;
+    }
+    
+    .affiliate-image-container {
+        height: 250px;
+    }
+    
+    .affiliate-text-overlay {
+        padding: 20px 15px 15px 15px;
+    }
+    
+    .affiliate-title {
+        font-size: 18px;
+    }
+    
+    .affiliate-subtitle {
+        font-size: 13px;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    #affiliateOverlay,
+    .affiliate-popup-content,
+    .affiliate-content,
+    .affiliate-image,
+    .affiliate-title,
+    .affiliate-subtitle {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/* Keyboard Navigation */
+.affiliate-close-btn:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 2px;
+}
+
+.affiliate-image-link:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 4px;
+}
