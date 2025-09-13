@@ -21,29 +21,22 @@
                         <div class="footer-widget">
                             <h3 class="title"><?php esc_html_e('TIN HOT', 'hot-news'); ?></h3>
                             <div class="contact-info">
-                                <?php
-                                $sample_contact = hot_news_get_sample_data('contact');
-                    ?>
-                                <p><i class="fa fa-map-marker"></i><?php echo esc_html(get_theme_mod('hot_news_contact_address', $sample_contact['address'])); ?></p>
-                                <p><i class="fa fa-envelope"></i><?php echo esc_html(get_theme_mod('hot_news_contact_email', $sample_contact['email'])); ?></p>
-                                <p><i class="fa fa-phone"></i><?php echo esc_html(get_theme_mod('hot_news_contact_phone', $sample_contact['phone'])); ?></p>
+                                <p><i class="fa fa-map-marker"></i><?php echo esc_html(hot_news_get_contact_info('address')); ?></p>
+                                <p><i class="fa fa-envelope"></i><?php echo esc_html(hot_news_get_contact_info('email')); ?></p>
+                                <p><i class="fa fa-phone"></i><?php echo esc_html(hot_news_get_contact_info('phone')); ?></p>
                                 <div class="social">
                                     <?php
-                        $social_networks = array(
-                            'twitter'   => 'fab fa-twitter',
-                            'facebook'  => 'fab fa-facebook-f',
-                            'linkedin'  => 'fab fa-linkedin-in',
-                            'instagram' => 'fab fa-instagram',
-                            'youtube'   => 'fab fa-youtube',
-                        );
-
-                    foreach ($social_networks as $network => $icon_class) {
-                        $social_url = get_theme_mod('hot_news_social_' . $network);
-                        if ($social_url) {
-                            echo '<a href="' . esc_url($social_url) . '" target="_blank" rel="noopener"><i class="' . esc_attr($icon_class) . '"></i></a>';
-                        }
-                    }
-                    ?>
+                                    // Get social networks from theme options (only filled ones)
+                                    $social_networks = hot_news_get_social_networks();
+                                    
+                                    foreach ($social_networks as $network => $data) {
+                                        if (!empty($data['url'])) {
+                                            echo '<a href="' . esc_url($data['url']) . '" target="_blank" rel="noopener" title="' . esc_attr($data['name']) . '">';
+                                            echo '<i class="' . esc_attr($data['icon']) . '"></i>';
+                                            echo '</a>';
+                                        }
+                                    }
+                                    ?>
                                 </div>
                             </div>
                         </div>
@@ -140,7 +133,22 @@ endif; ?>
         <div class="container">
             <div class="row">
                 <div class="col-md-6 copyright">
-                    <p><?php echo wp_kses_post(get_theme_mod('hot_news_footer_copyright', sprintf(__('Copyright &copy; %s <a href="%s">%s</a>. All Rights Reserved', 'hot-news'), date('Y'), esc_url(home_url('/')), get_bloginfo('name')))); ?></p>
+                    <?php 
+                    $copyright_text = hot_news_get_option('copyright_text');
+                    if (!empty($copyright_text)) {
+                        echo '<p>' . esc_html($copyright_text) . '</p>';
+                    } else {
+                        echo '<p>&copy; ' . date('Y') . ' <a href="' . esc_url(home_url()) . '">' . esc_html(get_bloginfo('name')) . '</a>. All Rights Reserved.</p>';
+                    }
+                    ?>
+                </div>
+                <div class="col-md-6">
+                    <?php 
+                    $site_description = hot_news_get_option('site_description');
+                    if (!empty($site_description)) {
+                        echo '<p class="text-muted small text-right">' . esc_html(wp_trim_words($site_description, 10)) . '</p>';
+                    }
+                    ?>
                 </div>
             </div>
         </div>

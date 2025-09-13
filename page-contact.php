@@ -124,10 +124,6 @@ get_header();
                                     <i class="fas fa-info-circle"></i> Thông tin liên hệ
                                 </h4>
                                 
-                                <?php
-                                $sample_contact = hot_news_get_sample_data('contact');
-                                ?>
-                                
                                 <div class="contact-info-list">
                                     <div class="contact-info-item">
                                         <div class="contact-icon">
@@ -135,7 +131,7 @@ get_header();
                                         </div>
                                         <div class="contact-details">
                                             <h6>Địa chỉ</h6>
-                                            <p><?php echo esc_html(get_theme_mod('hot_news_contact_address', $sample_contact['address'])); ?></p>
+                                            <p><?php echo esc_html(hot_news_get_contact_info('address')); ?></p>
                                         </div>
                                     </div>
                                     
@@ -146,8 +142,8 @@ get_header();
                                         <div class="contact-details">
                                             <h6>Email</h6>
                                             <p>
-                                                <a href="mailto:<?php echo esc_attr(get_theme_mod('hot_news_contact_email', $sample_contact['email'])); ?>">
-                                                    <?php echo esc_html(get_theme_mod('hot_news_contact_email', $sample_contact['email'])); ?>
+                                                <a href="mailto:<?php echo esc_attr(hot_news_get_contact_info('email')); ?>">
+                                                    <?php echo esc_html(hot_news_get_contact_info('email')); ?>
                                                 </a>
                                             </p>
                                         </div>
@@ -160,12 +156,25 @@ get_header();
                                         <div class="contact-details">
                                             <h6>Điện thoại</h6>
                                             <p>
-                                                <a href="tel:<?php echo esc_attr(get_theme_mod('hot_news_contact_phone', $sample_contact['phone'])); ?>">
-                                                    <?php echo esc_html(get_theme_mod('hot_news_contact_phone', $sample_contact['phone'])); ?>
+                                                <a href="tel:<?php echo esc_attr(hot_news_get_contact_info('phone')); ?>">
+                                                    <?php echo esc_html(hot_news_get_contact_info('phone')); ?>
                                                 </a>
                                             </p>
                                         </div>
                                     </div>
+                                    
+                                    <?php $business_hours = hot_news_get_contact_info('business_hours'); ?>
+                                    <?php if (!empty($business_hours)) : ?>
+                                    <div class="contact-info-item">
+                                        <div class="contact-icon">
+                                            <i class="fas fa-clock"></i>
+                                        </div>
+                                        <div class="contact-details">
+                                            <h6>Giờ làm việc</h6>
+                                            <p><?php echo esc_html($business_hours); ?></p>
+                                        </div>
+                                    </div>
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </div>
@@ -178,19 +187,13 @@ get_header();
                                 </h4>
                                 <div class="social-links">
                                     <?php
-                                    $social_networks = array(
-                                        'facebook'  => array('fab fa-facebook-f', 'Facebook'),
-                                        'twitter'   => array('fab fa-twitter', 'Twitter'),
-                                        'linkedin'  => array('fab fa-linkedin-in', 'LinkedIn'),
-                                        'instagram' => array('fab fa-instagram', 'Instagram'),
-                                        'youtube'   => array('fab fa-youtube', 'YouTube'),
-                                    );
-
+                                    // Get social networks from theme options (only filled ones)
+                                    $social_networks = hot_news_get_social_networks();
+                                    
                                     foreach ($social_networks as $network => $data) {
-                                        $social_url = get_theme_mod('hot_news_social_' . $network, $sample_contact['social_links'][$network]);
-                                        if ($social_url) {
-                                            echo '<a href="' . esc_url($social_url) . '" class="social-link ' . $network . '" target="_blank" rel="noopener">';
-                                            echo '<i class="' . esc_attr($data[0]) . '"></i> ' . esc_html($data[1]);
+                                        if (!empty($data['url'])) {
+                                            echo '<a href="' . esc_url($data['url']) . '" class="social-link ' . esc_attr($network) . '" target="_blank" rel="noopener">';
+                                            echo '<i class="' . esc_attr($data['icon']) . '"></i> ' . esc_html($data['name']);
                                             echo '</a>';
                                         }
                                     }

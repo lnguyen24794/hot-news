@@ -101,25 +101,25 @@ if (has_custom_logo()) {
                         <?php
                         // Hiển thị Google AdSense Header Ad hoặc fallback sang customizer
                         $fallback_html = '';
-$header_ad_image = get_theme_mod('hot_news_header_ad_image');
-$header_ad_url = get_theme_mod('hot_news_header_ad_url');
+                        $header_ad_image = get_theme_mod('hot_news_header_ad_image');
+                        $header_ad_url = get_theme_mod('hot_news_header_ad_url');
 
-if ($header_ad_image) {
-    if ($header_ad_url) {
-        $fallback_html = '<a href="' . esc_url($header_ad_url) . '" target="_blank" rel="noopener">';
-        $fallback_html .= '<img src="' . esc_url($header_ad_image) . '" alt="' . esc_attr__('Advertisement', 'hot-news') . '">';
-        $fallback_html .= '</a>';
-    } else {
-        $fallback_html = '<img src="' . esc_url($header_ad_image) . '" alt="' . esc_attr__('Advertisement', 'hot-news') . '">';
-    }
-} else {
-    $fallback_html = '<div class="ad-placeholder" style="background: #f5f5f5; padding: 20px; text-align: center; color: #666;">';
-    $fallback_html .= '<p>' . esc_html__('Advertisement Space', 'hot-news') . '</p>';
-    $fallback_html .= '<small>' . esc_html__('Configure in Google Ads Manager', 'hot-news') . '</small>';
-    $fallback_html .= '</div>';
-}
+                        if ($header_ad_image) {
+                            if ($header_ad_url) {
+                                $fallback_html = '<a href="' . esc_url($header_ad_url) . '" target="_blank" rel="noopener">';
+                                $fallback_html .= '<img src="' . esc_url($header_ad_image) . '" alt="' . esc_attr__('Advertisement', 'hot-news') . '">';
+                                $fallback_html .= '</a>';
+                            } else {
+                                $fallback_html = '<img src="' . esc_url($header_ad_image) . '" alt="' . esc_attr__('Advertisement', 'hot-news') . '">';
+                            }
+                        } else {
+                            $fallback_html = '<div class="ad-placeholder" style="background: #f5f5f5; padding: 20px; text-align: center; color: #666;">';
+                            $fallback_html .= '<p>' . esc_html__('Advertisement Space', 'hot-news') . '</p>';
+                            $fallback_html .= '<small>' . esc_html__('Configure in Google Ads Manager', 'hot-news') . '</small>';
+                            $fallback_html .= '</div>';
+                        }
 
-hot_news_display_ad('header_ad_code', $fallback_html);
+                    hot_news_display_ad('header_ad_code', $fallback_html);
 ?>
                     </div>
                 </div>
@@ -157,21 +157,17 @@ wp_nav_menu(array(
                     </div>
                     <div class="social ml-auto">
                         <?php
-$social_networks = array(
-    'twitter'   => 'fab fa-twitter',
-    'facebook'  => 'fab fa-facebook-f',
-    'linkedin'  => 'fab fa-linkedin-in',
-    'instagram' => 'fab fa-instagram',
-    'youtube'   => 'fab fa-youtube',
-);
-
-foreach ($social_networks as $network => $icon_class) {
-    $social_url = get_theme_mod('hot_news_social_' . $network);
-    if ($social_url) {
-        echo '<a href="' . esc_url($social_url) . '" target="_blank" rel="noopener"><i class="' . esc_attr($icon_class) . '"></i></a>';
-    }
-}
-?>
+                        // Get social networks from theme options
+                        $social_networks = hot_news_get_social_networks();
+                        
+                        foreach ($social_networks as $network => $data) {
+                            if (!empty($data['url'])) {
+                                echo '<a href="' . esc_url($data['url']) . '" target="_blank" rel="noopener" title="' . esc_attr($data['name']) . '">';
+                                echo '<i class="' . esc_attr($data['icon']) . '"></i>';
+                                echo '</a>';
+                            }
+                        }
+                        ?>
                     </div>
                 </div>
             </nav>

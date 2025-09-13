@@ -225,6 +225,25 @@ require HOT_NEWS_INC_DIR . '/template-functions.php';
 require HOT_NEWS_INC_DIR . '/customizer.php';
 
 /**
+ * Theme Options Page.
+ */
+require HOT_NEWS_INC_DIR . '/admin/theme-options.php';
+
+/**
+ * Load view template with arguments
+ *
+ * @param string $template_path Path to template file
+ * @param array $args Arguments to pass to template
+ */
+function loadView($template_path, $args = array()) {
+    if (file_exists($template_path)) {
+        // Make args available as variables in template
+        extract($args);
+        include $template_path;
+    }
+}
+
+/**
  * Custom Walker for Bootstrap Navigation
  */
 require get_template_directory() . '/inc/class-wp-bootstrap-navwalker.php';
@@ -376,14 +395,6 @@ function hot_news_get_hot_posts($limit = 5)
     );
 
     return get_posts($args);
-}
-
-/**
- * Load view file
- */
-function loadView($file, $data = []) {
-    extract($data); 
-    include $file;
 }
 
 /**
