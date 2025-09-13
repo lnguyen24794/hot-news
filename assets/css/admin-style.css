@@ -1,0 +1,475 @@
+/**
+ * Hot News WordPress Admin Custom Styling
+ * Enhanced admin interface with brand colors and modern design
+ */
+
+/* CSS Variables for Brand Colors */
+:root {
+    --hot-news-primary: #d63384;
+    --hot-news-primary-dark: #b02a5b;
+    --hot-news-primary-light: #f8d7da;
+    --hot-news-secondary: #fd7e14;
+    --hot-news-success: #198754;
+    --hot-news-danger: #dc3545;
+    --hot-news-warning: #ffc107;
+    --hot-news-info: #0dcaf0;
+    --hot-news-light: #f8f9fa;
+    --hot-news-dark: #212529;
+    --hot-news-gradient: linear-gradient(135deg, var(--hot-news-primary) 0%, var(--hot-news-primary-dark) 100%);
+}
+
+/* ==========================================================================
+   ADMIN BAR STYLING
+   ========================================================================== */
+
+#wpadminbar {
+    background: var(--hot-news-gradient);
+    box-shadow: 0 2px 10px rgba(214, 51, 132, 0.3);
+}
+
+#wpadminbar .ab-top-menu > li.hover > .ab-item,
+#wpadminbar .ab-top-menu > li:hover > .ab-item,
+#wpadminbar .ab-top-menu > li > .ab-item:focus {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    transition: all 0.3s ease;
+}
+
+#wpadminbar .ab-top-secondary .menupop .ab-sub-wrapper {
+    background: var(--hot-news-primary-dark);
+}
+
+#wpadminbar .quicklinks .menupop ul li a:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+/* WordPress Logo */
+#wpadminbar #wp-admin-bar-wp-logo > .ab-item {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+
+/* Hot News Settings Link in Admin Bar */
+#wp-admin-bar-hot-news-settings > .ab-item {
+    background: var(--hot-news-secondary);
+    color: #fff !important;
+    border-radius: 4px;
+    margin: 3px;
+    transition: all 0.3s ease;
+}
+
+#wp-admin-bar-hot-news-settings > .ab-item:hover {
+    background: #e55a00;
+    transform: scale(1.05);
+}
+
+/* ==========================================================================
+   ADMIN MENU STYLING
+   ========================================================================== */
+
+#adminmenu,
+#adminmenuback,
+#adminmenuwrap {
+    background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
+}
+
+#adminmenu .wp-submenu {
+    background: #34495e;
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
+    border-radius: 0 8px 8px 0;
+}
+
+/* Current Menu Item */
+#adminmenu li.current a.menu-top,
+#adminmenu li.wp-has-current-submenu a.wp-has-current-submenu {
+    background: var(--hot-news-gradient);
+    color: #fff;
+    box-shadow: inset 4px 0 0 var(--hot-news-secondary);
+    border-radius: 0 25px 25px 0;
+    margin-right: 10px;
+    position: relative;
+}
+
+#adminmenu li.current a.menu-top::after,
+#adminmenu li.wp-has-current-submenu a.wp-has-current-submenu::after {
+    content: '';
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 10px solid var(--hot-news-primary);
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+}
+
+/* Menu Arrow */
+#adminmenu .wp-menu-arrow {
+    display: none; /* Hide default arrow, we use custom one */
+}
+
+/* Menu Hover Effects */
+#adminmenu li a:hover,
+#adminmenu li.opensub > a.menu-top,
+#adminmenu li > a.menu-top:focus {
+    background: rgba(214, 51, 132, 0.15);
+    color: #fff;
+    border-radius: 0 20px 20px 0;
+    margin-right: 5px;
+    transition: all 0.3s ease;
+}
+
+/* Menu Icons */
+#adminmenu div.wp-menu-image:before {
+    color: var(--hot-news-secondary);
+    transition: all 0.3s ease;
+    font-size: 18px;
+}
+
+#adminmenu li.current div.wp-menu-image:before,
+#adminmenu li.wp-has-current-submenu div.wp-menu-image:before,
+#adminmenu li:hover div.wp-menu-image:before {
+    color: #fff;
+    transform: scale(1.2);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Submenu Styling */
+#adminmenu .wp-submenu li.current a,
+#adminmenu .wp-submenu a:focus,
+#adminmenu .wp-submenu a:hover {
+    background: var(--hot-news-primary);
+    color: #fff;
+    border-radius: 4px;
+    margin: 2px 8px;
+    padding-left: 16px;
+}
+
+/* ==========================================================================
+   MAIN CONTENT AREA
+   ========================================================================== */
+
+.wp-admin #wpwrap {
+    background: var(--hot-news-light);
+}
+
+.wp-admin #wpcontent {
+    padding-left: 20px;
+}
+
+/* Page Headers */
+.wp-admin .wrap h1,
+.wp-admin .wrap h2 {
+    color: var(--hot-news-primary);
+    font-weight: 700;
+    position: relative;
+    padding-left: 40px;
+}
+
+.wp-admin .wrap h1::before,
+.wp-admin .wrap h2::before {
+    content: "🔥";
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 0.8em;
+}
+
+/* ==========================================================================
+   BUTTONS & FORM ELEMENTS
+   ========================================================================== */
+
+/* Primary Buttons */
+.button-primary {
+    background: var(--hot-news-gradient);
+    border-color: var(--hot-news-primary-dark);
+    text-shadow: none;
+    box-shadow: 0 3px 6px rgba(214, 51, 132, 0.3);
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.button-primary:hover,
+.button-primary:focus {
+    background: linear-gradient(135deg, var(--hot-news-primary-dark) 0%, var(--hot-news-primary) 100%);
+    border-color: var(--hot-news-primary-dark);
+    box-shadow: 0 5px 12px rgba(214, 51, 132, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Secondary Buttons */
+.button-secondary {
+    border: 2px solid var(--hot-news-primary);
+    color: var(--hot-news-primary);
+    background: transparent;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.button-secondary:hover,
+.button-secondary:focus {
+    background: var(--hot-news-primary);
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+/* Links */
+.wp-admin a {
+    color: var(--hot-news-primary);
+    transition: color 0.3s ease;
+}
+
+.wp-admin a:hover,
+.wp-admin a:active,
+.wp-admin a:focus {
+    color: var(--hot-news-primary-dark);
+}
+
+/* Form Inputs */
+.wp-admin input[type="text"]:focus,
+.wp-admin input[type="email"]:focus,
+.wp-admin input[type="url"]:focus,
+.wp-admin input[type="password"]:focus,
+.wp-admin input[type="number"]:focus,
+.wp-admin textarea:focus,
+.wp-admin select:focus {
+    border-color: var(--hot-news-primary);
+    box-shadow: 0 0 0 2px rgba(214, 51, 132, 0.2);
+    outline: none;
+}
+
+/* ==========================================================================
+   DASHBOARD WIDGETS
+   ========================================================================== */
+
+.postbox {
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.postbox:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.postbox .hndle {
+    background: var(--hot-news-gradient);
+    color: #fff;
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    padding: 15px 20px;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.postbox .inside {
+    padding: 20px;
+}
+
+/* Custom Dashboard Widget */
+#hot-news-dashboard-widget .hot-news-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+#hot-news-dashboard-widget .stat-card {
+    background: var(--hot-news-gradient);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(214, 51, 132, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+#hot-news-dashboard-widget .stat-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+#hot-news-dashboard-widget .stat-card:hover::before {
+    opacity: 1;
+}
+
+#hot-news-dashboard-widget .stat-card:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 8px 20px rgba(214, 51, 132, 0.4);
+}
+
+#hot-news-dashboard-widget .stat-number {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#hot-news-dashboard-widget .stat-label {
+    font-size: 13px;
+    opacity: 0.9;
+    font-weight: 500;
+}
+
+/* ==========================================================================
+   NOTIFICATIONS & ALERTS
+   ========================================================================== */
+
+.notice.notice-success,
+.notice.updated {
+    border-left-color: var(--hot-news-success);
+    background: #d1e7dd;
+    border-radius: 6px;
+    border-left-width: 4px;
+}
+
+.notice.notice-warning {
+    border-left-color: var(--hot-news-warning);
+    background: #fff3cd;
+    border-radius: 6px;
+    border-left-width: 4px;
+}
+
+.notice.notice-error {
+    border-left-color: var(--hot-news-danger);
+    background: #f8d7da;
+    border-radius: 6px;
+    border-left-width: 4px;
+}
+
+.notice.notice-info {
+    border-left-color: var(--hot-news-info);
+    background: #d1ecf1;
+    border-radius: 6px;
+    border-left-width: 4px;
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+
+@media screen and (max-width: 782px) {
+    #adminmenu {
+        background: var(--hot-news-primary);
+    }
+    
+    #adminmenu a.menu-top:focus {
+        background: var(--hot-news-primary-dark);
+    }
+    
+    #adminmenu li.current a.menu-top {
+        border-radius: 0;
+        margin-right: 0;
+        box-shadow: inset 0 4px 0 var(--hot-news-secondary);
+    }
+    
+    #hot-news-dashboard-widget .hot-news-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ==========================================================================
+   MEDIA LIBRARY ENHANCEMENTS
+   ========================================================================== */
+
+.media-frame-title h1 {
+    color: var(--hot-news-primary);
+}
+
+.media-menu .media-menu-item.active {
+    background: var(--hot-news-primary);
+    color: #fff;
+}
+
+.attachments-browser .media-toolbar {
+    background: var(--hot-news-light);
+}
+
+/* ==========================================================================
+   POST EDITOR ENHANCEMENTS
+   ========================================================================== */
+
+.edit-post-header {
+    background: var(--hot-news-light);
+    border-bottom: 2px solid var(--hot-news-primary);
+}
+
+/* Classic Editor */
+#titlediv #title {
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 15px;
+    font-size: 18px;
+}
+
+#titlediv #title:focus {
+    border-color: var(--hot-news-primary);
+    box-shadow: 0 0 0 2px rgba(214, 51, 132, 0.2);
+}
+
+/* ==========================================================================
+   FOOTER CUSTOMIZATION
+   ========================================================================== */
+
+#wpfooter {
+    color: var(--hot-news-primary);
+    font-weight: 500;
+}
+
+#wpfooter a {
+    color: var(--hot-news-primary);
+    font-weight: 600;
+}
+
+#wpfooter a:hover {
+    color: var(--hot-news-primary-dark);
+}
+
+/* ==========================================================================
+   LOADING & ANIMATION EFFECTS
+   ========================================================================== */
+
+@keyframes hotNewsGlow {
+    0%, 100% { 
+        box-shadow: 0 0 5px rgba(214, 51, 132, 0.3); 
+    }
+    50% { 
+        box-shadow: 0 0 20px rgba(214, 51, 132, 0.6), 0 0 30px rgba(214, 51, 132, 0.4); 
+    }
+}
+
+.button-primary.loading,
+.button-primary:active {
+    animation: hotNewsGlow 1.5s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   ACCESSIBILITY IMPROVEMENTS
+   ========================================================================== */
+
+.wp-admin *:focus {
+    outline: 2px solid var(--hot-news-primary);
+    outline-offset: 2px;
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    :root {
+        --hot-news-primary: #b02a5b;
+        --hot-news-primary-dark: #8b1538;
+    }
+}

@@ -1,0 +1,489 @@
+/**
+ * Hot News WordPress Login Page Custom Styling
+ * Modern login page with brand colors and beautiful design
+ */
+
+/* ==========================================================================
+   LOGIN PAGE BACKGROUND & LAYOUT
+   ========================================================================== */
+
+body.login {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #d63384 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Animated Background Pattern */
+body.login::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: 
+        radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.1) 0%, transparent 25%),
+        radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.05) 0%, transparent 25%);
+    background-size: 400px 400px;
+    animation: backgroundMove 20s ease-in-out infinite;
+    z-index: -1;
+}
+
+@keyframes backgroundMove {
+    0%, 100% {
+        background-position: 0% 0%, 100% 100%;
+    }
+    50% {
+        background-position: 100% 100%, 0% 0%;
+    }
+}
+
+/* Login Container */
+.login #login {
+    padding: 5% 0 0;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* ==========================================================================
+   LOGIN FORM STYLING
+   ========================================================================== */
+
+.login form {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    box-shadow: 
+        0 25px 50px rgba(0, 0, 0, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+    padding: 50px 40px 40px;
+    border: none;
+    margin-bottom: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.login form::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, #d63384, transparent);
+    animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+}
+
+.login form:hover {
+    transform: translateY(-5px);
+    box-shadow: 
+        0 30px 60px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.3) inset;
+}
+
+/* ==========================================================================
+   LOGO STYLING
+   ========================================================================== */
+
+.login h1 {
+    margin-bottom: 30px;
+}
+
+.login h1 a {
+    background-image: url('../../assets/images/logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 250px;
+    height: 90px;
+    margin: 0 auto;
+    display: block;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2));
+    transition: all 0.3s ease;
+}
+
+.login h1 a:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.3));
+}
+
+/* ==========================================================================
+   FORM INPUTS STYLING
+   ========================================================================== */
+
+.login form .input,
+.login input[type="text"],
+.login input[type="password"],
+.login input[type="email"] {
+    background: rgba(248, 249, 250, 0.9);
+    border: 2px solid rgba(233, 236, 239, 0.7);
+    border-radius: 12px;
+    padding: 16px 20px;
+    font-size: 16px;
+    line-height: 1.4;
+    color: #495057;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.login form .input:focus,
+.login input[type="text"]:focus,
+.login input[type="password"]:focus,
+.login input[type="email"]:focus {
+    background: rgba(255, 255, 255, 0.95);
+    border-color: #d63384;
+    box-shadow: 
+        0 0 0 4px rgba(214, 51, 132, 0.2),
+        inset 0 2px 4px rgba(0, 0, 0, 0.1);
+    outline: none;
+    transform: translateY(-2px);
+}
+
+/* Input Labels */
+.login form .forgetmenot label,
+.login form p label {
+    color: #495057;
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 8px;
+    display: block;
+}
+
+/* Remember Me Checkbox */
+.login .forgetmenot {
+    margin: 20px 0;
+}
+
+.login .forgetmenot input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 8px;
+    accent-color: #d63384;
+}
+
+/* ==========================================================================
+   SUBMIT BUTTON STYLING
+   ========================================================================== */
+
+.login .button-primary {
+    background: linear-gradient(135deg, #d63384 0%, #b02a5b 100%);
+    border: none;
+    border-radius: 12px;
+    padding: 16px 32px;
+    font-size: 16px;
+    font-weight: 700;
+    text-shadow: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 
+        0 8px 20px rgba(214, 51, 132, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+    transition: all 0.3s ease;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.login .button-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.login .button-primary:hover,
+.login .button-primary:focus {
+    background: linear-gradient(135deg, #b02a5b 0%, #8b1538 100%);
+    transform: translateY(-3px);
+    box-shadow: 
+        0 12px 30px rgba(214, 51, 132, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.3) inset;
+}
+
+.login .button-primary:hover::before {
+    left: 100%;
+}
+
+.login .button-primary:active {
+    transform: translateY(-1px);
+    box-shadow: 
+        0 6px 15px rgba(214, 51, 132, 0.6),
+        0 0 0 1px rgba(255, 255, 255, 0.2) inset;
+}
+
+/* Loading State */
+.login .button-primary.loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+.login .button-primary.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    width: 20px;
+    height: 20px;
+    margin-top: -10px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top: 2px solid #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   NAVIGATION LINKS
+   ========================================================================== */
+
+.login #nav,
+.login #backtoblog {
+    text-align: center;
+    margin: 15px 0;
+}
+
+.login #nav a,
+.login #backtoblog a {
+    color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    padding: 8px 16px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: inline-block;
+    margin: 5px;
+    transition: all 0.3s ease;
+}
+
+.login #nav a:hover,
+.login #backtoblog a:hover {
+    color: #fff;
+    background: rgba(253, 126, 20, 0.9);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(253, 126, 20, 0.4);
+}
+
+/* ==========================================================================
+   MESSAGE & ERROR STYLING
+   ========================================================================== */
+
+.login .message {
+    background: rgba(212, 237, 218, 0.95);
+    border: 1px solid rgba(25, 135, 84, 0.3);
+    color: #0f5132;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(25, 135, 84, 0.2);
+}
+
+.login #login_error {
+    background: rgba(248, 215, 218, 0.95);
+    border: 1px solid rgba(220, 53, 69, 0.3);
+    color: #842029;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.2);
+}
+
+.login .success {
+    background: rgba(212, 237, 218, 0.95);
+    border: 1px solid rgba(25, 135, 84, 0.3);
+    color: #0f5132;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(25, 135, 84, 0.2);
+}
+
+/* ==========================================================================
+   PRIVACY POLICY LINK
+   ========================================================================== */
+
+.privacy-policy-page-link {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.privacy-policy-page-link a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.privacy-policy-page-link a:hover {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+
+@media screen and (max-width: 768px) {
+    body.login {
+        padding: 20px;
+    }
+    
+    .login #login {
+        padding: 0;
+    }
+    
+    .login form {
+        padding: 40px 30px 30px;
+        border-radius: 15px;
+    }
+    
+    .login h1 a {
+        width: 200px;
+        height: 70px;
+    }
+    
+    .login form .input,
+    .login input[type="text"],
+    .login input[type="password"],
+    .login input[type="email"] {
+        padding: 14px 16px;
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+    
+    .login .button-primary {
+        padding: 14px 24px;
+        font-size: 15px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .login form {
+        padding: 30px 20px 20px;
+        margin: 10px;
+    }
+    
+    .login h1 a {
+        width: 180px;
+        height: 60px;
+    }
+    
+    .login #nav a,
+    .login #backtoblog a {
+        display: block;
+        margin: 8px 0;
+    }
+}
+
+/* ==========================================================================
+   ACCESSIBILITY IMPROVEMENTS
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    body.login::before {
+        animation: none;
+    }
+}
+
+/* High contrast mode */
+@media (prefers-contrast: high) {
+    .login form {
+        background: #fff;
+        border: 2px solid #000;
+    }
+    
+    .login form .input:focus,
+    .login input:focus {
+        border-color: #000;
+        box-shadow: 0 0 0 2px #000;
+    }
+    
+    .login .button-primary {
+        background: #000;
+        color: #fff;
+    }
+}
+
+/* ==========================================================================
+   FLOATING ELEMENTS ANIMATION
+   ========================================================================== */
+
+@keyframes float1 {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    33% { transform: translateY(-20px) rotate(5deg); }
+    66% { transform: translateY(-10px) rotate(-5deg); }
+}
+
+@keyframes float2 {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    33% { transform: translateY(-15px) rotate(-3deg); }
+    66% { transform: translateY(-25px) rotate(3deg); }
+}
+
+body.login::after {
+    content: '🔥';
+    position: fixed;
+    top: 15%;
+    right: 15%;
+    font-size: 60px;
+    opacity: 0.1;
+    animation: float1 6s ease-in-out infinite;
+    z-index: -1;
+}
+
+/* Additional decorative elements */
+.login #login::before {
+    content: '📰';
+    position: absolute;
+    top: -50px;
+    right: -30px;
+    font-size: 40px;
+    opacity: 0.1;
+    animation: float2 8s ease-in-out infinite;
+}
+
+.login #login::after {
+    content: '⚡';
+    position: absolute;
+    bottom: -30px;
+    left: -20px;
+    font-size: 35px;
+    opacity: 0.1;
+    animation: float1 7s ease-in-out infinite reverse;
+}

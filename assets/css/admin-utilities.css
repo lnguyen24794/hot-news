@@ -1,0 +1,329 @@
+/**
+ * Hot News Admin Utilities
+ * Additional utility classes and enhancements for WordPress admin
+ */
+
+/* ==========================================================================
+   UTILITY CLASSES
+   ========================================================================== */
+
+/* Hot News Brand Colors as Utilities */
+.hot-news-bg-primary { background-color: #d63384 !important; }
+.hot-news-bg-secondary { background-color: #fd7e14 !important; }
+.hot-news-bg-success { background-color: #198754 !important; }
+.hot-news-bg-danger { background-color: #dc3545 !important; }
+.hot-news-bg-warning { background-color: #ffc107 !important; }
+.hot-news-bg-info { background-color: #0dcaf0 !important; }
+
+.hot-news-text-primary { color: #d63384 !important; }
+.hot-news-text-secondary { color: #fd7e14 !important; }
+.hot-news-text-success { color: #198754 !important; }
+.hot-news-text-danger { color: #dc3545 !important; }
+.hot-news-text-warning { color: #ffc107 !important; }
+.hot-news-text-info { color: #0dcaf0 !important; }
+
+/* Gradient Utilities */
+.hot-news-gradient-primary {
+    background: linear-gradient(135deg, #d63384 0%, #b02a5b 100%) !important;
+}
+
+.hot-news-gradient-secondary {
+    background: linear-gradient(135deg, #fd7e14 0%, #e55a00 100%) !important;
+}
+
+/* ==========================================================================
+   ENHANCED TABLE STYLING
+   ========================================================================== */
+
+.wp-list-table.striped > tbody > :nth-child(odd) {
+    background-color: rgba(214, 51, 132, 0.05);
+}
+
+.wp-list-table th,
+.wp-list-table td {
+    border-bottom: 1px solid rgba(214, 51, 132, 0.1);
+}
+
+.wp-list-table th {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    color: #d63384;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
+   METABOX ENHANCEMENTS
+   ========================================================================== */
+
+.postbox h3.hndle,
+.postbox .handlediv {
+    background: linear-gradient(135deg, #d63384 0%, #b02a5b 100%);
+    color: #fff;
+}
+
+.postbox .handlediv {
+    color: #fff;
+}
+
+.postbox .inside {
+    border-top: 3px solid #fd7e14;
+}
+
+/* ==========================================================================
+   FORM ENHANCEMENTS
+   ========================================================================== */
+
+/* Custom checkbox styling */
+.wp-admin input[type="checkbox"]:checked::before {
+    color: #d63384;
+}
+
+/* Custom radio button styling */
+.wp-admin input[type="radio"]:checked::before {
+    background: #d63384;
+}
+
+/* Select dropdown styling */
+.wp-admin select {
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+.wp-admin select:focus {
+    border-color: #d63384;
+    box-shadow: 0 0 0 2px rgba(214, 51, 132, 0.2);
+    outline: none;
+}
+
+/* ==========================================================================
+   MEDIA UPLOADER CUSTOMIZATION
+   ========================================================================== */
+
+.media-modal .media-frame-title {
+    background: linear-gradient(135deg, #d63384 0%, #b02a5b 100%);
+    color: #fff;
+}
+
+.media-modal .media-frame-router .media-router-item.active {
+    border-bottom-color: #d63384;
+    color: #d63384;
+}
+
+.media-modal .attachments-browser .media-toolbar-primary .button-primary {
+    background: #d63384;
+    border-color: #b02a5b;
+}
+
+/* ==========================================================================
+   PLUGIN SPECIFIC STYLING
+   ========================================================================== */
+
+/* Gutenberg Editor Enhancements */
+.block-editor-page .edit-post-header {
+    border-bottom: 3px solid #d63384;
+}
+
+.block-editor-page .components-button.is-primary {
+    background: #d63384;
+    border-color: #b02a5b;
+}
+
+/* Classic Editor TinyMCE */
+.mce-toolbar .mce-btn.mce-active,
+.mce-toolbar .mce-btn:hover {
+    background: rgba(214, 51, 132, 0.1);
+    border-color: #d63384;
+}
+
+/* ==========================================================================
+   CUSTOM ADMIN NOTIFICATIONS
+   ========================================================================== */
+
+.hot-news-notice {
+    position: relative;
+    padding: 15px 20px;
+    margin: 15px 0;
+    border-radius: 8px;
+    border-left: 4px solid;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.hot-news-notice.success {
+    background: #d4edda;
+    border-left-color: #198754;
+    color: #0f5132;
+}
+
+.hot-news-notice.error {
+    background: #f8d7da;
+    border-left-color: #dc3545;
+    color: #842029;
+}
+
+.hot-news-notice.warning {
+    background: #fff3cd;
+    border-left-color: #ffc107;
+    color: #664d03;
+}
+
+.hot-news-notice.info {
+    background: #d1ecf1;
+    border-left-color: #0dcaf0;
+    color: #055160;
+}
+
+/* ==========================================================================
+   LOADING STATES
+   ========================================================================== */
+
+.hot-news-loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.hot-news-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #d63384;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: hotNewsSpinner 1s linear infinite;
+}
+
+@keyframes hotNewsSpinner {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   RESPONSIVE UTILITIES
+   ========================================================================== */
+
+@media screen and (max-width: 782px) {
+    .hot-news-hide-mobile {
+        display: none !important;
+    }
+    
+    .hot-news-full-width-mobile {
+        width: 100% !important;
+        margin: 0 !important;
+    }
+}
+
+@media screen and (min-width: 783px) {
+    .hot-news-hide-desktop {
+        display: none !important;
+    }
+}
+
+/* ==========================================================================
+   ACCESSIBILITY ENHANCEMENTS
+   ========================================================================== */
+
+.hot-news-sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Focus indicators */
+.wp-admin .hot-news-focus:focus {
+    outline: 2px solid #d63384;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(214, 51, 132, 0.3);
+}
+
+/* ==========================================================================
+   ANIMATION UTILITIES
+   ========================================================================== */
+
+.hot-news-fade-in {
+    animation: hotNewsFadeIn 0.5s ease-in-out;
+}
+
+.hot-news-slide-up {
+    animation: hotNewsSlideUp 0.3s ease-out;
+}
+
+.hot-news-bounce {
+    animation: hotNewsBounce 0.6s ease-in-out;
+}
+
+@keyframes hotNewsFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes hotNewsSlideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes hotNewsBounce {
+    0%, 20%, 53%, 80%, 100% { transform: translate3d(0, 0, 0); }
+    40%, 43% { transform: translate3d(0, -8px, 0); }
+    70% { transform: translate3d(0, -4px, 0); }
+    90% { transform: translate3d(0, -2px, 0); }
+}
+
+/* ==========================================================================
+   PRINT STYLES
+   ========================================================================== */
+
+@media print {
+    .hot-news-no-print {
+        display: none !important;
+    }
+    
+    .postbox {
+        border: 1px solid #000 !important;
+        box-shadow: none !important;
+    }
+    
+    .button,
+    .button-primary,
+    .button-secondary {
+        background: #fff !important;
+        color: #000 !important;
+        border: 1px solid #000 !important;
+    }
+}
+
+/* ==========================================================================
+   DARK MODE SUPPORT (for future WordPress versions)
+   ========================================================================== */
+
+@media (prefers-color-scheme: dark) {
+    .hot-news-auto-dark {
+        background: #1a1a1a;
+        color: #e0e0e0;
+    }
+    
+    .hot-news-auto-dark .postbox {
+        background: #2d2d2d;
+        border-color: #444;
+    }
+    
+    .hot-news-auto-dark input,
+    .hot-news-auto-dark textarea,
+    .hot-news-auto-dark select {
+        background: #333;
+        color: #e0e0e0;
+        border-color: #555;
+    }
+}

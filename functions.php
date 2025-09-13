@@ -230,6 +230,11 @@ require HOT_NEWS_INC_DIR . '/customizer.php';
 require HOT_NEWS_INC_DIR . '/admin/theme-options.php';
 
 /**
+ * WordPress Admin Styling Customization.
+ */
+require HOT_NEWS_INC_DIR . '/admin/admin-styling.php';
+
+/**
  * Load view template with arguments
  *
  * @param string $template_path Path to template file
