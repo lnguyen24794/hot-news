@@ -75,7 +75,7 @@ endif; ?>
     <div class="brand">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-lg-2 col-md-4">
+                <div class="col-lg-2 col-md-4 col-sm-4 col-3">
                     <div class="b-logo">
                         <?php
 if (has_custom_logo()) {
@@ -95,7 +95,7 @@ if (has_custom_logo()) {
 ?>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-4">
+                <div class="col-lg-8 col-md-6 col-9">
                     <div class="b-ads">
                         <?php
                         // Hiển thị Google AdSense Header Ad hoặc fallback sang customizer
