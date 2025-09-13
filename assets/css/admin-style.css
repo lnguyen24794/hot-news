@@ -5,8 +5,8 @@
 
 /* CSS Variables for Brand Colors */
 :root {
-    --hot-news-primary: #d63384;
-    --hot-news-primary-dark: #b02a5b;
+    --hot-news-primary: #e96464;
+    --hot-news-primary-dark: #871010;
     --hot-news-primary-light: #f8d7da;
     --hot-news-secondary: #fd7e14;
     --hot-news-success: #198754;
@@ -469,7 +469,7 @@
 /* High contrast mode */
 @media (prefers-contrast: high) {
     :root {
-        --hot-news-primary: #b02a5b;
-        --hot-news-primary-dark: #8b1538;
+        --hot-news-primary: #e96464;
+        --hot-news-primary-dark: #871010;
     }
 }

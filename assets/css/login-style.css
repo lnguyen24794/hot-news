@@ -175,7 +175,7 @@ body.login::before {
    ========================================================================== */
 
 .login .button-primary {
-    background: linear-gradient(135deg, #d63384 0%, #b02a5b 100%);
+    background: linear-gradient(135deg, #d63351 0%, #b02a2a 100%);
     border: none;
     border-radius: 12px;
     padding: 16px 32px;

@@ -80,8 +80,8 @@ class Hot_News_Admin_Styling
         <style>
         /* Hot News Admin Theme Colors */
         :root {
-            --hot-news-primary: #d63384;
-            --hot-news-primary-dark: #b02a5b;
+            --hot-news-primary: #e96464;
+            --hot-news-primary-dark: #871010;
             --hot-news-secondary: #fd7e14;
             --hot-news-success: #198754;
             --hot-news-danger: #dc3545;
@@ -332,7 +332,6 @@ class Hot_News_Admin_Styling
         }
 
         .login .button-primary {
-            background: linear-gradient(135deg, #d63384 0%, #b02a5b 100%);
             border: none;
             border-radius: 8px;
             padding: 12px 24px;

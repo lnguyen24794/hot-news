@@ -59,7 +59,7 @@
 
 .postbox h3.hndle,
 .postbox .handlediv {
-    background: linear-gradient(135deg, #d63384 0%, #b02a5b 100%);
+    background: linear-gradient(135deg, #d63351 0%, #b02a2a 100%);
     color: #fff;
 }
 
@@ -103,7 +103,7 @@
    ========================================================================== */
 
 .media-modal .media-frame-title {
-    background: linear-gradient(135deg, #d63384 0%, #b02a5b 100%);
+    background: linear-gradient(135deg, #d63351 0%, #b02a2a 100%);
     color: #fff;
 }
 
