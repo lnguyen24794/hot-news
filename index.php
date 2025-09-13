@@ -16,311 +16,152 @@ get_header();
 <main id="primary" class="site-main">
 
     <?php if (is_home() && !is_paged()) : ?>
-        <!-- Top News Start-->
-        <div class="top-news">
+        <!-- 3 Column Layout: Hot News (7) | Popular News (2) | Ads (3) -->
+        <div class="homepage-layout">
             <div class="container">
-                <div class="row">
-                    <div class="col-md-6 tn-left">
-                        <div class="row tn-slider">
-                            <?php
-                            $featured_posts = hot_news_get_featured_posts(2);
-        foreach ($featured_posts as $post) :
-            setup_postdata($post);
-            ?>
-                                <div class="col-md-6">
-                                    <div class="tn-img">
-                                        <?php if (has_post_thumbnail()) : ?>
-                                            <?php the_post_thumbnail('news-large'); ?>
-                                        <?php else : ?>
-                                            <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/news-450x350-1.jpg'); ?>" alt="<?php the_title_attribute(); ?>">
-                                        <?php endif; ?>
-                                        <div class="tn-title">
-                                            <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+                <div class="row mt-5">
+                    <!-- Left Column: Hot News (7/12) -->
+                    <div class="col-lg-6">
+                        <div class="hot-news-section">
+                            
+                            <!-- Featured Hot News -->
+                            <div class="featured-hot-news mb-4">
+                                <?php
+                                    $hot_posts = hot_news_get_hot_posts(6);
+                                    if (empty($hot_posts)) {
+                                        $hot_posts = get_posts(array(
+                                            'posts_per_page' => 1,
+                                            'post_status' => 'publish',
+                                        ));
+                                    }
+                                    if (!empty($hot_posts)) :
+                                        $post = $hot_posts[0];
+                                        setup_postdata($post);
+                                        ?>
+                                    <?php loadView(get_template_directory() . '/home/vertical-item.php', ['is_main' => true]); ?>
+                                <?php
+                                    wp_reset_postdata();
+                                endif;
+                                ?>
+                            </div>
+
+                            <!-- More Hot News -->
+                            <div class="more-hot-news">
+                                <div class="row">
+                                    <?php
+                                    
+                                    foreach ($hot_posts as $key => $post) :
+                                        if ($key == 0) {
+                                            continue;
+                                        }
+                                        setup_postdata($post);
+                                        ?>
+                                        <div class="col-md-6 mb-3">
+                                            <?php loadView(get_template_directory() . '/home/vertical-item.php', ['is_main' => false]); ?>
                                         </div>
-                                    </div>
+                                    <?php endforeach;
+                                        wp_reset_postdata(); ?>
                                 </div>
-                            <?php endforeach;
-wp_reset_postdata(); ?>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-6 tn-right">
-                        <div class="row">
-                            <?php
-$hot_posts = hot_news_get_hot_posts(4);
-if (empty($hot_posts)) {
-    $hot_posts = get_posts(array(
-        'posts_per_page' => 4,
-        'post_status' => 'publish'
-    ));
-}
-foreach ($hot_posts as $post) :
-    setup_postdata($post);
-    ?>
-                                <div class="col-md-6">
-                                    <div class="tn-img">
-                                        <?php if (has_post_thumbnail()) : ?>
-                                            <?php the_post_thumbnail('news-medium'); ?>
-                                        <?php else : ?>
-                                            <img  style="max-height: 200px; height: 200px;" src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/news-350x223-' . ((array_search($post, $hot_posts) % 5) + 1) . '.jpg'); ?>" alt="<?php the_title_attribute(); ?>">
-                                        <?php endif; ?>
-                                        <div class="tn-title">
-                                            <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+
+                    <!-- Middle Column: Popular News (3/12) -->
+                    <div class="col-lg-3">
+                        <div class="popular-news-section">
+                            <div>
+                                <?php
+                                    $popular_posts = hot_news_get_popular_posts(8);
+                                    if (empty($popular_posts)) {
+                                        $popular_posts = get_posts(array(
+                                            'posts_per_page' => 8,
+                                            'post_status' => 'publish',
+                                            'meta_key' => '_post_views',
+                                            'orderby' => 'meta_value_num',
+                                            'order' => 'DESC'
+                                        ));
+                                    }
+                                    if (!empty($popular_posts)) :
+                                        $post = $popular_posts[0];
+                                        setup_postdata($post);
+                                        ?>
+                                    <?php loadView(get_template_directory() . '/home/vertical-item.php', ['is_main' => false]); ?>
+                                <?php
+                                    wp_reset_postdata();
+                                endif;
+                                ?>
+                            </div>
+                            <div class="popular-news-list">
+                                <?php
+                                foreach ($popular_posts as $key => $post) :
+                                    if ($key == 0) {
+                                        continue;
+                                    }
+                                    setup_postdata($post);
+                                    ?>
+                                      <?php loadView(get_template_directory() . '/home/horizontal-item.php', ['is_main' => false]); ?>
+                                <?php endforeach;
+                                wp_reset_postdata(); ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Advertisements (3/12) -->
+                    <div class="col-lg-3">
+                        <div class="ads-section">
+                            <!-- Ad Banner 1 -->
+                            <div class="ad-banner mb-4">
+                                <div class="ad-label">Quảng cáo</div>
+                                <?php
+                                    hot_news_display_ad(
+                                        'homepage_ad_1',
+                                        '<a href="#" target="_blank" rel="noopener">
+                                                                            <img src="' . esc_url(get_template_directory_uri() . '/assets/images/ads-1.jpg') . '" 
+                                                                                alt="Quảng cáo 1" class="img-fluid">
+                                                                        </a>'
+                                    );
+                                    ?>
+                            </div>
+
+                            <!-- Ad Banner 2 -->
+                            <div class="ad-banner mb-4">
+                                <div class="ad-label">Quảng cáo</div>
+                                <?php
+                                hot_news_display_ad(
+                                    'homepage_ad_2',
+                                    '<a href="#" target="_blank" rel="noopener">
+                                                                        <img src="' . esc_url(get_template_directory_uri() . '/assets/images/ads-2.jpg') . '" 
+                                                                            alt="Quảng cáo 2" class="img-fluid">
+                                                                    </a>'
+                                );
+                                ?>
+                            </div>
+
+                            <!-- Newsletter Signup -->
+                            <div class="newsletter-widget">
+                                <div class="widget-card">
+                                    <h5 class="widget-title">
+                                        <i class="fas fa-envelope"></i> Đăng ký nhận tin
+                                    </h5>
+                                    <p>Nhận tin tức mới nhất</p>
+                                    <form class="newsletter-form" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post">
+                                        <input type="hidden" name="action" value="hot_news_newsletter_signup">
+                                        <?php wp_nonce_field('hot_news_advertisement_nonce', 'newsletter_nonce'); ?>
+                                        <div class="form-group">
+                                            <input type="email" name="newsletter_email" class="form-control" 
+                                                   placeholder="Email của bạn..." required>
                                         </div>
-                                    </div>
+                                        <button class="btn btn-primary btn-block" type="submit">
+                                            Đăng ký <i class="fas fa-paper-plane"></i>
+                                        </button>
+                                    </form>
                                 </div>
-                            <?php endforeach;
-wp_reset_postdata(); ?>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- Top News End-->
-
-        <!-- Category News Start-->
-        <?php
-        // Get top categories with posts
-        $categories = get_categories(array(
-            'orderby' => 'count',
-            'order' => 'DESC',
-            'number' => 4,
-            'hide_empty' => true
-        ));
-
-if ($categories) :
-    $category_count = 0;
-    foreach ($categories as $category) :
-        $category_posts = get_posts(array(
-            'category' => $category->term_id,
-            'posts_per_page' => 3,
-            'post_status' => 'publish'
-        ));
-
-        if (empty($category_posts)) {
-            continue;
-        }
-
-        if ($category_count % 2 == 0) {
-            echo '<div class="cat-news"><div class="container"><div class="row">';
-        }
-        ?>
-                
-                <div class="col-md-6">
-                    <h2><?php echo esc_html($category->name); ?></h2>
-                    <div class="row cn-slider">
-                        <?php foreach ($category_posts as $post) :
-                            setup_postdata($post); ?>
-                            <div class="col-md-6">
-                                <div class="cn-img">
-                                    <?php if (has_post_thumbnail()) : ?>
-                                        <?php the_post_thumbnail('news-medium'); ?>
-                                    <?php else : ?>
-                                        <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/news-350x223-' . ((array_search($post, $category_posts) % 5) + 1) . '.jpg'); ?>" alt="<?php the_title_attribute(); ?>">
-                                    <?php endif; ?>
-                                    <div class="cn-title">
-                                        <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php endforeach;
-        wp_reset_postdata(); ?>
-                    </div>
-                </div>
-                
-                <?php
-                $category_count++;
-        if ($category_count % 2 == 0) {
-            echo '</div></div></div>';
-        }
-
-        // Limit to 4 categories for homepage
-        if ($category_count >= 4) {
-            break;
-        }
-    endforeach;
-
-// Close the last row if odd number of categories
-if ($category_count % 2 == 1) {
-    echo '</div></div></div>';
-}
-endif;
-?>
-        <!-- Category News End-->
-        
-        <!-- Tab News Start-->
-        <div class="tab-news">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-6">
-                        <ul class="nav nav-pills nav-justified">
-                            <li class="nav-item">
-                                <a class="nav-link active" data-toggle="pill" href="#featured">Tin Nổi Bật</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-toggle="pill" href="#popular">Phổ Biến</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" data-toggle="pill" href="#latest">Mới Nhất</a>
-                            </li>
-                        </ul>
-
-                        <div class="tab-content">
-                            <div id="featured" class="container tab-pane active">
-                                <?php
-                        $featured_posts = hot_news_get_featured_posts(3);
-foreach ($featured_posts as $post) :
-    setup_postdata($post);
-    ?>
-                                <div class="tn-news">
-                                    <div class="tn-img">
-                                        <?php if (has_post_thumbnail()) : ?>
-                                            <?php the_post_thumbnail('news-medium'); ?>
-                                        <?php else : ?>
-                                            <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/news-350x223-1.jpg'); ?>" alt="<?php the_title_attribute(); ?>">
-                                        <?php endif; ?>
-                                    </div>
-                                    <div class="tn-title">
-                                        <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                                    </div>
-                                </div>
-                                <?php endforeach;
-wp_reset_postdata(); ?>
-                            </div>
-                            <div id="popular" class="container tab-pane fade">
-                                <?php
-$popular_posts = hot_news_get_popular_posts(3);
-foreach ($popular_posts as $post) :
-    setup_postdata($post);
-    ?>
-                                <div class="tn-news">
-                                    <div class="tn-img">
-                                        <?php if (has_post_thumbnail()) : ?>
-                                            <?php the_post_thumbnail('news-medium'); ?>
-                                        <?php else : ?>
-                                            <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/news-350x223-2.jpg'); ?>" alt="<?php the_title_attribute(); ?>">
-                                        <?php endif; ?>
-                                    </div>
-                                    <div class="tn-title">
-                                        <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                                    </div>
-                                </div>
-                                <?php endforeach;
-wp_reset_postdata(); ?>
-                            </div>
-                            <div id="latest" class="container tab-pane fade">
-                                <?php
-$latest_posts = get_posts(array('posts_per_page' => 3));
-foreach ($latest_posts as $post) :
-    setup_postdata($post);
-    ?>
-                                <div class="tn-news">
-                                    <div class="tn-img">
-                                        <?php if (has_post_thumbnail()) : ?>
-                                            <?php the_post_thumbnail('news-medium'); ?>
-                                        <?php else : ?>
-                                            <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/news-350x223-3.jpg'); ?>" alt="<?php the_title_attribute(); ?>">
-                                        <?php endif; ?>
-                                    </div>
-                                    <div class="tn-title">
-                                        <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                                    </div>
-                                </div>
-                                <?php endforeach;
-wp_reset_postdata(); ?>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="col-md-6">
-                         <!-- Google AdSense Tab News Ad -->
-                         <div class="ad-banner mb-4">
-                            <div class="ad-label">Quảng cáo</div>
-                            <?php
-                            hot_news_display_ad(
-                                'tab_news_ad_code',
-                                '<a href="#" target="_blank" rel="noopener">
-                                    <img src="' . esc_url(get_template_directory_uri() . '/assets/images/ads-1.jpg') . '" 
-                                            alt="Quảng cáo 1" class="img-fluid">
-                                </a>'
-                            );
-?>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Tab News End-->
-
-    <?php endif; ?>
-
-    <!-- Main News Start-->
-    <?php if (is_home() && !is_paged()) : ?>
-    <div class="main-news">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-9">
-                    <div class="row">
-                        <?php
-                        $main_posts = get_posts(array(
-'posts_per_page' => 9,
-'post_status' => 'publish',
-'meta_query' => array(
-'relation' => 'OR',
-array(
-    'key' => '_featured_post',
-    'compare' => 'NOT EXISTS'
-),
-array(
-    'key' => '_featured_post',
-    'value' => '1',
-    'compare' => '!='
-)
-)
-                        ));
-
-        foreach ($main_posts as $post) :
-            setup_postdata($post);
-            ?>
-                            <div class="col-md-4">
-                                <div class="mn-img">
-                                    <?php if (has_post_thumbnail()) : ?>
-                                        <?php the_post_thumbnail('news-medium'); ?>
-                                    <?php else : ?>
-                                        <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/news-350x223-' . ((array_search($post, $main_posts) % 5) + 1) . '.jpg'); ?>" alt="<?php the_title_attribute(); ?>">
-                                    <?php endif; ?>
-                                    <div class="mn-title">
-                                        <a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php endforeach;
-wp_reset_postdata(); ?>
-                    </div>
-                </div>
-
-                <div class="col-lg-3">
-                    <div class="mn-list">
-                        <h2>Đọc Thêm</h2>
-                        <ul>
-                            <?php
-    $read_more_posts = get_posts(array(
-        'posts_per_page' => 10,
-        'post_status' => 'publish',
-        'orderby' => 'rand'
-    ));
-
-foreach ($read_more_posts as $post) :
-    setup_postdata($post);
-    ?>
-                                <li><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></li>
-                            <?php endforeach;
-wp_reset_postdata(); ?>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <?php endif; ?>
     <!-- Main News End-->
 
@@ -400,10 +241,10 @@ wp_reset_postdata(); ?>
                             endwhile;
     endif;
 ?>
-                    </div>
-                    
-                    <div class="load-more-section text-center">
-                        <?php
+                                                </div>
+                                                
+                                                <div class="load-more-section text-center">
+                                                    <?php
 // Pagination with modern styling
 the_posts_pagination(array(
     'mid_size'  => 2,
@@ -421,13 +262,13 @@ the_posts_pagination(array(
                             <div class="ad-banner mb-4">
                                 <div class="ad-label">Quảng cáo</div>
                                 <?php
-                                hot_news_display_ad(
-                                    'sidebar_ad_code',
-                                    '<a href="#" target="_blank" rel="noopener">
+    hot_news_display_ad(
+        'sidebar_ad_code',
+        '<a href="#" target="_blank" rel="noopener">
                                         <img src="' . esc_url(get_template_directory_uri() . '/assets/images/ads-1.jpg') . '" 
                                              alt="Quảng cáo 1" class="img-fluid">
                                     </a>'
-                                );
+    );
 ?>
                             </div>
                             

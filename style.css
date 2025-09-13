@@ -1312,3 +1312,27 @@ a img.aligncenter {
         margin-bottom: 15px;
     }
 }
+
+.max-350 {
+    max-height: 350px !important;
+    overflow: hidden;
+}
+
+.max-160 {
+    max-height: 160px !important;
+    overflow: hidden;
+}
+
+.hot-news-title {
+    a {
+        color: black !important;
+        font-weight: 700;
+    }
+}
+.hot-news-sm-title {
+    a {
+        font-size: 12px !important;
+        color: black !important;
+        font-weight: 700;
+    }
+}

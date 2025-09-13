@@ -37,6 +37,7 @@ function hot_news_setup()
 
     // Set default thumbnail sizes
     set_post_thumbnail_size(825, 525, true); // Main news image
+    add_image_size('news-full', 'auto', 'auto', true); // Main news image
     add_image_size('news-large', 450, 350, true); // Large news thumbnail
     add_image_size('news-medium', 350, 200, true); // Medium news thumbnail
     add_image_size('news-small', 150, 100, true); // Small news thumbnail
@@ -375,6 +376,14 @@ function hot_news_get_hot_posts($limit = 5)
     );
 
     return get_posts($args);
+}
+
+/**
+ * Load view file
+ */
+function loadView($file, $data = []) {
+    extract($data); 
+    include $file;
 }
 
 /**
