@@ -75,7 +75,7 @@ endif; ?>
     <div class="brand">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-lg-3 col-md-4">
+                <div class="col-lg-2 col-md-4">
                     <div class="b-logo">
                         <?php
 if (has_custom_logo()) {
