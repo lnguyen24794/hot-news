@@ -48,6 +48,12 @@
     transition: transform 0.3s ease;
 }
 
+@media (max-width: 768px) {
+    .affiliate-popup-content {
+        left: 45%;
+    }
+}
+
 /* Close Button */
 .affiliate-close-btn {
     position: absolute;
