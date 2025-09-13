@@ -8,7 +8,7 @@
    ========================================================================== */
 
 body.login {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #d63384 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, var(--hot-news-primary) 100%);
     background-attachment: fixed;
     min-height: 100vh;
     position: relative;
@@ -73,7 +73,7 @@ body.login::before {
     left: -100%;
     width: 100%;
     height: 4px;
-    background: linear-gradient(90deg, transparent, #d63384, transparent);
+    background: linear-gradient(90deg, transparent, var(--hot-news-primary), transparent);
     animation: shimmer 2s infinite;
 }
 
@@ -140,7 +140,7 @@ body.login::before {
 .login input[type="password"]:focus,
 .login input[type="email"]:focus {
     background: rgba(255, 255, 255, 0.95);
-    border-color: #d63384;
+    border-color: var(--hot-news-primary);
     box-shadow: 
         0 0 0 4px rgba(214, 51, 132, 0.2),
         inset 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -167,7 +167,7 @@ body.login::before {
     width: 18px;
     height: 18px;
     margin-right: 8px;
-    accent-color: #d63384;
+    accent-color: var(--hot-news-primary);
 }
 
 /* ==========================================================================

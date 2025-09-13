@@ -257,7 +257,7 @@ class Hot_News_Affiliate_Manager
                         <strong>Modal delay:</strong> <?php echo get_option('hot_news_affiliate_modal_delay', 3000); ?>ms
                     </p>
                     <?php if ($active_affiliates == 0): ?>
-                    <p style="color: #d63384; font-weight: 600;">⚠️ Modal sẽ không hiển thị vì không có affiliate nào đang hoạt động!</p>
+                    <p style="color: var(--hot-news-primary); font-weight: 600;">⚠️ Modal sẽ không hiển thị vì không có affiliate nào đang hoạt động!</p>
                     <?php endif; ?>
                 </div>
                 <?php endif; ?>

@@ -326,7 +326,7 @@ class Hot_News_Admin_Styling
         .login input[type="password"]:focus,
         .login input[type="email"]:focus {
             background: #fff;
-            border-color: #d63384;
+            border-color: var(--hot-news-primary);
             box-shadow: 0 0 0 3px rgba(214, 51, 132, 0.1);
             outline: none;
         }
@@ -345,7 +345,7 @@ class Hot_News_Admin_Styling
 
         .login .button-primary:hover,
         .login .button-primary:focus {
-            background: linear-gradient(135deg, #b02a5b 0%, #d63384 100%);
+            background: linear-gradient(135deg, #b02a5b 0%, var(--hot-news-primary) 100%);
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(214, 51, 132, 0.5);
         }
@@ -385,7 +385,7 @@ class Hot_News_Admin_Styling
             right: 15px;
             width: 20px;
             height: 20px;
-            border: 2px solid #d63384;
+            border: 2px solid var(--hot-news-primary);
             border-top: 2px solid transparent;
             border-radius: 50%;
             animation: spin 1s linear infinite;
@@ -479,7 +479,7 @@ class Hot_News_Admin_Styling
         </div>
         
         <div style="padding: 15px; background: #f8f9fa; border-radius: 8px; margin-top: 15px;">
-            <h4 style="margin: 0 0 10px; color: #d63384;">
+            <h4 style="margin: 0 0 10px; color: var(--hot-news-primary);">
                 <i class="dashicons dashicons-admin-settings"></i> Cài đặt nhanh
             </h4>
             <p style="margin: 10px 0;">

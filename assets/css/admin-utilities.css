@@ -8,14 +8,14 @@
    ========================================================================== */
 
 /* Hot News Brand Colors as Utilities */
-.hot-news-bg-primary { background-color: #d63384 !important; }
+.hot-news-bg-primary { background-color: var(--hot-news-primary) !important; }
 .hot-news-bg-secondary { background-color: #fd7e14 !important; }
 .hot-news-bg-success { background-color: #198754 !important; }
 .hot-news-bg-danger { background-color: #dc3545 !important; }
 .hot-news-bg-warning { background-color: #ffc107 !important; }
 .hot-news-bg-info { background-color: #0dcaf0 !important; }
 
-.hot-news-text-primary { color: #d63384 !important; }
+.hot-news-text-primary { color: var(--hot-news-primary) !important; }
 .hot-news-text-secondary { color: #fd7e14 !important; }
 .hot-news-text-success { color: #198754 !important; }
 .hot-news-text-danger { color: #dc3545 !important; }
@@ -24,7 +24,7 @@
 
 /* Gradient Utilities */
 .hot-news-gradient-primary {
-    background: linear-gradient(135deg, #d63384 0%, #b02a5b 100%) !important;
+    background: linear-gradient(135deg, var(--hot-news-primary) 0%, #b02a5b 100%) !important;
 }
 
 .hot-news-gradient-secondary {
@@ -46,7 +46,7 @@
 
 .wp-list-table th {
     background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-    color: #d63384;
+    color: var(--hot-news-primary);
     font-weight: 700;
     text-transform: uppercase;
     font-size: 12px;
@@ -77,12 +77,12 @@
 
 /* Custom checkbox styling */
 .wp-admin input[type="checkbox"]:checked::before {
-    color: #d63384;
+    color: var(--hot-news-primary);
 }
 
 /* Custom radio button styling */
 .wp-admin input[type="radio"]:checked::before {
-    background: #d63384;
+    background: var(--hot-news-primary);
 }
 
 /* Select dropdown styling */
@@ -93,7 +93,7 @@
 }
 
 .wp-admin select:focus {
-    border-color: #d63384;
+    border-color: var(--hot-news-primary);
     box-shadow: 0 0 0 2px rgba(214, 51, 132, 0.2);
     outline: none;
 }
@@ -108,12 +108,12 @@
 }
 
 .media-modal .media-frame-router .media-router-item.active {
-    border-bottom-color: #d63384;
-    color: #d63384;
+    border-bottom-color: var(--hot-news-primary);
+    color: var(--hot-news-primary);
 }
 
 .media-modal .attachments-browser .media-toolbar-primary .button-primary {
-    background: #d63384;
+    background: var(--hot-news-primary);
     border-color: #b02a5b;
 }
 
@@ -123,11 +123,11 @@
 
 /* Gutenberg Editor Enhancements */
 .block-editor-page .edit-post-header {
-    border-bottom: 3px solid #d63384;
+    border-bottom: 3px solid var(--hot-news-primary);
 }
 
 .block-editor-page .components-button.is-primary {
-    background: #d63384;
+    background: var(--hot-news-primary);
     border-color: #b02a5b;
 }
 
@@ -135,7 +135,7 @@
 .mce-toolbar .mce-btn.mce-active,
 .mce-toolbar .mce-btn:hover {
     background: rgba(214, 51, 132, 0.1);
-    border-color: #d63384;
+    border-color: var(--hot-news-primary);
 }
 
 /* ==========================================================================
@@ -193,7 +193,7 @@
     width: 20px;
     height: 20px;
     margin: -10px 0 0 -10px;
-    border: 2px solid #d63384;
+    border: 2px solid var(--hot-news-primary);
     border-top: 2px solid transparent;
     border-radius: 50%;
     animation: hotNewsSpinner 1s linear infinite;
@@ -243,7 +243,7 @@
 
 /* Focus indicators */
 .wp-admin .hot-news-focus:focus {
-    outline: 2px solid #d63384;
+    outline: 2px solid var(--hot-news-primary);
     outline-offset: 2px;
     box-shadow: 0 0 0 4px rgba(214, 51, 132, 0.3);
 }
