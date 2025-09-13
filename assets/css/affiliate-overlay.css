@@ -297,9 +297,6 @@
 }
 
 @media (max-width: 480px) {
-    .affiliate-popup-content {
-        margin: 10px;
-    }
     
     .affiliate-image-container {
         height: 250px;
