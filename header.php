@@ -122,11 +122,6 @@ if (has_custom_logo()) {
 ?>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-4">
-                    <div class="b-search">
-                        <?php get_search_form(); ?>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
