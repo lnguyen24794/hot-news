@@ -30,9 +30,8 @@
                 <div class="col-md-6">
                     <div class="tb-contact">
                         <?php
-                        $sample_contact = hot_news_get_sample_data('contact');
-$contact_email = get_theme_mod('hot_news_contact_email', $sample_contact['email']);
-$contact_phone = get_theme_mod('hot_news_contact_phone', $sample_contact['phone']);
+$contact_email = hot_news_get_contact_info('email');
+$contact_phone = hot_news_get_contact_info('phone');
 
 if ($contact_email) : ?>
                             <p><i class="fas fa-envelope"></i><?php echo esc_html($contact_email); ?></p>
