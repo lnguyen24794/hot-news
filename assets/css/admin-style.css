@@ -162,15 +162,12 @@
 /* Page Headers */
 .wp-admin .wrap h1,
 .wp-admin .wrap h2 {
-    color: var(--hot-news-primary);
     font-weight: 700;
     position: relative;
-    padding-left: 40px;
 }
 
 .wp-admin .wrap h1::before,
 .wp-admin .wrap h2::before {
-    content: "🔥";
     position: absolute;
     left: 0;
     top: 0;

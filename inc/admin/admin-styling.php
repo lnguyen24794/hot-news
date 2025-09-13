@@ -156,7 +156,6 @@ class Hot_News_Admin_Styling
 
         .wp-admin .wrap h1,
         .wp-admin .wrap h2 {
-            color: var(--hot-news-primary);
             font-weight: 600;
         }
 
