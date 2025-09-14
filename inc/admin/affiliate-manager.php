@@ -369,40 +369,56 @@ class Hot_News_Affiliate_Manager
     private function render_affiliate_row($affiliate)
     {
         ?>
-        <tr data-id="<?php echo $affiliate->id; ?>">
-            <td><?php echo $affiliate->id; ?></td>
-            <td>
+        <tr data-id="<?php echo $affiliate->id; ?>" class="affiliate-row">
+            <td class="affiliate-id">
+                <strong><?php echo $affiliate->id; ?></strong>
+            </td>
+            <td class="affiliate-image">
                 <div class="affiliate-image-thumb">
                     <img src="<?php echo esc_url($affiliate->image_url); ?>" alt="<?php echo esc_attr($affiliate->title); ?>">
                 </div>
             </td>
-            <td>
+            <td class="affiliate-title">
                 <strong><?php echo esc_html($affiliate->title); ?></strong>
+                <div class="affiliate-meta">
+                    <small class="created-date">
+                        <?php echo sprintf(__('Tạo: %s', 'hot-news'), date_i18n('d/m/Y H:i', strtotime($affiliate->created_at))); ?>
+                    </small>
+                </div>
             </td>
-            <td>
-                <a href="<?php echo esc_url($affiliate->url); ?>" target="_blank" rel="noopener">
-                    <?php echo esc_html(wp_trim_words($affiliate->url, 8, '...')); ?>
+            <td class="affiliate-url">
+                <a href="<?php echo esc_url($affiliate->url); ?>" target="_blank" rel="noopener" class="affiliate-link">
+                    <?php echo esc_html(wp_trim_words($affiliate->url, 6, '...')); ?>
                     <span class="dashicons dashicons-external"></span>
                 </a>
+                <div class="url-preview">
+                    <small class="url-domain"><?php echo esc_html(parse_url($affiliate->url, PHP_URL_HOST)); ?></small>
+                </div>
             </td>
-            <td>
-                <span class="click-count"><?php echo number_format($affiliate->click_count); ?></span>
+            <td class="affiliate-clicks">
+                <div class="click-stats">
+                    <span class="click-count"><?php echo number_format($affiliate->click_count); ?></span>
+                </div>
             </td>
-            <td>
-                <div class="status-toggle">
-                    <label class="toggle-switch">
-                        <input type="checkbox" class="toggle-status" data-id="<?php echo $affiliate->id; ?>" <?php checked($affiliate->is_active); ?>>
-                        <span class="toggle-slider"></span>
+            <td class="affiliate-status">
+                <div class="status-control">
+                    <label class="status-checkbox-wrapper">
+                        <input type="checkbox" class="toggle-status status-checkbox" data-id="<?php echo $affiliate->id; ?>" <?php checked($affiliate->is_active); ?>>
+                        <span class="status-label">
+                            <?php _e('Hoạt động', 'hot-news'); ?>
+                        </span>
                     </label>
                 </div>
             </td>
-            <td>
-                <div class="row-actions">
-                    <button type="button" class="button button-small edit-affiliate" data-id="<?php echo $affiliate->id; ?>">
-                        <?php _e('Sửa', 'hot-news'); ?>
+            <td class="affiliate-actions">
+                <div class="action-buttons">
+                    <button type="button" class="button button-secondary button-small edit-affiliate" data-id="<?php echo $affiliate->id; ?>" title="<?php _e('Chỉnh sửa affiliate', 'hot-news'); ?>">
+                        <i class="dashicons dashicons-edit"></i>
+                        <span class="button-text"><?php _e('Sửa', 'hot-news'); ?></span>
                     </button>
-                    <button type="button" class="button button-small button-link-delete delete-affiliate" data-id="<?php echo $affiliate->id; ?>">
-                        <?php _e('Xóa', 'hot-news'); ?>
+                    <button type="button" class="button button-secondary button-small delete-affiliate" data-id="<?php echo $affiliate->id; ?>" title="<?php _e('Xóa affiliate', 'hot-news'); ?>">
+                        <i class="dashicons dashicons-trash"></i>
+                        <span class="button-text"><?php _e('Xóa', 'hot-news'); ?></span>
                     </button>
                 </div>
             </td>

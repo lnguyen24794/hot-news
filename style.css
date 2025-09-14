@@ -731,6 +731,26 @@ a img.aligncenter {
     color: white;
 }
 
+.social-link.linkedin {
+    background: #f8f9fa;
+    color: #0077b5;
+}
+
+.social-link.linkedin:hover {
+    background: #0077b5;
+    color: white;
+}
+
+.social-link.tiktok {
+    background: #f8f9fa;
+    color: #000000;
+}
+
+.social-link.tiktok:hover {
+    background: #000000;
+    color: white;
+}
+
 /* Notification Toast */
 .notification-toast {
     animation: slideInRight 0.3s ease;

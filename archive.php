@@ -264,18 +264,18 @@ endif;
                                         <i class="fas fa-share-alt"></i> Theo dõi chúng tôi
                                     </h4>
                                     <div class="social-links">
-                                        <a href="#" class="social-link facebook" target="_blank">
-                                            <i class="fab fa-facebook-f"></i> Facebook
-                                        </a>
-                                        <a href="#" class="social-link twitter" target="_blank">
-                                            <i class="fab fa-twitter"></i> Twitter
-                                        </a>
-                                        <a href="#" class="social-link youtube" target="_blank">
-                                            <i class="fab fa-youtube"></i> YouTube
-                                        </a>
-                                        <a href="#" class="social-link instagram" target="_blank">
-                                            <i class="fab fa-instagram"></i> Instagram
-                                        </a>
+                                        <?php
+                                        // Get social networks from theme options (only filled ones)
+                                        $social_networks = hot_news_get_social_networks();
+                                        
+                                        foreach ($social_networks as $network => $data) {
+                                            if (!empty($data['url'])) {
+                                                echo '<a class="social-link ' . esc_attr($network) . '" href="' . esc_url($data['url']) . '" target="_blank" rel="noopener" title="' . esc_attr($data['name']) . '">';
+                                                echo '<i class="' . esc_attr($data['icon']) . '"></i>';
+                                                echo '</a>';
+                                            }
+                                        }
+                                        ?>
                                     </div>
                                 </div>
                             </div>
