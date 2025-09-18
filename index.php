@@ -21,44 +21,44 @@ get_header();
                 <!-- Left Column: Hot News (7/12) -->
                 <div class="col-lg-6">
                     <div class="hot-news-section">
-                        
+                        <h2>Tin mới</h2>
                         <!-- Featured Hot News -->
                         <div class="featured-hot-news mb-4">
                             <?php
                                 $hot_posts = hot_news_get_hot_posts(6);
-                                if (empty($hot_posts)) {
-                                    $hot_posts = get_posts(array(
-                                        'posts_per_page' => 1,
-                                        'post_status' => 'publish',
-                                    ));
-                                }
-                                if (!empty($hot_posts)) :
-                                    $post = $hot_posts[0];
-                                    setup_postdata($post);
-                                    ?>
-                                <?php loadView(get_template_directory() . '/home/vertical-item.php', ['is_main' => true]); ?>
-                            <?php
+if (empty($hot_posts)) {
+    $hot_posts = get_posts(array(
+        'posts_per_page' => 1,
+        'post_status' => 'publish',
+    ));
+}
+if (!empty($hot_posts)) :
+    $post = $hot_posts[0];
+    setup_postdata($post);
+    ?>
+                                                                <?php loadView(get_template_directory() . '/home/vertical-item.php', ['is_main' => true]); ?>
+                                                            <?php
                                 wp_reset_postdata();
-                            endif;
-                            ?>
+endif;
+?>
                         </div>
 
                         <!-- More Hot News -->
                         <div class="more-hot-news">
                             <div class="row">
                                 <?php
-                                
-                                foreach ($hot_posts as $key => $post) :
-                                    if ($key == 0) {
-                                        continue;
-                                    }
-                                    setup_postdata($post);
-                                    ?>
+
+    foreach ($hot_posts as $key => $post) :
+        if ($key == 0) {
+            continue;
+        }
+        setup_postdata($post);
+        ?>
                                     <div class="col-md-6 mb-3">
                                         <?php loadView(get_template_directory() . '/home/vertical-item.php', ['is_main' => false]); ?>
                                     </div>
                                 <?php endforeach;
-                                    wp_reset_postdata(); ?>
+wp_reset_postdata(); ?>
                             </div>
                         </div>
                     </div>
@@ -67,39 +67,40 @@ get_header();
                 <!-- Middle Column: Popular News (3/12) -->
                 <div class="col-lg-3">
                     <div class="popular-news-section">
+                        <h2>Tin đọc nhiều</h2>
                         <div>
                             <?php
                                 $popular_posts = hot_news_get_popular_posts(8);
-                                if (empty($popular_posts)) {
-                                    $popular_posts = get_posts(array(
-                                        'posts_per_page' => 8,
-                                        'post_status' => 'publish',
-                                        'meta_key' => '_post_views',
-                                        'orderby' => 'meta_value_num',
-                                        'order' => 'DESC'
-                                    ));
-                                }
-                                if (!empty($popular_posts)) :
-                                    $post = $popular_posts[0];
-                                    setup_postdata($post);
-                                    ?>
+if (empty($popular_posts)) {
+    $popular_posts = get_posts(array(
+        'posts_per_page' => 8,
+        'post_status' => 'publish',
+        'meta_key' => '_post_views',
+        'orderby' => 'meta_value_num',
+        'order' => 'DESC'
+    ));
+}
+if (!empty($popular_posts)) :
+    $post = $popular_posts[0];
+    setup_postdata($post);
+    ?>
                                 <?php loadView(get_template_directory() . '/home/vertical-item.php', ['is_main' => false]); ?>
                             <?php
-                                wp_reset_postdata();
-                            endif;
-                            ?>
+    wp_reset_postdata();
+endif;
+?>
                         </div>
                         <div class="popular-news-list">
                             <?php
-                            foreach ($popular_posts as $key => $post) :
-                                if ($key == 0) {
-                                    continue;
-                                }
-                                setup_postdata($post);
-                                ?>
+foreach ($popular_posts as $key => $post) :
+    if ($key == 0) {
+        continue;
+    }
+    setup_postdata($post);
+    ?>
                                     <?php loadView(get_template_directory() . '/home/horizontal-item.php', ['is_main' => false]); ?>
                             <?php endforeach;
-                            wp_reset_postdata(); ?>
+wp_reset_postdata(); ?>
                         </div>
                     </div>
                 </div>
@@ -111,14 +112,14 @@ get_header();
                         <div class="ad-banner mb-4">
                             <div class="ad-label">Quảng cáo</div>
                             <?php
-                                hot_news_display_ad(
-                                    'homepage_ad_1',
-                                    '<a href="#" target="_blank" rel="noopener">
+    hot_news_display_ad(
+        'homepage_ad_1',
+        '<a href="#" target="_blank" rel="noopener">
                                                                         <img src="' . esc_url(get_template_directory_uri() . '/assets/images/ads-1.jpg') . '" 
                                                                             alt="Quảng cáo 1" class="img-fluid">
                                                                     </a>'
-                                );
-                                ?>
+    );
+?>
                         </div>
 
                         <!-- Ad Banner 2 -->
@@ -132,7 +133,7 @@ get_header();
                                                                         alt="Quảng cáo 2" class="img-fluid">
                                                                 </a>'
                             );
-                            ?>
+?>
                         </div>
 
                         <!-- Newsletter Signup -->

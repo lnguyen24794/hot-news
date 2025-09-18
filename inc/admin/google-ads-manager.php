@@ -294,7 +294,7 @@ class Hot_News_Google_Ads_Manager
         $options = get_option('hot_news_google_ads_options');
         $value = isset($options['auto_ads_code']) ? $options['auto_ads_code'] : '';
         ?>
-        <textarea name="hot_news_google_ads_options[auto_ads_code]" rows="5" cols="50" class="large-text"><?php echo esc_textarea($value); ?></textarea>
+        <textarea name="hot_news_google_ads_options[auto_ads_code]" rows="5" cols="50" class="large-text" style="height: auto;"><?php echo esc_textarea($value); ?></textarea>
         <p class="description">
             <?php _e('Mã JavaScript tùy chỉnh cho Auto Ads (tùy chọn). Ví dụ: cấu hình vị trí, loại quảng cáo...', 'hot-news'); ?>
         </p>
@@ -307,7 +307,7 @@ class Hot_News_Google_Ads_Manager
         $options = get_option('hot_news_google_ads_options');
         $value = isset($options['header_ad_code']) ? $options['header_ad_code'] : '';
         ?>
-        <textarea name="hot_news_google_ads_options[header_ad_code]" rows="8" cols="50" class="large-text"><?php echo esc_textarea($value); ?></textarea>
+        <textarea name="hot_news_google_ads_options[header_ad_code]" rows="8" cols="50" class="large-text" style="height: auto;"><?php echo esc_textarea($value); ?></textarea>
         <p class="description">
             <?php _e('Mã AdSense cho vị trí header (banner phía trên). Kích thước khuyến nghị: 728x90 hoặc 970x90.', 'hot-news'); ?>
         </p>
@@ -320,7 +320,7 @@ class Hot_News_Google_Ads_Manager
         $options = get_option('hot_news_google_ads_options');
         $value = isset($options['tab_news_ad_code']) ? $options['tab_news_ad_code'] : '';
         ?>
-        <textarea name="hot_news_google_ads_options[tab_news_ad_code]" rows="8" cols="50" class="large-text"><?php echo esc_textarea($value); ?></textarea>
+        <textarea name="hot_news_google_ads_options[tab_news_ad_code]" rows="8" cols="50" class="large-text" style="height: auto;"><?php echo esc_textarea($value); ?></textarea>
         <p class="description">
             <?php _e('Mã AdSense cho khu vực Tab News trên trang chủ. Kích thước khuyến nghị: 300x250 hoặc 336x280.', 'hot-news'); ?>
         </p>
@@ -333,7 +333,7 @@ class Hot_News_Google_Ads_Manager
         $options = get_option('hot_news_google_ads_options');
         $value = isset($options['sidebar_ad_code']) ? $options['sidebar_ad_code'] : '';
         ?>
-        <textarea name="hot_news_google_ads_options[sidebar_ad_code]" rows="8" cols="50" class="large-text"><?php echo esc_textarea($value); ?></textarea>
+        <textarea name="hot_news_google_ads_options[sidebar_ad_code]" rows="8" cols="50" class="large-text" style="height: auto;"><?php echo esc_textarea($value); ?></textarea>
         <p class="description">
             <?php _e('Mã AdSense cho sidebar. Kích thước khuyến nghị: 300x250, 300x600 hoặc responsive.', 'hot-news'); ?>
         </p>
@@ -346,7 +346,7 @@ class Hot_News_Google_Ads_Manager
         $options = get_option('hot_news_google_ads_options');
         $value = isset($options['single_content_top_ad']) ? $options['single_content_top_ad'] : '';
         ?>
-        <textarea name="hot_news_google_ads_options[single_content_top_ad]" rows="8" cols="50" class="large-text"><?php echo esc_textarea($value); ?></textarea>
+        <textarea name="hot_news_google_ads_options[single_content_top_ad]" rows="8" cols="50" class="large-text" style="height: auto;"><?php echo esc_textarea($value); ?></textarea>
         <p class="description">
             <?php _e('Mã AdSense hiển thị trên đầu nội dung bài viết. Kích thước khuyến nghị: 728x90 hoặc responsive.', 'hot-news'); ?>
         </p>
@@ -358,7 +358,7 @@ class Hot_News_Google_Ads_Manager
         $options = get_option('hot_news_google_ads_options');
         $value = isset($options['single_content_middle_ad']) ? $options['single_content_middle_ad'] : '';
         ?>
-        <textarea name="hot_news_google_ads_options[single_content_middle_ad]" rows="8" cols="50" class="large-text"><?php echo esc_textarea($value); ?></textarea>
+        <textarea name="hot_news_google_ads_options[single_content_middle_ad]" rows="8" cols="50" class="large-text" style="height: auto;"><?php echo esc_textarea($value); ?></textarea>
         <p class="description">
             <?php _e('Mã AdSense hiển thị giữa nội dung bài viết (sau đoạn thứ 2). Kích thước khuyến nghị: 300x250 hoặc 728x90.', 'hot-news'); ?>
         </p>
@@ -370,7 +370,7 @@ class Hot_News_Google_Ads_Manager
         $options = get_option('hot_news_google_ads_options');
         $value = isset($options['single_content_bottom_ad']) ? $options['single_content_bottom_ad'] : '';
         ?>
-        <textarea name="hot_news_google_ads_options[single_content_bottom_ad]" rows="8" cols="50" class="large-text"><?php echo esc_textarea($value); ?></textarea>
+        <textarea name="hot_news_google_ads_options[single_content_bottom_ad]" rows="8" cols="50" class="large-text" style="height: auto;"><?php echo esc_textarea($value); ?></textarea>
         <p class="description">
             <?php _e('Mã AdSense hiển thị cuối nội dung bài viết. Kích thước khuyến nghị: 728x90 hoặc 300x250.', 'hot-news'); ?>
         </p>
@@ -382,7 +382,7 @@ class Hot_News_Google_Ads_Manager
         $options = get_option('hot_news_google_ads_options');
         $value = isset($options['single_sidebar_ad']) ? $options['single_sidebar_ad'] : '';
         ?>
-        <textarea name="hot_news_google_ads_options[single_sidebar_ad]" rows="8" cols="50" class="large-text"><?php echo esc_textarea($value); ?></textarea>
+        <textarea name="hot_news_google_ads_options[single_sidebar_ad]" rows="8" cols="50" class="large-text" style="height: auto;"><?php echo esc_textarea($value); ?></textarea>
         <p class="description">
             <?php _e('Mã AdSense cho sidebar trang bài viết. Kích thước khuyến nghị: 300x250 hoặc 300x600.', 'hot-news'); ?>
         </p>
@@ -395,7 +395,7 @@ class Hot_News_Google_Ads_Manager
         $options = get_option('hot_news_google_ads_options');
         $value = isset($options['archive_header_ad']) ? $options['archive_header_ad'] : '';
         ?>
-        <textarea name="hot_news_google_ads_options[archive_header_ad]" rows="8" cols="50" class="large-text"><?php echo esc_textarea($value); ?></textarea>
+        <textarea name="hot_news_google_ads_options[archive_header_ad]" rows="8" cols="50" class="large-text" style="height: auto;"><?php echo esc_textarea($value); ?></textarea>
         <p class="description">
             <?php _e('Mã AdSense cho header trang lưu trữ. Kích thước khuyến nghị: 728x90.', 'hot-news'); ?>
         </p>
@@ -407,7 +407,7 @@ class Hot_News_Google_Ads_Manager
         $options = get_option('hot_news_google_ads_options');
         $value = isset($options['archive_sidebar_ad_1']) ? $options['archive_sidebar_ad_1'] : '';
         ?>
-        <textarea name="hot_news_google_ads_options[archive_sidebar_ad_1]" rows="8" cols="50" class="large-text"><?php echo esc_textarea($value); ?></textarea>
+        <textarea name="hot_news_google_ads_options[archive_sidebar_ad_1]" rows="8" cols="50" class="large-text" style="height: auto;"><?php echo esc_textarea($value); ?></textarea>
         <p class="description">
             <?php _e('Mã AdSense cho banner 1 trong sidebar trang lưu trữ.', 'hot-news'); ?>
         </p>
@@ -419,7 +419,7 @@ class Hot_News_Google_Ads_Manager
         $options = get_option('hot_news_google_ads_options');
         $value = isset($options['archive_sidebar_ad_2']) ? $options['archive_sidebar_ad_2'] : '';
         ?>
-        <textarea name="hot_news_google_ads_options[archive_sidebar_ad_2]" rows="8" cols="50" class="large-text"><?php echo esc_textarea($value); ?></textarea>
+        <textarea name="hot_news_google_ads_options[archive_sidebar_ad_2]" rows="8" cols="50" class="large-text" style="height: auto;"><?php echo esc_textarea($value); ?></textarea>
         <p class="description">
             <?php _e('Mã AdSense cho banner 2 trong sidebar trang lưu trữ.', 'hot-news'); ?>
         </p>
