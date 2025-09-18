@@ -393,7 +393,6 @@ function hot_news_get_hot_posts($limit = 5)
         'post_type' => 'post',
         'post_status' => 'publish',
         'posts_per_page' => $limit,
-        'meta_key' => '_hot_news',
         'meta_value' => '1',
         'orderby' => 'date',
         'order' => 'DESC'

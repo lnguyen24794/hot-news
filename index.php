@@ -29,7 +29,7 @@ get_header();
                         <!-- Featured Hot News -->
                         <div class="featured-hot-news mb-4">
                             <?php
-                                $hot_posts = hot_news_get_hot_posts(6);
+                                $hot_posts = hot_news_get_hot_posts(15);
 if (empty($hot_posts)) {
     $hot_posts = get_posts(array(
         'posts_per_page' => 1,
