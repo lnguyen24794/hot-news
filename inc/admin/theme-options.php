@@ -579,7 +579,6 @@ function hot_news_get_contact_info($field = null)
     $contact_info = array(
         'email' => hot_news_get_option('contact_email', 'contact@hotnews.vn'),
         'phone' => hot_news_get_option('contact_phone', '+84 123 456 789'),
-        'address' => hot_news_get_option('contact_address', '123 Đường Báo Chí, Quận 1, TP.HCM'),
         'business_hours' => hot_news_get_option('business_hours', 'Thứ 2 - Thứ 6: 8:00 - 17:30')
     );
     

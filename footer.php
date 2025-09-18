@@ -21,7 +21,6 @@
                         <div class="footer-widget">
                             <h3 class="title"><?php esc_html_e('TIN HOT', 'hot-news'); ?></h3>
                             <div class="contact-info">
-                                <p><i class="fa fa-map-marker"></i><?php echo esc_html(hot_news_get_contact_info('address')); ?></p>
                                 <p><i class="fa fa-envelope"></i><?php echo esc_html(hot_news_get_contact_info('email')); ?></p>
                                 <p><i class="fa fa-phone"></i><?php echo esc_html(hot_news_get_contact_info('phone')); ?></p>
                                 <div class="social">

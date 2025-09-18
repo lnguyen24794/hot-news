@@ -218,7 +218,6 @@ $sample_categories = array(
 $sample_contact_info = array(
     'email' => 'lienhe@tintuc.vn',
     'phone' => '+84 123 456 789',
-    'address' => '123 Đường Báo Chí, Quận 1, TP.HCM',
     'social_links' => array(
         'twitter' => '#',
         'facebook' => '#',
@@ -570,7 +569,6 @@ function hot_news_setup_sample_theme_options()
     // Set theme customizer options
     set_theme_mod('hot_news_contact_email', $contact_info['email']);
     set_theme_mod('hot_news_contact_phone', $contact_info['phone']);
-    set_theme_mod('hot_news_contact_address', $contact_info['address']);
 
     // Set social links
     foreach ($contact_info['social_links'] as $platform => $url) {

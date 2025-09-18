@@ -127,16 +127,6 @@ get_header();
                                 <div class="contact-info-list">
                                     <div class="contact-info-item">
                                         <div class="contact-icon">
-                                            <i class="fas fa-map-marker-alt"></i>
-                                        </div>
-                                        <div class="contact-details">
-                                            <h6>Địa chỉ</h6>
-                                            <p><?php echo esc_html(hot_news_get_contact_info('address')); ?></p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="contact-info-item">
-                                        <div class="contact-icon">
                                             <i class="fas fa-envelope"></i>
                                         </div>
                                         <div class="contact-details">
