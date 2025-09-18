@@ -1,6 +1,6 @@
 <div class="shadow mt-3 mb-3 p-1 rounded-lg">
    <div class="row">
-        <div class="col-md-4 pr-0 hot-news-image <?php echo $is_main ? 'max-350' : 'max-160'; ?>">
+        <div class="col-md-4 pr-0 hot-news-image text-center <?php echo $is_main ? 'max-350' : 'max-160'; ?>">
             <?php if (has_post_thumbnail()) : ?>
                 <a href="<?php the_permalink(); ?>">
                     <?php the_post_thumbnail('news-full', array('class' => 'img-fluid')); ?>

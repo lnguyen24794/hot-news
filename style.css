@@ -1333,12 +1333,12 @@ a img.aligncenter {
     }
 }
 
-.max-350 {
+.max-350 img{
     max-height: 350px !important;
     overflow: hidden;
 }
 
-.max-160 {
+.max-160 img{
     max-height: 160px !important;
     overflow: hidden;
 }
