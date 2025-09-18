@@ -1360,3 +1360,39 @@ button.btn:hover {
         text-align: center; 
     } 
 }
+
+div#nz-div {
+    border-bottom: 2px solid #FF6F61;
+    margin-bottom: 40px;
+    display: block;
+    }
+
+#nz-div h3.tde {
+    margin: 0;
+    font-size: 16px;
+    line-height: 20px;
+    display: inline-block;
+    text-transform: uppercase;
+}
+
+#nz-div h3.tde :after {
+    content: "";
+    width: 0;
+    height: 0;
+    border-top: 40px solid transparent;
+    border-left: 20px solid #FF6F61;
+    border-bottom: 0px solid transparent;
+    border-right: 0 solid transparent;
+    position: absolute;
+    top: 0px;
+    right: -20px;
+}
+
+#nz-div h3.tde span {
+    background: #FF6F61;
+    padding: 10px 20px 8px 20px;
+    color: white;
+    position: relative;
+    display: inline-block;
+    margin: 0;
+}

@@ -21,7 +21,11 @@ get_header();
                 <!-- Left Column: Hot News (7/12) -->
                 <div class="col-lg-6">
                     <div class="hot-news-section">
-                        <h2>Tin mới</h2>
+                        <div id='nz-div'>
+                            <h3 class="tde">			
+                            <span class="null">Tin mới</span>	
+                            </h3>
+                        </div>
                         <!-- Featured Hot News -->
                         <div class="featured-hot-news mb-4">
                             <?php
@@ -67,7 +71,11 @@ wp_reset_postdata(); ?>
                 <!-- Middle Column: Popular News (3/12) -->
                 <div class="col-lg-3">
                     <div class="popular-news-section">
-                        <h2>Tin đọc nhiều</h2>
+                        <div id='nz-div'>
+                            <h3 class="tde">			
+                            <span class="null">Tin đọc nhiều</span>	
+                            </h3>
+                        </div>
                         <div>
                             <?php
                                 $popular_posts = hot_news_get_popular_posts(8);
