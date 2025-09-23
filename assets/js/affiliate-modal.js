@@ -142,17 +142,18 @@ jQuery(document).ready(function($) {
         // Update overlay content
         $('#affiliate-popup-image').attr('src', affiliate.image_url).attr('alt', affiliate.title);
         $('#affiliate-popup-title').text(affiliate.title);
-        $('#affiliate-popup-link').attr('href', affiliate.url);
+        $('#affiliate-clickable-area').attr('data-url', affiliate.url);
         
         // Show content state
         showContentState();
         
-        // Track click on affiliate image/link and close overlay
-        $('#affiliate-popup-link').off('click').on('click', function(e) {
+        // Track click on entire affiliate content area and close overlay
+        $('#affiliate-clickable-area').off('click').on('click', function(e) {
             e.preventDefault(); // Prevent default to handle closing first
+            e.stopPropagation(); // Prevent event bubbling
             
             if (hotNewsAffiliateModal.debug) {
-                console.log('🖱️ Affiliate image clicked:', affiliate.id);
+                console.log('🖱️ Affiliate content clicked:', affiliate.id);
             }
             
             // Track click
@@ -167,6 +168,9 @@ jQuery(document).ready(function($) {
             }, 300);
         });
         
+        // Add cursor pointer style to indicate clickability
+        $('#affiliate-clickable-area').css('cursor', 'pointer');
+        
         // Add entrance animation
         setTimeout(function() {
             $('.affiliate-content').addClass('animate-in');
@@ -177,9 +181,6 @@ jQuery(document).ready(function($) {
      * Close overlay
      */
     function closeModal() {
-        if (hotNewsAffiliateModal.debug) {
-            console.log('❌ Closing affiliate overlay...');
-        }
 
         // Remove blur effect
         $('.site-main, .site-header, .site-footer').removeClass('content-blurred');
@@ -227,9 +228,12 @@ jQuery(document).ready(function($) {
         closeModal();
     });
 
-    // Prevent closing when clicking on the content area
+    // Prevent closing when clicking on the popup content (except clickable area)
     $(document).on('click', '#affiliateOverlay .affiliate-popup-content', function(e) {
-        e.stopPropagation();
+        // Only stop propagation if not clicking on the clickable area
+        if (!$(e.target).closest('#affiliate-clickable-area').length) {
+            e.stopPropagation();
+        }
     });
 
     // ESC key to close overlay
