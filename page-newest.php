@@ -1,7 +1,7 @@
 <?php
 /**
  * The template for displaying newest posts archive
- *
+ * Template Name: Newest Page
  * @package Hot_News
  */
 

@@ -1,7 +1,7 @@
 <?php
 /**
  * The template for displaying popular posts archive
- *
+ * Template Name: Popular Page
  * @package Hot_News
  */
 
