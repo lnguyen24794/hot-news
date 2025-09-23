@@ -11,6 +11,7 @@ jQuery(document).ready(function($) {
     let modalShown = false;
     let userEngaged = false;
     let exitIntentTriggered = false;
+    let currentAffiliate = null;
 
     // Check if overlay element exists
     if ($('#affiliateOverlay').length === 0) {
@@ -96,10 +97,6 @@ jQuery(document).ready(function($) {
      * Load random affiliate data
      */
     function loadRandomAffiliate() {
-        if (hotNewsAffiliateModal.debug) {
-            console.log('🔄 Loading random affiliate...');
-        }
-
         $.ajax({
             url: hotNewsAffiliateModal.ajax_url,
             type: 'POST',
@@ -113,6 +110,7 @@ jQuery(document).ready(function($) {
                 }
 
                 if (response.success && response.data) {
+                    currentAffiliate = response.data;
                     displayAffiliateContent(response.data);
                 } else {
                     const errorMsg = response.data || 'Không tìm thấy affiliate link nào.';
@@ -135,9 +133,6 @@ jQuery(document).ready(function($) {
      * Display affiliate content in overlay
      */
     function displayAffiliateContent(affiliate) {
-        if (hotNewsAffiliateModal.debug) {
-            console.log('🎨 Displaying affiliate content:', affiliate);
-        }
         
         // Update overlay content
         $('#affiliate-popup-image').attr('src', affiliate.image_url).attr('alt', affiliate.title);
@@ -151,10 +146,6 @@ jQuery(document).ready(function($) {
         $('#affiliate-clickable-area').off('click').on('click', function(e) {
             e.preventDefault(); // Prevent default to handle closing first
             e.stopPropagation(); // Prevent event bubbling
-            
-            if (hotNewsAffiliateModal.debug) {
-                console.log('🖱️ Affiliate content clicked:', affiliate.id);
-            }
             
             // Track click
             trackAffiliateClick(affiliate.id);
@@ -225,6 +216,7 @@ jQuery(document).ready(function($) {
     
     // Close overlay on click outside or close button
     $(document).on('click', '#affiliateOverlay .affiliate-close-btn, #affiliateOverlay .affiliate-backdrop', function() {
+        trackAffiliateClick(currentAffiliate.id);
         closeModal();
     });
 
