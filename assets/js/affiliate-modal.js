@@ -11,7 +11,7 @@ jQuery(document).ready(function($) {
     let modalShown = false;
     let userEngaged = false;
     let exitIntentTriggered = false;
-    let currentAffiliate = null;
+    var currentAffiliate = null;
 
     // Check if overlay element exists
     if ($('#affiliateOverlay').length === 0) {
@@ -97,6 +97,10 @@ jQuery(document).ready(function($) {
      * Load random affiliate data
      */
     function loadRandomAffiliate() {
+        if (hotNewsAffiliateModal.debug) {
+            console.log('🔄 Loading random affiliate...');
+        }
+
         $.ajax({
             url: hotNewsAffiliateModal.ajax_url,
             type: 'POST',
@@ -110,8 +114,8 @@ jQuery(document).ready(function($) {
                 }
 
                 if (response.success && response.data) {
-                    currentAffiliate = response.data;
                     displayAffiliateContent(response.data);
+                    currentAffiliate = response.data;
                 } else {
                     const errorMsg = response.data || 'Không tìm thấy affiliate link nào.';
                     if (hotNewsAffiliateModal.debug) {
@@ -133,34 +137,29 @@ jQuery(document).ready(function($) {
      * Display affiliate content in overlay
      */
     function displayAffiliateContent(affiliate) {
+        if (hotNewsAffiliateModal.debug) {
+            console.log('🎨 Displaying affiliate content:', affiliate);
+        }
         
         // Update overlay content
         $('#affiliate-popup-image').attr('src', affiliate.image_url).attr('alt', affiliate.title);
         $('#affiliate-popup-title').text(affiliate.title);
-        $('#affiliate-clickable-area').attr('data-url', affiliate.url);
+        $('#affiliate-popup-link').attr('href', affiliate.url);
         
         // Show content state
         showContentState();
         
-        // Track click on entire affiliate content area and close overlay
-        $('#affiliate-clickable-area').off('click').on('click', function(e) {
+        // Track click on affiliate image/link and close overlay
+        $('#affiliate-popup-link').off('click').on('click', function(e) {
             e.preventDefault(); // Prevent default to handle closing first
-            e.stopPropagation(); // Prevent event bubbling
             
-            // Track click
-            trackAffiliateClick(affiliate.id);
+            if (hotNewsAffiliateModal.debug) {
+                console.log('🖱️ Affiliate image clicked:', affiliate.id);
+            }
             
             // Close overlay first
             closeModal();
-            
-            // Then redirect after a small delay
-            setTimeout(function() {
-                window.open(affiliate.url, '_blank', 'noopener,noreferrer');
-            }, 300);
         });
-        
-        // Add cursor pointer style to indicate clickability
-        $('#affiliate-clickable-area').css('cursor', 'pointer');
         
         // Add entrance animation
         setTimeout(function() {
@@ -172,6 +171,12 @@ jQuery(document).ready(function($) {
      * Close overlay
      */
     function closeModal() {
+        // Track click
+        trackAffiliateClick(currentAffiliate.id);
+        
+        if (hotNewsAffiliateModal.debug) {
+            console.log('❌ Closing affiliate overlay...');
+        }
 
         // Remove blur effect
         $('.site-main, .site-header, .site-footer').removeClass('content-blurred');
@@ -183,6 +188,11 @@ jQuery(document).ready(function($) {
         if (modalTimeout) {
             clearTimeout(modalTimeout);
         }
+
+        // Then redirect after a small delay
+        setTimeout(function() {
+            window.open(currentAffiliate.url, '_blank', 'noopener,noreferrer');
+        }, 300);
     }
     
     /**
@@ -216,16 +226,12 @@ jQuery(document).ready(function($) {
     
     // Close overlay on click outside or close button
     $(document).on('click', '#affiliateOverlay .affiliate-close-btn, #affiliateOverlay .affiliate-backdrop', function() {
-        trackAffiliateClick(currentAffiliate.id);
         closeModal();
     });
 
-    // Prevent closing when clicking on the popup content (except clickable area)
+    // Prevent closing when clicking on the content area
     $(document).on('click', '#affiliateOverlay .affiliate-popup-content', function(e) {
-        // Only stop propagation if not clicking on the clickable area
-        if (!$(e.target).closest('#affiliate-clickable-area').length) {
-            e.stopPropagation();
-        }
+        e.stopPropagation();
     });
 
     // ESC key to close overlay
