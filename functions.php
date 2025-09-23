@@ -1785,3 +1785,9 @@ function hot_news_analytics_dashboard_widget()
     </div>
     <?php
 }
+
+add_filter('mejs_settings', function($settings) {
+    $settings['stretching'] = 'responsive'; // Tối ưu responsive trên mobile
+    $settings['pluginPath'] = 'https://cdn.jsdelivr.net/npm/mediaelement@latest/build/'; // Sử dụng CDN mới
+    return $settings;
+});
