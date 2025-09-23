@@ -186,6 +186,44 @@ function hot_news_scripts()
 
     // Enqueue main theme stylesheet
     wp_enqueue_style('hot-news-style', get_stylesheet_uri(), array(), HOT_NEWS_VERSION);
+    
+    // Add inline CSS for section title links
+    $custom_css = '
+        .section-title-link {
+            color: inherit !important;
+            text-decoration: none !important;
+            transition: all 0.3s ease;
+        }
+        .section-title-link:hover {
+            color: #007bff !important;
+            text-decoration: none !important;
+        }
+        .section-title-link:hover .null {
+            transform: translateX(5px);
+        }
+        .section-title-link .null {
+            transition: transform 0.3s ease;
+        }
+        .archive-header {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 30px;
+            border-radius: 10px;
+            border-left: 5px solid #007bff;
+        }
+        .archive-title {
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .popular-rank {
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #333 !important;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+    ';
+    wp_add_inline_style('hot-news-style', $custom_css);
 
     // Enqueue jQuery
     wp_enqueue_script('jquery');
@@ -631,6 +669,61 @@ require get_template_directory() . '/inc/admin/google-ads-manager.php';
  * Include Affiliate Manager
  */
 require get_template_directory() . '/inc/admin/affiliate-manager.php';
+
+/**
+ * Add custom rewrite rules for archive pages
+ */
+function hot_news_add_custom_rewrite_rules()
+{
+    add_rewrite_rule('^tin-moi/?$', 'index.php?hot_news_archive=newest', 'top');
+    add_rewrite_rule('^tin-doc-nhieu/?$', 'index.php?hot_news_archive=popular', 'top');
+}
+add_action('init', 'hot_news_add_custom_rewrite_rules');
+
+/**
+ * Add custom query vars
+ */
+function hot_news_add_query_vars($vars)
+{
+    $vars[] = 'hot_news_archive';
+    return $vars;
+}
+add_filter('query_vars', 'hot_news_add_query_vars');
+
+/**
+ * Handle custom archive templates
+ */
+function hot_news_template_include($template)
+{
+    $archive_type = get_query_var('hot_news_archive');
+    
+    if ($archive_type) {
+        $custom_template = '';
+        
+        if ($archive_type === 'newest') {
+            $custom_template = locate_template('archive-newest.php');
+        } elseif ($archive_type === 'popular') {
+            $custom_template = locate_template('archive-popular.php');
+        }
+        
+        if ($custom_template) {
+            return $custom_template;
+        }
+    }
+    
+    return $template;
+}
+add_filter('template_include', 'hot_news_template_include');
+
+/**
+ * Flush rewrite rules on theme activation
+ */
+function hot_news_flush_rewrite_rules()
+{
+    hot_news_add_custom_rewrite_rules();
+    flush_rewrite_rules();
+}
+add_action('after_switch_theme', 'hot_news_flush_rewrite_rules');
 
 /**
  * Add breaking news functionality
@@ -1407,6 +1500,7 @@ function hot_news_load_more_posts()
     $year = isset($_POST['year']) ? intval($_POST['year']) : 0;
     $month = isset($_POST['month']) ? intval($_POST['month']) : 0;
     $day = isset($_POST['day']) ? intval($_POST['day']) : 0;
+    $archive_type = isset($_POST['archive_type']) ? sanitize_text_field($_POST['archive_type']) : '';
 
     // Validate page number
     if ($page < 1 || $page > 100) { // Limit to 100 pages max
@@ -1425,19 +1519,21 @@ function hot_news_load_more_posts()
     );
 
     // Add specific query parameters based on archive type
-    if (!empty($category)) {
+    if (!empty($archive_type)) {
+        if ($archive_type === 'newest') {
+            // Already set to order by date DESC, no additional parameters needed
+        } elseif ($archive_type === 'popular') {
+            $args['meta_key'] = '_post_views';
+            $args['orderby'] = 'meta_value_num';
+            $args['order'] = 'DESC';
+        }
+    } elseif (!empty($category)) {
         $args['category_name'] = $category;
-    }
-
-    if (!empty($tag)) {
+    } elseif (!empty($tag)) {
         $args['tag'] = $tag;
-    }
-
-    if ($author > 0) {
+    } elseif ($author > 0) {
         $args['author'] = $author;
-    }
-
-    if ($year > 0) {
+    } elseif ($year > 0) {
         $args['year'] = $year;
         if ($month > 0) {
             $args['monthnum'] = $month;

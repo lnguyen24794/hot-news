@@ -23,19 +23,22 @@ get_header();
                     <div class="hot-news-section">
                         <div id='nz-div'>
                             <h3 class="tde">			
-                            <span class="null">Tin mới</span>	
+                            <a href="<?php echo esc_url(home_url('/tin-moi')); ?>" class="section-title-link">
+                                <span class="null">Tin mới</span>
+                            </a>	
                             </h3>
                         </div>
                         <!-- Featured Hot News -->
                         <div class="featured-hot-news mb-4">
                             <?php
-                                $hot_posts = hot_news_get_hot_posts(15);
-                    if (empty($hot_posts)) {
-                        $hot_posts = get_posts(array(
-                            'posts_per_page' => 1,
-                            'post_status' => 'publish',
-                        ));
-                    }
+                                // Get latest published posts for "Tin mới" section
+                                $hot_posts = get_posts(array(
+                                    'posts_per_page' => 15,
+                                    'post_status' => 'publish',
+                                    'orderby' => 'date',
+                                    'order' => 'DESC'
+                                ));
+                                
                     if (!empty($hot_posts)) :
                         $post = $hot_posts[0];
                         setup_postdata($post);
@@ -73,7 +76,9 @@ wp_reset_postdata(); ?>
                     <div class="popular-news-section">
                         <div id='nz-div'>
                             <h3 class="tde">			
-                            <span class="null">Tin đọc nhiều</span>	
+                            <a href="<?php echo esc_url(home_url('/tin-doc-nhieu')); ?>" class="section-title-link">
+                                <span class="null">Tin đọc nhiều</span>
+                            </a>	
                             </h3>
                         </div>
                         <div>
