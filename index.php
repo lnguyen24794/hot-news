@@ -23,9 +23,9 @@ get_header();
                     <div class="hot-news-section">
                         <div id='nz-div'>
                             <h3 class="tde">			
-                            <a href="<?php echo esc_url(home_url('/tin-moi')); ?>" class="section-title-link">
-                                <span class="null">Tin mới</span>
-                            </a>	
+                            
+                                <span class="null"> <a href="<?php echo esc_url(home_url('/tin-moi')); ?>" class="section-title-link"> Tin mới  </a>	</span>
+                           
                             </h3>
                         </div>
                         <!-- Featured Hot News -->
@@ -76,9 +76,9 @@ wp_reset_postdata(); ?>
                     <div class="popular-news-section">
                         <div id='nz-div'>
                             <h3 class="tde">			
-                            <a href="<?php echo esc_url(home_url('/tin-doc-nhieu')); ?>" class="section-title-link">
-                                <span class="null">Tin đọc nhiều</span>
-                            </a>	
+                            
+                                <span class="null"><a href="<?php echo esc_url(home_url('/tin-doc-nhieu')); ?>" class="section-title-link"> Tin đọc nhiều    </a>	</span>
+                         
                             </h3>
                         </div>
                         <div>
