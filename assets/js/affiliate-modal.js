@@ -191,7 +191,8 @@ jQuery(document).ready(function($) {
 
         // Then redirect after a small delay
         setTimeout(function() {
-            window.open(currentAffiliate.url, '_blank', 'noopener,noreferrer');
+            console.log('Redirecting to:', currentAffiliate.url);
+            window.open(currentAffiliate.url, '_blank');
         }, 300);
     }
     
