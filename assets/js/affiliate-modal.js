@@ -32,7 +32,7 @@ jQuery(document).ready(function($) {
      * Initialize modal delay
      */
     modalTimeout = setTimeout(function() {
-        if (!userEngaged && !modalShown) {
+        if (!modalShown) {
             showAffiliateModal();
         }
     }, parseInt(hotNewsAffiliateModal.delay));

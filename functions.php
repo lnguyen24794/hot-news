@@ -8,7 +8,7 @@
  */
 
 if (!defined('HOT_NEWS_VERSION')) {
-    define('HOT_NEWS_VERSION', '1.0.8');
+    define('HOT_NEWS_VERSION', '1.0.9');
 }
 
 /**
@@ -186,7 +186,7 @@ function hot_news_scripts()
 
     // Enqueue main theme stylesheet
     wp_enqueue_style('hot-news-style', get_stylesheet_uri(), array(), HOT_NEWS_VERSION);
-    
+
     // Add inline CSS for section title links
     $custom_css = '
         .section-title-link {
@@ -278,7 +278,8 @@ require HOT_NEWS_INC_DIR . '/admin/admin-styling.php';
  * @param string $template_path Path to template file
  * @param array $args Arguments to pass to template
  */
-function loadView($template_path, $args = array()) {
+function loadView($template_path, $args = array())
+{
     if (file_exists($template_path)) {
         // Make args available as variables in template
         extract($args);
@@ -696,21 +697,21 @@ add_filter('query_vars', 'hot_news_add_query_vars');
 function hot_news_template_include($template)
 {
     $archive_type = get_query_var('hot_news_archive');
-    
+
     if ($archive_type) {
         $custom_template = '';
-        
+
         if ($archive_type === 'newest') {
             $custom_template = locate_template('archive-newest.php');
         } elseif ($archive_type === 'popular') {
             $custom_template = locate_template('archive-popular.php');
         }
-        
+
         if ($custom_template) {
             return $custom_template;
         }
     }
-    
+
     return $template;
 }
 add_filter('template_include', 'hot_news_template_include');
@@ -1786,7 +1787,7 @@ function hot_news_analytics_dashboard_widget()
     <?php
 }
 
-add_filter('mejs_settings', function($settings) {
+add_filter('mejs_settings', function ($settings) {
     $settings['stretching'] = 'responsive'; // Tối ưu responsive trên mobile
     $settings['pluginPath'] = 'https://cdn.jsdelivr.net/npm/mediaelement@latest/build/'; // Sử dụng CDN mới
     return $settings;
