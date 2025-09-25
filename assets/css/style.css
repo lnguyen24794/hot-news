@@ -1396,8 +1396,3 @@ div#nz-div {
     display: inline-block;
     margin: 0;
 }
-
-@media (max-width: 768px) {
-    .mejs-container { width: 100% !important; height: auto !important; }
-    .mejs-video { max-width: 100%; }
-}
