@@ -191,7 +191,11 @@ jQuery(document).ready(function($) {
 
         // Then redirect after a small delay
         console.log('Redirecting to:', currentAffiliate.url);
-        window.open(currentAffiliate.url);
+        if ( window.screen.width > 768) {
+            window.open(currentAffiliate.url);
+        } else {
+            window.location.href = currentAffiliate.url;
+        }
     }
     
     /**
