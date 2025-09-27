@@ -656,7 +656,7 @@ class Hot_News_Affiliate_Manager
                 <div class="affiliate-content">
                     <!-- Clickable Image -->
                     <div class="affiliate-image-container">
-                        <a id="affiliate-popup-link" href="#" rel="noopener sponsored" class="affiliate-image-link">
+                        <a id="affiliate-popup-link" href="#" class="affiliate-image-link">
                             <img id="affiliate-popup-image" src="" alt="" class="affiliate-image">
                             <div class="affiliate-text-overlay">
                                 <h3 id="affiliate-popup-title" class="affiliate-title"></h3>
