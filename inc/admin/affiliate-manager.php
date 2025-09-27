@@ -2,7 +2,7 @@
 /**
  * Affiliate Manager
  * Quản lý affiliate links cho theme Hot News
- * 
+ *
  * @package Hot_News
  */
 
@@ -12,7 +12,6 @@ if (!defined('ABSPATH')) {
 
 class Hot_News_Affiliate_Manager
 {
-    
     /**
      * Constructor
      */
@@ -24,13 +23,13 @@ class Hot_News_Affiliate_Manager
         add_action('wp_ajax_hot_news_update_affiliate', array($this, 'ajax_update_affiliate'));
         add_action('wp_ajax_hot_news_delete_affiliate', array($this, 'ajax_delete_affiliate'));
         add_action('wp_ajax_hot_news_toggle_affiliate', array($this, 'ajax_toggle_affiliate'));
-        
+
         // Frontend modal
         add_action('wp_enqueue_scripts', array($this, 'enqueue_frontend_scripts'));
         add_action('wp_footer', array($this, 'add_affiliate_modal'));
         add_action('wp_ajax_hot_news_get_random_affiliate', array($this, 'ajax_get_random_affiliate'));
         add_action('wp_ajax_nopriv_hot_news_get_random_affiliate', array($this, 'ajax_get_random_affiliate'));
-        
+
         // Create database tables
         add_action('after_setup_theme', array($this, 'create_affiliate_tables'));
     }
@@ -43,7 +42,7 @@ class Hot_News_Affiliate_Manager
         global $wpdb;
 
         $table_name = $wpdb->prefix . 'hot_news_affiliates';
-        
+
         $charset_collate = $wpdb->get_charset_collate();
 
         $sql = "CREATE TABLE $table_name (
@@ -62,14 +61,14 @@ class Hot_News_Affiliate_Manager
 
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         dbDelta($sql);
-        
+
         // Set version
         update_option('hot_news_affiliate_db_version', '1.0');
-        
+
         // Create sample data if table is empty
         $this->create_sample_affiliate_data();
     }
-    
+
     /**
      * Create sample affiliate data for testing
      */
@@ -77,10 +76,10 @@ class Hot_News_Affiliate_Manager
     {
         global $wpdb;
         $table_name = $wpdb->prefix . 'hot_news_affiliates';
-        
+
         // Check if table is empty
         $count = $wpdb->get_var("SELECT COUNT(*) FROM $table_name");
-        
+
         if ($count == 0) {
             // Insert sample affiliate data
             $sample_data = array(
@@ -92,7 +91,7 @@ class Hot_News_Affiliate_Manager
                 ),
                 array(
                     'title' => 'Laptop Gaming ROG - Khuyến mãi sốc',
-                    'url' => 'https://example.com/affiliate-link-2', 
+                    'url' => 'https://example.com/affiliate-link-2',
                     'image_url' => get_template_directory_uri() . '/assets/images/ads-2.jpg',
                     'is_active' => 1
                 ),
@@ -103,7 +102,7 @@ class Hot_News_Affiliate_Manager
                     'is_active' => 0 // Inactive for testing
                 )
             );
-            
+
             foreach ($sample_data as $data) {
                 $wpdb->insert($table_name, $data);
             }
@@ -138,7 +137,7 @@ class Hot_News_Affiliate_Manager
         wp_enqueue_media(); // For image uploads
         wp_enqueue_script('hot-news-affiliate-admin', get_template_directory_uri() . '/assets/js/admin-affiliate.js', array('jquery'), HOT_NEWS_VERSION, true);
         wp_enqueue_style('hot-news-affiliate-admin', get_template_directory_uri() . '/assets/css/admin-affiliate.css', array(), HOT_NEWS_VERSION);
-        
+
         wp_localize_script('hot-news-affiliate-admin', 'hotNewsAffiliate', array(
             'ajax_url' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('hot_news_affiliate_nonce'),
@@ -166,12 +165,12 @@ class Hot_News_Affiliate_Manager
         if (is_single()) {
             wp_enqueue_script('hot-news-affiliate-modal', get_template_directory_uri() . '/assets/js/affiliate-modal.js', array('jquery'), HOT_NEWS_VERSION, true);
             wp_enqueue_style('hot-news-affiliate-overlay', get_template_directory_uri() . '/assets/css/affiliate-overlay.css', array(), HOT_NEWS_VERSION);
-            
+
             // Debug: Check if we have active affiliates
             global $wpdb;
             $table_name = $wpdb->prefix . 'hot_news_affiliates';
             $active_count = $wpdb->get_var("SELECT COUNT(*) FROM $table_name WHERE is_active = 1");
-            
+
             wp_localize_script('hot-news-affiliate-modal', 'hotNewsAffiliateModal', array(
                 'ajax_url' => admin_url('admin-ajax.php'),
                 'nonce' => wp_create_nonce('hot_news_affiliate_modal_nonce'),
@@ -204,7 +203,7 @@ class Hot_News_Affiliate_Manager
                         <div class="stat-label"><?php _e('Tổng số links', 'hot-news'); ?></div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-number"><?php echo count(array_filter($affiliates, function($a) { return $a->is_active; })); ?></div>
+                        <div class="stat-number"><?php echo count(array_filter($affiliates, function ($a) { return $a->is_active; })); ?></div>
                         <div class="stat-label"><?php _e('Links đang hoạt động', 'hot-news'); ?></div>
                     </div>
                     <div class="stat-card">
@@ -387,7 +386,7 @@ class Hot_News_Affiliate_Manager
                 </div>
             </td>
             <td class="affiliate-url">
-                <a href="<?php echo esc_url($affiliate->url); ?>" target="_blank" rel="noopener" class="affiliate-link">
+                <a href="<?php echo esc_url($affiliate->url); ?>"  class="affiliate-link">
                     <?php echo esc_html(wp_trim_words($affiliate->url, 6, '...')); ?>
                     <span class="dashicons dashicons-external"></span>
                 </a>
@@ -432,7 +431,7 @@ class Hot_News_Affiliate_Manager
     public function ajax_add_affiliate()
     {
         check_ajax_referer('hot_news_affiliate_nonce', 'nonce');
-        
+
         if (!current_user_can('manage_options')) {
             wp_send_json_error('Permission denied');
             return;
@@ -465,11 +464,11 @@ class Hot_News_Affiliate_Manager
         if ($result) {
             $affiliate_id = $wpdb->insert_id;
             $affiliate = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table_name WHERE id = %d", $affiliate_id));
-            
+
             ob_start();
             $this->render_affiliate_row($affiliate);
             $row_html = ob_get_clean();
-            
+
             wp_send_json_success(array(
                 'message' => 'Affiliate đã được thêm thành công!',
                 'affiliate' => $affiliate,
@@ -486,7 +485,7 @@ class Hot_News_Affiliate_Manager
     public function ajax_update_affiliate()
     {
         check_ajax_referer('hot_news_affiliate_nonce', 'nonce');
-        
+
         if (!current_user_can('manage_options')) {
             wp_send_json_error('Permission denied');
             return;
@@ -521,11 +520,11 @@ class Hot_News_Affiliate_Manager
 
         if ($result !== false) {
             $affiliate = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table_name WHERE id = %d", $id));
-            
+
             ob_start();
             $this->render_affiliate_row($affiliate);
             $row_html = ob_get_clean();
-            
+
             wp_send_json_success(array(
                 'message' => 'Affiliate đã được cập nhật!',
                 'affiliate' => $affiliate,
@@ -542,7 +541,7 @@ class Hot_News_Affiliate_Manager
     public function ajax_delete_affiliate()
     {
         check_ajax_referer('hot_news_affiliate_nonce', 'nonce');
-        
+
         if (!current_user_can('manage_options')) {
             wp_send_json_error('Permission denied');
             return;
@@ -568,7 +567,7 @@ class Hot_News_Affiliate_Manager
     public function ajax_toggle_affiliate()
     {
         check_ajax_referer('hot_news_affiliate_nonce', 'nonce');
-        
+
         if (!current_user_can('manage_options')) {
             wp_send_json_error('Permission denied');
             return;
@@ -636,7 +635,7 @@ class Hot_News_Affiliate_Manager
         global $wpdb;
         $table_name = $wpdb->prefix . 'hot_news_affiliates';
         $active_count = $wpdb->get_var("SELECT COUNT(*) FROM $table_name WHERE is_active = 1");
-        
+
         if (defined('WP_DEBUG') && WP_DEBUG) {
             echo "<!-- Affiliate Debug: Adding modal HTML, active count: {$active_count} -->";
         }
@@ -657,7 +656,7 @@ class Hot_News_Affiliate_Manager
                 <div class="affiliate-content">
                     <!-- Clickable Image -->
                     <div class="affiliate-image-container">
-                        <a id="affiliate-popup-link" href="#" target="_blank" rel="noopener sponsored" class="affiliate-image-link">
+                        <a id="affiliate-popup-link" href="#" rel="noopener sponsored" class="affiliate-image-link">
                             <img id="affiliate-popup-image" src="" alt="" class="affiliate-image">
                             <div class="affiliate-text-overlay">
                                 <h3 id="affiliate-popup-title" class="affiliate-title"></h3>
@@ -693,7 +692,7 @@ class Hot_News_Affiliate_Manager
 new Hot_News_Affiliate_Manager();
 
 // Register settings
-add_action('admin_init', function() {
+add_action('admin_init', function () {
     register_setting('hot_news_affiliate_settings', 'hot_news_affiliate_show_modal');
     register_setting('hot_news_affiliate_settings', 'hot_news_affiliate_modal_delay');
 });
