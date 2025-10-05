@@ -8,7 +8,7 @@
  */
 
 if (!defined('HOT_NEWS_VERSION')) {
-    define('HOT_NEWS_VERSION', '1.1.2');
+    define('HOT_NEWS_VERSION', '1.2.0');
 }
 
 /**
