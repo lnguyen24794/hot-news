@@ -240,6 +240,22 @@ function hot_news_scripts()
     // Enqueue main theme script
     wp_enqueue_script('hot-news-main', get_template_directory_uri() . '/assets/js/main.js', array('jquery', 'bootstrap', 'slick-js'), HOT_NEWS_VERSION, true);
 
+    // Enqueue sensitive content styles and scripts
+    wp_enqueue_style('hot-news-sensitive-content', get_template_directory_uri() . '/assets/css/sensitive-content.css', array(), HOT_NEWS_VERSION);
+    wp_enqueue_script('hot-news-sensitive-content', get_template_directory_uri() . '/assets/js/sensitive-content.js', array('jquery'), HOT_NEWS_VERSION, true);
+
+    // Pass sensitive content data to JavaScript
+    if (is_single() || is_page()) {
+        $post_id = get_the_ID();
+        $is_sensitive = get_post_meta($post_id, '_sensitive_content', true);
+        wp_localize_script('hot-news-sensitive-content', 'hotNewsSensitive', array(
+            'isSensitive' => $is_sensitive === '1',
+            'confirmText' => __('Bạn có chắc muốn xem nội dung nhạy cảm này?', 'hot-news'),
+            'viewButtonText' => __('Nhấn để xem', 'hot-news'),
+            'warningText' => __('Nội dung nhạy cảm', 'hot-news')
+        ));
+    }
+
     // Enqueue comment reply script
     if (is_singular() && comments_open() && get_option('thread_comments')) {
         wp_enqueue_script('comment-reply');
@@ -522,6 +538,7 @@ function hot_news_featured_post_callback($post)
     wp_nonce_field('hot_news_save_featured_post', 'hot_news_featured_post_nonce');
     $featured = get_post_meta($post->ID, '_featured_post', true);
     $hot_news = get_post_meta($post->ID, '_hot_news', true);
+    $sensitive_content = get_post_meta($post->ID, '_sensitive_content', true);
     ?>
     <p>
         <label for="hot_news_featured_post">
@@ -534,6 +551,14 @@ function hot_news_featured_post_callback($post)
             <input type="checkbox" id="hot_news_hot_post" name="hot_news_hot_post" value="1" <?php checked($hot_news, '1'); ?> />
             <strong><?php _e('🔥 Đánh dấu là tin HOT', 'hot-news'); ?></strong>
         </label>
+    </p>
+    <p style="border-top: 1px solid #ddd; padding-top: 10px; margin-top: 10px;">
+        <label for="hot_news_sensitive_content">
+            <input type="checkbox" id="hot_news_sensitive_content" name="hot_news_sensitive_content" value="1" <?php checked($sensitive_content, '1'); ?> />
+            <strong style="color: #d63638;"><?php _e('⚠️ Bài viết nhạy cảm', 'hot-news'); ?></strong>
+        </label>
+        <br>
+        <small style="color: #646970;"><?php _e('Làm mờ hình ảnh/video nhạy cảm. Người xem cần xác nhận để xem rõ.', 'hot-news'); ?></small>
     </p>
     <?php
 }
@@ -605,6 +630,13 @@ function hot_news_save_featured_post($post_id)
         update_post_meta($post_id, '_hot_news', '1');
     } else {
         delete_post_meta($post_id, '_hot_news');
+    }
+
+    // Save sensitive content field
+    if (isset($_POST['hot_news_sensitive_content'])) {
+        update_post_meta($post_id, '_sensitive_content', '1');
+    } else {
+        delete_post_meta($post_id, '_sensitive_content');
     }
 }
 add_action('save_post', 'hot_news_save_featured_post');
@@ -1559,22 +1591,34 @@ function hot_news_load_more_posts()
         $post_count++;
 
         ob_start();
+        $sensitive_class = hot_news_get_sensitive_class();
+        $is_sensitive = hot_news_is_sensitive_content();
+        $thumbnail_class = 'img-fluid';
+        if ($sensitive_class) {
+            $thumbnail_class .= ' ' . $sensitive_class;
+        }
         ?>
-        <div class="news-feed-item" data-post-id="<?php echo get_the_ID(); ?>">
+        <div class="news-feed-item" data-post-id="<?php echo get_the_ID(); ?>" <?php echo hot_news_get_sensitive_wrapper_attr(); ?>>
             <div class="news-item-card">
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="news-image">
+                        <div class="news-image" style="position: relative;">
                             <?php if (has_post_thumbnail()) : ?>
                                 <a href="<?php the_permalink(); ?>">
-                                    <?php the_post_thumbnail('news-medium', array('class' => 'img-fluid')); ?>
+                                    <?php the_post_thumbnail('news-medium', array('class' => $thumbnail_class)); ?>
                                 </a>
                             <?php else : ?>
                                 <a href="<?php the_permalink(); ?>">
                                     <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/news-350x223-' . (($post_count % 5) + 1) . '.jpg'); ?>" 
-                                         alt="<?php the_title_attribute(); ?>" class="img-fluid">
+                                         alt="<?php the_title_attribute(); ?>" class="<?php echo $thumbnail_class; ?>">
                                 </a>
                             <?php endif; ?>
+                            <?php
+                            // Render overlay for sensitive content
+                            if ($is_sensitive) {
+                                echo hot_news_render_sensitive_overlay();
+                            }
+        ?>
                         </div>
                     </div>
                     <div class="col-md-8">
@@ -1593,7 +1637,7 @@ function hot_news_load_more_posts()
                                 </a>
                                 <div class="news-stats">
                                     <?php
-                                    $views = get_post_meta(get_the_ID(), '_post_views', true) ?: 0;
+                $views = get_post_meta(get_the_ID(), '_post_views', true) ?: 0;
         $likes = get_post_meta(get_the_ID(), '_post_likes', true) ?: 0;
         ?>
                                     <span class="stat-item">
@@ -1627,6 +1671,63 @@ function hot_news_load_more_posts()
 }
 add_action('wp_ajax_hot_news_load_more_posts', 'hot_news_load_more_posts');
 add_action('wp_ajax_nopriv_hot_news_load_more_posts', 'hot_news_load_more_posts');
+
+/**
+ * Check if post has sensitive content
+ */
+function hot_news_is_sensitive_content($post_id = null)
+{
+    if (!$post_id) {
+        $post_id = get_the_ID();
+    }
+    return get_post_meta($post_id, '_sensitive_content', true) === '1';
+}
+
+/**
+ * Get sensitive content class for images
+ */
+function hot_news_get_sensitive_class($post_id = null)
+{
+    if (hot_news_is_sensitive_content($post_id)) {
+        return 'sensitive-content-blur';
+    }
+    return '';
+}
+
+/**
+ * Get sensitive content wrapper attributes
+ */
+function hot_news_get_sensitive_wrapper_attr($post_id = null)
+{
+    if (hot_news_is_sensitive_content($post_id)) {
+        return ' data-sensitive="true"';
+    }
+    return '';
+}
+
+/**
+ * Render sensitive content overlay button
+ */
+function hot_news_render_sensitive_overlay($post_id = null)
+{
+    if (!hot_news_is_sensitive_content($post_id)) {
+        return '';
+    }
+
+    ob_start();
+    ?>
+    <div class="sensitive-content-overlay">
+        <div class="sensitive-content-warning">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p><?php _e('Nội dung nhạy cảm', 'hot-news'); ?></p>
+            <button class="btn btn-light btn-sm sensitive-view-btn">
+                <i class="fas fa-eye"></i> <?php _e('Nhấn để xem', 'hot-news'); ?>
+            </button>
+        </div>
+    </div>
+    <?php
+    return ob_get_clean();
+}
 
 /**
  * Analytics dashboard widget content

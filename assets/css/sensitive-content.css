@@ -1,0 +1,249 @@
+/**
+ * Sensitive Content Styles
+ * 
+ * Styles for blurred sensitive images and overlay controls
+ */
+
+/* Blurred image effect */
+.sensitive-content-blur {
+    filter: blur(20px);
+    transition: filter 0.3s ease;
+    position: relative;
+}
+
+.sensitive-content-blur.revealed {
+    filter: blur(0);
+}
+
+/* Wrapper for images with overlay */
+.sensitive-image-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.sensitive-image-wrapper img,
+.sensitive-image-wrapper iframe,
+.sensitive-image-wrapper video {
+    width: 100%;
+    height: auto;
+}
+
+/* Overlay warning */
+.sensitive-content-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    transition: opacity 0.3s ease;
+}
+
+.sensitive-content-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.sensitive-content-warning {
+    text-align: center;
+    color: #fff;
+    padding: 20px;
+}
+
+.sensitive-content-warning i {
+    font-size: 48px;
+    color: #ffc107;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.sensitive-content-warning p {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #fff;
+}
+
+.sensitive-view-btn {
+    background: #fff;
+    color: #333;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sensitive-view-btn:hover {
+    background: #f8f9fa;
+    transform: scale(1.05);
+}
+
+.sensitive-view-btn i {
+    margin-right: 5px;
+}
+
+/* Featured image on single post */
+.post-featured-image {
+    position: relative;
+}
+
+.post-featured-image.sensitive-wrapper {
+    position: relative;
+    display: block;
+}
+
+/* Archive/list images */
+.news-image,
+.hot-news-image,
+.related-post-image,
+.popular-post-item,
+.tab-news-item {
+    position: relative;
+}
+
+.news-image a,
+.hot-news-image a,
+.related-post-image a {
+    display: block;
+    position: relative;
+}
+
+/* Content images and videos */
+.entry-content img,
+.entry-content iframe,
+.entry-content video {
+    max-width: 100%;
+    height: auto;
+}
+
+.entry-content .sensitive-image-wrapper {
+    margin: 20px 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .sensitive-content-warning i {
+        font-size: 36px;
+    }
+    
+    .sensitive-content-warning p {
+        font-size: 16px;
+    }
+    
+    .sensitive-view-btn {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+}
+
+/* Animation for reveal */
+@keyframes revealContent {
+    from {
+        filter: blur(20px);
+        opacity: 0.5;
+    }
+    to {
+        filter: blur(0);
+        opacity: 1;
+    }
+}
+
+.sensitive-content-blur.revealing {
+    animation: revealContent 0.5s ease forwards;
+}
+
+/* Thumbnail images in lists */
+.card-img-top.sensitive-content-blur,
+img.sensitive-content-blur {
+    width: 100%;
+    object-fit: cover;
+}
+
+/* Small overlay for thumbnails */
+.news-image .sensitive-content-overlay,
+.hot-news-image .sensitive-content-overlay,
+.related-post-image .sensitive-content-overlay {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.news-image .sensitive-content-warning,
+.hot-news-image .sensitive-content-warning,
+.related-post-image .sensitive-content-warning {
+    padding: 10px;
+}
+
+.news-image .sensitive-content-warning i,
+.hot-news-image .sensitive-content-warning i,
+.related-post-image .sensitive-content-warning i {
+    font-size: 24px;
+    margin-bottom: 5px;
+}
+
+.news-image .sensitive-content-warning p,
+.hot-news-image .sensitive-content-warning p,
+.related-post-image .sensitive-content-warning p {
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.news-image .sensitive-view-btn,
+.hot-news-image .sensitive-view-btn,
+.related-post-image .sensitive-view-btn {
+    padding: 5px 10px;
+    font-size: 11px;
+}
+
+/* Very small thumbnails (sidebar, related posts) */
+.tab-news-item .sensitive-content-overlay,
+.popular-post-item .sensitive-content-overlay {
+    background: rgba(0, 0, 0, 0.85);
+}
+
+.tab-news-item .sensitive-content-warning,
+.popular-post-item .sensitive-content-warning {
+    padding: 5px;
+}
+
+.tab-news-item .sensitive-content-warning i,
+.popular-post-item .sensitive-content-warning i {
+    font-size: 18px;
+    margin-bottom: 3px;
+}
+
+.tab-news-item .sensitive-content-warning p,
+.popular-post-item .sensitive-content-warning p {
+    font-size: 10px;
+    margin-bottom: 5px;
+}
+
+.tab-news-item .sensitive-view-btn,
+.popular-post-item .sensitive-view-btn {
+    padding: 3px 8px;
+    font-size: 10px;
+}
+
+/* Badge for sensitive posts in lists */
+.sensitive-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #d63638;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 600;
+    z-index: 5;
+    text-transform: uppercase;
+}
+
+.sensitive-badge i {
+    margin-right: 3px;
+}
