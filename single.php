@@ -146,32 +146,18 @@ while (have_posts()) :
                                 <?php foreach ($related_posts as $post) :
                                     setup_postdata($post); ?>
                                     <div class="col-md-4">
-                                        <div class="related-post-item" <?php echo hot_news_get_sensitive_wrapper_attr(); ?>>
-                                            <div class="related-post-image" style="position: relative;">
-                                                <?php
-                                                $sensitive_class = hot_news_get_sensitive_class();
-                                    $is_sensitive = hot_news_is_sensitive_content();
-                                    $thumbnail_class = 'img-fluid';
-                                    if ($sensitive_class) {
-                                        $thumbnail_class .= ' ' . $sensitive_class;
-                                    }
-                                    ?>
+                                        <div class="related-post-item">
+                                            <div class="related-post-image">
                                                 <?php if (has_post_thumbnail()) : ?>
                                                     <a href="<?php the_permalink(); ?>">
-                                                        <?php the_post_thumbnail('news-medium', array('class' => $thumbnail_class)); ?>
+                                                        <?php the_post_thumbnail('news-medium', array('class' => 'img-fluid')); ?>
                                                     </a>
                                                 <?php else : ?>
                                                     <a href="<?php the_permalink(); ?>">
                                                         <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/news-350x223-' . ((array_search($post, $related_posts) % 5) + 1) . '.jpg'); ?>" 
-                                                             alt="<?php the_title_attribute(); ?>" class="<?php echo $thumbnail_class; ?>">
+                                                             alt="<?php the_title_attribute(); ?>" class="img-fluid">
                                                     </a>
                                                 <?php endif; ?>
-                                                <?php
-                                    // Render overlay for sensitive content
-                                    if ($is_sensitive) {
-                                        echo hot_news_render_sensitive_overlay();
-                                    }
-                                    ?>
                                             </div>
                                             <div class="related-post-content">
                                                 <h5 class="related-post-title">
@@ -248,33 +234,19 @@ hot_news_display_ad('single_sidebar_ad', $fallback_html);
             $featured_posts = hot_news_get_featured_posts(5);
 foreach ($featured_posts as $post) :
     setup_postdata($post); ?>
-                                            <div class="tab-news-item" <?php echo hot_news_get_sensitive_wrapper_attr(); ?>>
+                                            <div class="tab-news-item">
                                                 <div class="row no-gutters">
-                                                    <div class="col-4" style="position: relative;">
-                                                        <?php
-                                                        $sensitive_class = hot_news_get_sensitive_class();
-    $is_sensitive = hot_news_is_sensitive_content();
-    $thumbnail_class = 'img-fluid';
-    if ($sensitive_class) {
-        $thumbnail_class .= ' ' . $sensitive_class;
-    }
-    ?>
+                                                    <div class="col-4">
                                                         <?php if (has_post_thumbnail()) : ?>
                                                             <a href="<?php the_permalink(); ?>">
-                                                                <?php the_post_thumbnail('news-small', array('class' => $thumbnail_class)); ?>
+                                                                <?php the_post_thumbnail('news-small', array('class' => 'img-fluid')); ?>
                                                             </a>
                                                         <?php else : ?>
                                                             <a href="<?php the_permalink(); ?>">
                                                                 <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/news-350x223-' . ((array_search($post, $featured_posts) % 5) + 1) . '.jpg'); ?>" 
-                                                                     alt="<?php the_title_attribute(); ?>" class="<?php echo $thumbnail_class; ?>">
+                                                                     alt="<?php the_title_attribute(); ?>" class="img-fluid">
                                                             </a>
                                                         <?php endif; ?>
-                                                        <?php
-    // Render overlay for sensitive content
-    if ($is_sensitive) {
-        echo hot_news_render_sensitive_overlay();
-    }
-    ?>
                                                     </div>
                                                     <div class="col-8">
                                                         <div class="tab-news-content">
@@ -296,33 +268,19 @@ wp_reset_postdata(); ?>
 $popular_posts = hot_news_get_popular_posts(5);
 foreach ($popular_posts as $post) :
     setup_postdata($post); ?>
-                                            <div class="tab-news-item" <?php echo hot_news_get_sensitive_wrapper_attr(); ?>>
+                                            <div class="tab-news-item">
                                                 <div class="row no-gutters">
-                                                    <div class="col-4" style="position: relative;">
-                                                        <?php
-                                                        $sensitive_class = hot_news_get_sensitive_class();
-    $is_sensitive = hot_news_is_sensitive_content();
-    $thumbnail_class = 'img-fluid';
-    if ($sensitive_class) {
-        $thumbnail_class .= ' ' . $sensitive_class;
-    }
-    ?>
+                                                    <div class="col-4">
                                                         <?php if (has_post_thumbnail()) : ?>
                                                             <a href="<?php the_permalink(); ?>">
-                                                                <?php the_post_thumbnail('news-small', array('class' => $thumbnail_class)); ?>
+                                                                <?php the_post_thumbnail('news-small', array('class' => 'img-fluid')); ?>
                                                             </a>
                                                         <?php else : ?>
                                                             <a href="<?php the_permalink(); ?>">
                                                                 <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/news-350x223-' . ((array_search($post, $popular_posts) % 5) + 1) . '.jpg'); ?>" 
-                                                                     alt="<?php the_title_attribute(); ?>" class="<?php echo $thumbnail_class; ?>">
+                                                                     alt="<?php the_title_attribute(); ?>" class="img-fluid">
                                                             </a>
                                                         <?php endif; ?>
-                                                        <?php
-    // Render overlay for sensitive content
-    if ($is_sensitive) {
-        echo hot_news_render_sensitive_overlay();
-    }
-    ?>
                                                     </div>
                                                     <div class="col-8">
                                                         <div class="tab-news-content">
@@ -344,33 +302,19 @@ wp_reset_postdata(); ?>
 $latest_posts = get_posts(array('posts_per_page' => 5));
 foreach ($latest_posts as $post) :
     setup_postdata($post); ?>
-                                            <div class="tab-news-item" <?php echo hot_news_get_sensitive_wrapper_attr(); ?>>
+                                            <div class="tab-news-item">
                                                 <div class="row no-gutters">
-                                                    <div class="col-4" style="position: relative;">
-                                                        <?php
-                                                        $sensitive_class = hot_news_get_sensitive_class();
-    $is_sensitive = hot_news_is_sensitive_content();
-    $thumbnail_class = 'img-fluid';
-    if ($sensitive_class) {
-        $thumbnail_class .= ' ' . $sensitive_class;
-    }
-    ?>
+                                                    <div class="col-4">
                                                         <?php if (has_post_thumbnail()) : ?>
                                                             <a href="<?php the_permalink(); ?>">
-                                                                <?php the_post_thumbnail('news-small', array('class' => $thumbnail_class)); ?>
+                                                                <?php the_post_thumbnail('news-small', array('class' => 'img-fluid')); ?>
                                                             </a>
                                                         <?php else : ?>
                                                             <a href="<?php the_permalink(); ?>">
                                                                 <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/news-350x223-' . ((array_search($post, $latest_posts) % 5) + 1) . '.jpg'); ?>" 
-                                                                     alt="<?php the_title_attribute(); ?>" class="<?php echo $thumbnail_class; ?>">
+                                                                     alt="<?php the_title_attribute(); ?>" class="img-fluid">
                                                             </a>
                                                         <?php endif; ?>
-                                                        <?php
-    // Render overlay for sensitive content
-    if ($is_sensitive) {
-        echo hot_news_render_sensitive_overlay();
-    }
-    ?>
                                                     </div>
                                                     <div class="col-8">
                                                         <div class="tab-news-content">
