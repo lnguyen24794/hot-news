@@ -8,7 +8,7 @@
  */
 
 if (!defined('HOT_NEWS_VERSION')) {
-    define('HOT_NEWS_VERSION', '1.2.1');
+    define('HOT_NEWS_VERSION', '1.2.2');
 }
 
 /**
@@ -1788,6 +1788,47 @@ function hot_news_attachment_to_js_blur($response, $attachment, $meta)
     return $response;
 }
 add_filter('wp_prepare_attachment_for_js', 'hot_news_attachment_to_js_blur', 10, 3);
+
+/**
+ * Add sensitive class when inserting image into editor
+ */
+function hot_news_image_send_to_editor($html, $id, $caption, $title, $align, $url, $size, $alt)
+{
+    // Check if this image should be blurred
+    if (hot_news_is_image_sensitive($id)) {
+        // Use DOMDocument to properly modify the HTML
+        $dom = new DOMDocument();
+        libxml_use_internal_errors(true);
+        $dom->loadHTML('<?xml encoding="utf-8" ?>' . $html);
+        libxml_clear_errors();
+        
+        $images = $dom->getElementsByTagName('img');
+        if ($images->length > 0) {
+            $img = $images->item(0);
+            
+            // Add class
+            $existing_class = $img->getAttribute('class');
+            if ($existing_class) {
+                $img->setAttribute('class', $existing_class . ' sensitive-image-blur');
+            } else {
+                $img->setAttribute('class', 'sensitive-image-blur');
+            }
+            
+            // Add data attributes
+            $img->setAttribute('data-sensitive', 'true');
+            $img->setAttribute('data-attachment-id', $id);
+            
+            // Get the modified HTML
+            $body = $dom->getElementsByTagName('body')->item(0);
+            $html = '';
+            foreach ($body->childNodes as $node) {
+                $html .= $dom->saveHTML($node);
+            }
+        }
+    }
+    return $html;
+}
+add_filter('image_send_to_editor', 'hot_news_image_send_to_editor', 10, 8);
 
 /**
  * Analytics dashboard widget content

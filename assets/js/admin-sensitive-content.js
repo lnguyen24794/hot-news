@@ -9,8 +9,15 @@
 
     // Wait for WordPress media to be ready
     $(document).ready(function() {
+        console.log('🚀 Admin Sensitive Content Script Loaded');
+        
         if (typeof wp !== 'undefined' && wp.media && wp.media.view) {
             initMediaModalCheckbox();
+        }
+        
+        // For Gutenberg/Block Editor - add class when image block is inserted
+        if (typeof wp !== 'undefined' && wp.data && wp.blocks) {
+            initBlockEditorSupport();
         }
     });
 
@@ -188,6 +195,61 @@
                 $(this).remove();
             });
         }, 3000);
+    }
+
+    /**
+     * Add Gutenberg/Block Editor support
+     */
+    function initBlockEditorSupport() {
+        console.log('🎨 Initializing Block Editor support');
+        
+        // Subscribe to block editor changes
+        var previousBlocks = [];
+        
+        wp.data.subscribe(function() {
+            var blocks = wp.data.select('core/block-editor').getBlocks();
+            
+            blocks.forEach(function(block) {
+                if (block.name === 'core/image' && block.attributes.id) {
+                    var attachmentId = block.attributes.id;
+                    var className = block.attributes.className || '';
+                    var blockKey = block.clientId + '_' + attachmentId;
+                    
+                    // Skip if already processed
+                    if (previousBlocks.indexOf(blockKey) !== -1) {
+                        return;
+                    }
+                    
+                    // Check if this image is marked as sensitive
+                    var attachment = wp.media.attachment(attachmentId);
+                    if (attachment) {
+                        attachment.fetch().done(function() {
+                            var blurValue = attachment.get('blur_sensitive_image');
+                            
+                            if (blurValue === '1') {
+                                // Add sensitive class if not already there
+                                if (className.indexOf('sensitive-image-blur') === -1) {
+                                    console.log('📸 Adding sensitive class to block image #' + attachmentId);
+                                    className = (className + ' sensitive-image-blur').trim();
+                                    
+                                    // Update block attributes
+                                    wp.data.dispatch('core/block-editor').updateBlockAttributes(
+                                        block.clientId,
+                                        {
+                                            className: className
+                                        }
+                                    );
+                                    
+                                    previousBlocks.push(blockKey);
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        });
+        
+        console.log('✅ Block Editor support initialized');
     }
 
 })(jQuery);
