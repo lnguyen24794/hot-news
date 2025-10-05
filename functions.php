@@ -8,7 +8,7 @@
  */
 
 if (!defined('HOT_NEWS_VERSION')) {
-    define('HOT_NEWS_VERSION', '1.2.3');
+    define('HOT_NEWS_VERSION', '1.2.4');
 }
 
 /**
@@ -1908,6 +1908,96 @@ function hot_news_video_send_to_editor($html, $id)
     return $html;
 }
 add_filter('video_send_to_editor', 'hot_news_video_send_to_editor', 10, 2);
+
+/**
+ * Alternative: Handle all media (images and videos) being sent to editor
+ */
+function hot_news_media_send_to_editor($html, $id, $attachment)
+{
+    $post = get_post($id);
+    if (!$post) {
+        return $html;
+    }
+    
+    $mime_type = $post->post_mime_type;
+    
+    // Handle video
+    if (strpos($mime_type, 'video') !== false && hot_news_is_video_sensitive($id)) {
+        // Add class and data attributes to video tags
+        $html = preg_replace(
+            '/<video([^>]*)class="([^"]*)"/',
+            '<video$1class="$2 sensitive-video-blur" data-sensitive="true" data-attachment-id="' . $id . '"',
+            $html,
+            1,
+            $count
+        );
+        
+        // If no class attribute exists, add it
+        if ($count === 0) {
+            $html = preg_replace(
+                '/<video/',
+                '<video class="sensitive-video-blur" data-sensitive="true" data-attachment-id="' . $id . '"',
+                $html,
+                1
+            );
+        }
+    }
+    
+    return $html;
+}
+add_filter('media_send_to_editor', 'hot_news_media_send_to_editor', 10, 3);
+
+/**
+ * Process content to add blur classes to videos (fallback for existing content)
+ */
+function hot_news_add_blur_to_videos_in_content($content)
+{
+    if (!is_single() && !is_page()) {
+        return $content;
+    }
+    
+    // Find all video tags with wp-video class or attachment-id
+    if (preg_match_all('/<video[^>]*class="[^"]*wp-video[^"]*"[^>]*>/i', $content, $matches)) {
+        foreach ($matches[0] as $video_tag) {
+            // Try to extract attachment ID
+            if (preg_match('/id="wp-video-(\d+)/', $video_tag, $id_match)) {
+                $attachment_id = $id_match[1];
+                
+                // Check if this video should be blurred
+                if (hot_news_is_video_sensitive($attachment_id)) {
+                    // Add sensitive class if not already there
+                    if (strpos($video_tag, 'sensitive-video-blur') === false) {
+                        $new_video_tag = str_replace('class="', 'class="sensitive-video-blur ', $video_tag);
+                        $new_video_tag = str_replace('<video', '<video data-sensitive="true" data-attachment-id="' . $attachment_id . '"', $new_video_tag);
+                        $content = str_replace($video_tag, $new_video_tag, $content);
+                    }
+                }
+            }
+        }
+    }
+    
+    // Also handle video shortcodes
+    if (preg_match_all('/\[video[^\]]*\]/i', $content, $shortcode_matches)) {
+        foreach ($shortcode_matches[0] as $shortcode) {
+            // Extract ID from shortcode if present
+            if (preg_match('/\[video[^\]]*id="(\d+)"/', $shortcode, $id_match) || 
+                preg_match('/\[video[^\]]*\s+(\d+)/', $shortcode, $id_match)) {
+                $attachment_id = $id_match[1];
+                
+                if (hot_news_is_video_sensitive($attachment_id)) {
+                    // Add class parameter to shortcode
+                    if (strpos($shortcode, 'class=') === false) {
+                        $new_shortcode = str_replace('[video', '[video class="sensitive-video-blur"', $shortcode);
+                        $content = str_replace($shortcode, $new_shortcode, $content);
+                    }
+                }
+            }
+        }
+    }
+    
+    return $content;
+}
+add_filter('the_content', 'hot_news_add_blur_to_videos_in_content', 10);
 
 /**
  * Analytics dashboard widget content
