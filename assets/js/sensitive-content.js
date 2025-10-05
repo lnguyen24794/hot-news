@@ -1,7 +1,7 @@
 /**
  * Sensitive Content Handler
  * 
- * Handles revealing blurred sensitive images (per-image basis)
+ * Handles revealing blurred sensitive images and videos
  */
 
 (function($) {
@@ -22,28 +22,30 @@
             const $button = $(this);
             const $overlay = $button.closest('.sensitive-content-overlay');
             const $wrapper = $overlay.parent();
-            const $blurredItem = $wrapper.find('.sensitive-image-blur');
+            const $blurredItem = $wrapper.find('.sensitive-image-blur, .sensitive-video-blur');
             
             // Reveal the content
             revealContent($overlay, $blurredItem, $wrapper);
         });
 
-        // Find and wrap all images with sensitive-image-blur class
-        wrapSensitiveImages();
+        // Find and wrap all sensitive media (images and videos)
+        wrapSensitiveMedia();
 
         // Check session storage for previously revealed items
         restoreRevealedState();
     }
 
     /**
-     * Find and wrap all images marked as sensitive
+     * Find and wrap all media (images and videos) marked as sensitive
      */
-    function wrapSensitiveImages() {
-        // Debug: Log all images found
+    function wrapSensitiveMedia() {
+        // Debug: Log all media found
         const $allImages = $('img');
+        const $allVideos = $('video');
         console.log('🔍 Total images found:', $allImages.length);
+        console.log('🔍 Total videos found:', $allVideos.length);
         
-        // Find all images with sensitive-image-blur class
+        // Find all sensitive images
         const $sensitiveImages = $('.sensitive-image-blur, img[data-sensitive="true"]');
         console.log('🔍 Sensitive images found:', $sensitiveImages.length);
         
@@ -52,7 +54,7 @@
             console.log('📸 Processing sensitive image #' + (index + 1), $img.attr('src'));
             
             // Skip if already wrapped
-            if ($img.parent().hasClass('sensitive-image-wrapper')) {
+            if ($img.parent().hasClass('sensitive-media-wrapper') || $img.parent().hasClass('sensitive-image-wrapper')) {
                 console.log('⏭️ Already wrapped, skipping');
                 return;
             }
@@ -60,7 +62,7 @@
             // If image is inside a link, wrap the link instead
             if ($img.parent().is('a')) {
                 const $link = $img.parent();
-                if (!$link.parent().hasClass('sensitive-image-wrapper')) {
+                if (!$link.parent().hasClass('sensitive-media-wrapper')) {
                     console.log('🔗 Wrapping link instead of image');
                     wrapElement($link, $img);
                 }
@@ -70,25 +72,53 @@
             }
         });
 
-        // Also check for featured image if it has sensitive class
-        const $featuredSensitive = $('.post-featured-image img.sensitive-image-blur');
-        console.log('🎯 Featured sensitive images:', $featuredSensitive.length);
+        // Find all sensitive videos
+        const $sensitiveVideos = $('.sensitive-video-blur, video[data-sensitive="true"]');
+        console.log('🔍 Sensitive videos found:', $sensitiveVideos.length);
+        
+        $sensitiveVideos.each(function(index) {
+            const $video = $(this);
+            console.log('🎬 Processing sensitive video #' + (index + 1), $video.attr('src'));
+            
+            // Skip if already wrapped
+            if ($video.parent().hasClass('sensitive-media-wrapper') || $video.parent().hasClass('sensitive-video-wrapper')) {
+                console.log('⏭️ Already wrapped, skipping');
+                return;
+            }
+            
+            // Pause video if it's playing
+            if ($video[0] && !$video[0].paused) {
+                $video[0].pause();
+            }
+            
+            console.log('🎥 Wrapping video directly');
+            wrapElement($video, $video);
+        });
+
+        // Also check for featured media if it has sensitive class
+        const $featuredSensitive = $('.post-featured-image img.sensitive-image-blur, .post-featured-image video.sensitive-video-blur');
+        console.log('🎯 Featured sensitive media:', $featuredSensitive.length);
         
         $featuredSensitive.each(function() {
-            const $img = $(this);
-            const $container = $img.closest('.post-featured-image');
+            const $media = $(this);
+            const $container = $media.closest('.post-featured-image');
             
             if ($container.length && !$container.find('.sensitive-content-overlay').length) {
-                console.log('✨ Adding overlay to featured image');
+                console.log('✨ Adding overlay to featured media');
                 const itemId = 'sensitive-featured-' + Math.random().toString(36).substr(2, 9);
                 $container.attr('data-item-id', itemId);
                 
                 const overlayHtml = createOverlayHtml();
                 $container.css('position', 'relative').append(overlayHtml);
+                
+                // Pause video if featured media is video
+                if ($media.is('video') && $media[0] && !$media[0].paused) {
+                    $media[0].pause();
+                }
             }
         });
         
-        console.log('✅ Sensitive images processing complete');
+        console.log('✅ Sensitive media processing complete');
     }
 
     /**
@@ -111,12 +141,14 @@
     /**
      * Wrap an element with sensitive content wrapper
      */
-    function wrapElement($elementToWrap, $imageElement) {
+    function wrapElement($elementToWrap, $mediaElement) {
         const itemId = 'sensitive-' + Math.random().toString(36).substr(2, 9);
-        const attachmentId = $imageElement.data('attachment-id') || '';
+        const attachmentId = $mediaElement.data('attachment-id') || '';
+        const isVideo = $mediaElement.is('video');
+        const wrapperClass = isVideo ? 'sensitive-video-wrapper' : 'sensitive-image-wrapper';
         
         const $wrapper = $('<div>', {
-            'class': 'sensitive-image-wrapper',
+            'class': wrapperClass + ' sensitive-media-wrapper',
             'data-item-id': itemId,
             'data-attachment-id': attachmentId
         });

@@ -38,16 +38,30 @@
                 AttachmentDetailsOriginal.prototype.render.apply(this, arguments);
                 
                 var model = this.model;
-                if (!model || model.get('type') !== 'image') {
-                    console.log('⏭️ Not an image, skipping');
+                if (!model) {
+                    return this;
+                }
+                
+                var mediaType = model.get('type');
+                var isImage = mediaType === 'image';
+                var isVideo = mediaType === 'video';
+                
+                // Only show for images and videos
+                if (!isImage && !isVideo) {
+                    console.log('⏭️ Not an image or video, skipping');
                     return this;
                 }
                 
                 var attachmentId = model.get('id');
-                var blurValue = model.get('blur_sensitive_image') || '';
+                var blurMeta = isImage ? 'blur_sensitive_image' : 'blur_sensitive_video';
+                var blurValue = model.get(blurMeta) || '';
                 var isChecked = blurValue === '1';
+                var label = isImage ? '⚠️ Làm mờ hình ảnh' : '⚠️ Làm mờ video';
+                var description = isImage ? 
+                    'Đánh dấu hình ảnh này là nhạy cảm (sẽ bị làm mờ khi hiển thị)' : 
+                    'Đánh dấu video này là nhạy cảm (sẽ bị làm mờ khi hiển thị)';
                 
-                console.log('📸 Image attachment:', {
+                console.log(`📸 ${mediaType} attachment:`, {
                     id: attachmentId,
                     blurValue: blurValue,
                     isChecked: isChecked
@@ -60,20 +74,21 @@
                 }
                 
                 // Remove old checkbox if exists
-                $settings.find('.blur-sensitive-image-setting').remove();
+                $settings.find('.blur-sensitive-media-setting').remove();
                 
                 // Create checkbox HTML
                 var checkboxHtml = `
-                    <label class="setting blur-sensitive-image-setting" style="padding: 12px 0; border-top: 1px solid #ddd; margin-top: 10px; display: block;">
-                        <span class="name" style="display: inline-block; min-width: 30%; vertical-align: top; font-weight: 600;">⚠️ Làm mờ hình ảnh</span>
+                    <label class="setting blur-sensitive-media-setting" style="padding: 12px 0; border-top: 1px solid #ddd; margin-top: 10px; display: block;">
+                        <span class="name" style="display: inline-block; min-width: 30%; vertical-align: top; font-weight: 600;">${label}</span>
                         <span style="display: inline-block; width: 65%;">
                             <input type="checkbox" 
                                    class="blur-sensitive-checkbox" 
                                    data-attachment-id="${attachmentId}"
+                                   data-media-type="${mediaType}"
                                    value="1" 
                                    ${isChecked ? 'checked' : ''} />
                             <span style="display: block; font-size: 12px; color: #666; margin-top: 5px;">
-                                Đánh dấu hình ảnh này là nhạy cảm (sẽ bị làm mờ khi hiển thị)
+                                ${description}
                             </span>
                         </span>
                     </label>
@@ -88,18 +103,21 @@
                 this.$el.find('.blur-sensitive-checkbox').on('change', function() {
                     var $checkbox = $(this);
                     var attachmentId = $checkbox.data('attachment-id');
+                    var mediaType = $checkbox.data('media-type');
                     var isChecked = $checkbox.is(':checked') ? '1' : '0';
                     
                     console.log('🔄 Checkbox changed:', {
                         attachmentId: attachmentId,
+                        mediaType: mediaType,
                         isChecked: isChecked
                     });
                     
                     // Update model
-                    self.model.set('blur_sensitive_image', isChecked);
+                    var blurMeta = mediaType === 'image' ? 'blur_sensitive_image' : 'blur_sensitive_video';
+                    self.model.set(blurMeta, isChecked);
                     
                     // Save to database via AJAX
-                    saveBlurSetting(attachmentId, isChecked);
+                    saveBlurSetting(attachmentId, isChecked, mediaType);
                 });
                 
                 return this;
@@ -112,10 +130,15 @@
     /**
      * Save blur setting via AJAX
      */
-    function saveBlurSetting(attachmentId, value) {
+    function saveBlurSetting(attachmentId, value, mediaType) {
+        mediaType = mediaType || 'image';
+        var action = mediaType === 'video' ? 'save_blur_sensitive_video' : 'save_blur_sensitive_image';
+        
         console.log('💾 Saving blur setting:', {
             attachmentId: attachmentId,
             value: value,
+            mediaType: mediaType,
+            action: action,
             nonce: hotNewsSensitiveAdmin.nonce
         });
         
@@ -123,9 +146,10 @@
             url: hotNewsSensitiveAdmin.ajaxurl || ajaxurl,
             type: 'POST',
             data: {
-                action: 'save_blur_sensitive_image',
+                action: action,
                 attachment_id: attachmentId,
                 blur_value: value,
+                media_type: mediaType,
                 nonce: hotNewsSensitiveAdmin.nonce
             },
             success: function(response) {
@@ -210,7 +234,11 @@
             var blocks = wp.data.select('core/block-editor').getBlocks();
             
             blocks.forEach(function(block) {
-                if (block.name === 'core/image' && block.attributes.id) {
+                // Handle both image and video blocks
+                var isImageBlock = block.name === 'core/image';
+                var isVideoBlock = block.name === 'core/video';
+                
+                if ((isImageBlock || isVideoBlock) && block.attributes.id) {
                     var attachmentId = block.attributes.id;
                     var className = block.attributes.className || '';
                     var blockKey = block.clientId + '_' + attachmentId;
@@ -220,17 +248,20 @@
                         return;
                     }
                     
-                    // Check if this image is marked as sensitive
+                    // Check if this media is marked as sensitive
                     var attachment = wp.media.attachment(attachmentId);
                     if (attachment) {
                         attachment.fetch().done(function() {
-                            var blurValue = attachment.get('blur_sensitive_image');
+                            var blurMeta = isImageBlock ? 'blur_sensitive_image' : 'blur_sensitive_video';
+                            var blurClass = isImageBlock ? 'sensitive-image-blur' : 'sensitive-video-blur';
+                            var blurValue = attachment.get(blurMeta);
                             
                             if (blurValue === '1') {
                                 // Add sensitive class if not already there
-                                if (className.indexOf('sensitive-image-blur') === -1) {
-                                    console.log('📸 Adding sensitive class to block image #' + attachmentId);
-                                    className = (className + ' sensitive-image-blur').trim();
+                                if (className.indexOf(blurClass) === -1) {
+                                    var mediaType = isImageBlock ? 'image' : 'video';
+                                    console.log('📸 Adding sensitive class to block ' + mediaType + ' #' + attachmentId);
+                                    className = (className + ' ' + blurClass).trim();
                                     
                                     // Update block attributes
                                     wp.data.dispatch('core/block-editor').updateBlockAttributes(

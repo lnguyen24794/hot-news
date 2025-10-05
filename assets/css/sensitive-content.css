@@ -15,8 +15,21 @@
     filter: blur(0);
 }
 
-/* Wrapper for images with overlay */
-.sensitive-image-wrapper {
+/* Blurred video effect */
+.sensitive-video-blur {
+    filter: blur(10px);
+    transition: filter 0.3s ease;
+    position: relative;
+}
+
+.sensitive-video-blur.revealed {
+    filter: blur(0);
+}
+
+/* Wrapper for images and videos with overlay */
+.sensitive-image-wrapper,
+.sensitive-media-wrapper,
+.sensitive-video-wrapper {
     position: relative;
     display: inline-block;
     width: 100%;
@@ -24,7 +37,10 @@
 
 .sensitive-image-wrapper img,
 .sensitive-image-wrapper iframe,
-.sensitive-image-wrapper video {
+.sensitive-image-wrapper video,
+.sensitive-media-wrapper img,
+.sensitive-media-wrapper video,
+.sensitive-video-wrapper video {
     width: 100%;
     height: auto;
 }
@@ -109,7 +125,9 @@
     height: auto;
 }
 
-.entry-content .sensitive-image-wrapper {
+.entry-content .sensitive-image-wrapper,
+.entry-content .sensitive-media-wrapper,
+.entry-content .sensitive-video-wrapper {
     margin: 20px 0;
 }
 
@@ -141,12 +159,14 @@
     }
 }
 
-.sensitive-image-blur.revealing {
+.sensitive-image-blur.revealing,
+.sensitive-video-blur.revealing {
     animation: revealContent 0.5s ease forwards;
 }
 
-/* Thumbnail images - only apply to content images */
-img.sensitive-image-blur {
+/* Thumbnail images and videos - only apply to content */
+img.sensitive-image-blur,
+video.sensitive-video-blur {
     width: 100%;
     object-fit: cover;
 }

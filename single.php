@@ -46,12 +46,6 @@ while (have_posts()) :
                         <?php hot_news_display_meta(); ?>
                     </div>
                     
-                    <?php if (has_post_thumbnail()) : ?>
-                        <div class="post-featured-image">
-                            <?php the_post_thumbnail('large', array('class' => 'img-fluid')); ?>
-                        </div>
-                    <?php endif; ?>
-                    
                     <div class="post-content">
                         <div class="entry-content">
                             <?php

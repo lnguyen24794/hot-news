@@ -8,7 +8,7 @@
  */
 
 if (!defined('HOT_NEWS_VERSION')) {
-    define('HOT_NEWS_VERSION', '1.2.2');
+    define('HOT_NEWS_VERSION', '1.2.3');
 }
 
 /**
@@ -1672,7 +1672,7 @@ function hot_news_enqueue_admin_media_scripts($hook)
 add_action('admin_enqueue_scripts', 'hot_news_enqueue_admin_media_scripts');
 
 /**
- * AJAX handler to save blur setting
+ * AJAX handler to save blur setting (for both images and videos)
  */
 function hot_news_save_blur_sensitive_ajax()
 {
@@ -1685,55 +1685,76 @@ function hot_news_save_blur_sensitive_ajax()
 
     $attachment_id = isset($_POST['attachment_id']) ? intval($_POST['attachment_id']) : 0;
     $blur_value = isset($_POST['blur_value']) ? sanitize_text_field($_POST['blur_value']) : '0';
+    $media_type = isset($_POST['media_type']) ? sanitize_text_field($_POST['media_type']) : 'image'; // 'image' or 'video'
 
     if ($attachment_id <= 0) {
         wp_send_json_error('Invalid attachment ID');
         return;
     }
 
+    // Determine meta key based on media type
+    $meta_key = ($media_type === 'video') ? '_blur_sensitive_video' : '_blur_sensitive_image';
+
     // Save to database
     if ($blur_value === '1') {
-        $result = update_post_meta($attachment_id, '_blur_sensitive_image', '1');
+        $result = update_post_meta($attachment_id, $meta_key, '1');
     } else {
-        $result = delete_post_meta($attachment_id, '_blur_sensitive_image');
+        $result = delete_post_meta($attachment_id, $meta_key);
     }
 
     // Verify it was saved
-    $saved_value = get_post_meta($attachment_id, '_blur_sensitive_image', true);
+    $saved_value = get_post_meta($attachment_id, $meta_key, true);
 
     wp_send_json_success(array(
         'message' => 'Blur setting saved',
         'attachment_id' => $attachment_id,
+        'media_type' => $media_type,
         'blur_value' => $blur_value,
         'saved_value' => $saved_value,
         'update_result' => $result
     ));
 }
 add_action('wp_ajax_save_blur_sensitive_image', 'hot_news_save_blur_sensitive_ajax');
+add_action('wp_ajax_save_blur_sensitive_video', 'hot_news_save_blur_sensitive_ajax');
 
 /**
- * Add custom field to media attachment (image blur setting)
+ * Add custom field to media attachment (image/video blur setting)
  */
 function hot_news_attachment_field_blur($form_fields, $post)
 {
-    // Only show for images
-    if (strpos($post->post_mime_type, 'image') === false) {
+    $is_image = strpos($post->post_mime_type, 'image') !== false;
+    $is_video = strpos($post->post_mime_type, 'video') !== false;
+    
+    // Only show for images and videos
+    if (!$is_image && !$is_video) {
         return $form_fields;
     }
 
-    $blur_image = get_post_meta($post->ID, '_blur_sensitive_image', true);
+    if ($is_image) {
+        $blur_value = get_post_meta($post->ID, '_blur_sensitive_image', true);
+        $field_name = 'blur_sensitive_image';
+        $label = '⚠️ Làm mờ hình ảnh';
+        $description = 'Đánh dấu hình ảnh này là nhạy cảm (sẽ bị làm mờ khi hiển thị)';
+        $help = 'Hình ảnh sẽ bị làm mờ và yêu cầu người xem click để xem rõ';
+    } else {
+        $blur_value = get_post_meta($post->ID, '_blur_sensitive_video', true);
+        $field_name = 'blur_sensitive_video';
+        $label = '⚠️ Làm mờ video';
+        $description = 'Đánh dấu video này là nhạy cảm (sẽ bị làm mờ khi hiển thị)';
+        $help = 'Video sẽ bị làm mờ và yêu cầu người xem click để xem rõ';
+    }
 
-    $form_fields['blur_sensitive_image'] = array(
-        'label' => __('⚠️ Làm mờ hình ảnh', 'hot-news'),
+    $form_fields[$field_name] = array(
+        'label' => __($label, 'hot-news'),
         'input' => 'html',
-        'html' => '<label for="attachments-' . $post->ID . '-blur_sensitive_image">
+        'html' => '<label for="attachments-' . $post->ID . '-' . $field_name . '">
                     <input type="checkbox" 
-                           id="attachments-' . $post->ID . '-blur_sensitive_image" 
-                           name="attachments[' . $post->ID . '][blur_sensitive_image]" 
-                           value="1" ' . checked($blur_image, '1', false) . ' />
-                    ' . __('Đánh dấu hình ảnh này là nhạy cảm (sẽ bị làm mờ khi hiển thị)', 'hot-news') . '
+                           id="attachments-' . $post->ID . '-' . $field_name . '" 
+                           name="attachments[' . $post->ID . '][' . $field_name . ']" 
+                           value="1" ' . checked($blur_value, '1', false) . ' />
+                    ' . __($description, 'hot-news') . '
                    </label>',
-        'helps' => __('Hình ảnh sẽ bị làm mờ và yêu cầu người xem click để xem rõ', 'hot-news'),
+        'helps' => __($help, 'hot-news'),
     );
 
     return $form_fields;
@@ -1745,10 +1766,18 @@ add_filter('attachment_fields_to_edit', 'hot_news_attachment_field_blur', 10, 2)
  */
 function hot_news_attachment_field_blur_save($post, $attachment)
 {
+    // Save image blur setting
     if (isset($attachment['blur_sensitive_image'])) {
         update_post_meta($post['ID'], '_blur_sensitive_image', '1');
     } else {
         delete_post_meta($post['ID'], '_blur_sensitive_image');
+    }
+
+    // Save video blur setting
+    if (isset($attachment['blur_sensitive_video'])) {
+        update_post_meta($post['ID'], '_blur_sensitive_video', '1');
+    } else {
+        delete_post_meta($post['ID'], '_blur_sensitive_video');
     }
 
     return $post;
@@ -1761,6 +1790,14 @@ add_filter('attachment_fields_to_save', 'hot_news_attachment_field_blur_save', 1
 function hot_news_is_image_sensitive($attachment_id)
 {
     return get_post_meta($attachment_id, '_blur_sensitive_image', true) === '1';
+}
+
+/**
+ * Check if video attachment should be blurred
+ */
+function hot_news_is_video_sensitive($attachment_id)
+{
+    return get_post_meta($attachment_id, '_blur_sensitive_video', true) === '1';
 }
 
 /**
@@ -1784,6 +1821,7 @@ function hot_news_attachment_to_js_blur($response, $attachment, $meta)
 {
     if (isset($attachment->ID)) {
         $response['blur_sensitive_image'] = get_post_meta($attachment->ID, '_blur_sensitive_image', true);
+        $response['blur_sensitive_video'] = get_post_meta($attachment->ID, '_blur_sensitive_video', true);
     }
     return $response;
 }
@@ -1829,6 +1867,47 @@ function hot_news_image_send_to_editor($html, $id, $caption, $title, $align, $ur
     return $html;
 }
 add_filter('image_send_to_editor', 'hot_news_image_send_to_editor', 10, 8);
+
+/**
+ * Add sensitive class to videos in content
+ */
+function hot_news_video_send_to_editor($html, $id)
+{
+    // Check if this video should be blurred
+    if (hot_news_is_video_sensitive($id)) {
+        // Use DOMDocument to properly modify the HTML
+        $dom = new DOMDocument();
+        libxml_use_internal_errors(true);
+        $dom->loadHTML('<?xml encoding="utf-8" ?>' . $html);
+        libxml_clear_errors();
+        
+        $videos = $dom->getElementsByTagName('video');
+        if ($videos->length > 0) {
+            $video = $videos->item(0);
+            
+            // Add class
+            $existing_class = $video->getAttribute('class');
+            if ($existing_class) {
+                $video->setAttribute('class', $existing_class . ' sensitive-video-blur');
+            } else {
+                $video->setAttribute('class', 'sensitive-video-blur');
+            }
+            
+            // Add data attributes
+            $video->setAttribute('data-sensitive', 'true');
+            $video->setAttribute('data-attachment-id', $id);
+            
+            // Get the modified HTML
+            $body = $dom->getElementsByTagName('body')->item(0);
+            $html = '';
+            foreach ($body->childNodes as $node) {
+                $html .= $dom->saveHTML($node);
+            }
+        }
+    }
+    return $html;
+}
+add_filter('video_send_to_editor', 'hot_news_video_send_to_editor', 10, 2);
 
 /**
  * Analytics dashboard widget content
