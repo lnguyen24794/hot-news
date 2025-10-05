@@ -1691,16 +1691,22 @@ function hot_news_save_blur_sensitive_ajax()
         return;
     }
 
+    // Save to database
     if ($blur_value === '1') {
-        update_post_meta($attachment_id, '_blur_sensitive_image', '1');
+        $result = update_post_meta($attachment_id, '_blur_sensitive_image', '1');
     } else {
-        delete_post_meta($attachment_id, '_blur_sensitive_image');
+        $result = delete_post_meta($attachment_id, '_blur_sensitive_image');
     }
+
+    // Verify it was saved
+    $saved_value = get_post_meta($attachment_id, '_blur_sensitive_image', true);
 
     wp_send_json_success(array(
         'message' => 'Blur setting saved',
         'attachment_id' => $attachment_id,
-        'blur_value' => $blur_value
+        'blur_value' => $blur_value,
+        'saved_value' => $saved_value,
+        'update_result' => $result
     ));
 }
 add_action('wp_ajax_save_blur_sensitive_image', 'hot_news_save_blur_sensitive_ajax');

@@ -18,48 +18,75 @@
      * Initialize checkbox in media modal
      */
     function initMediaModalCheckbox() {
+        console.log('🎬 Initializing media modal checkbox');
+        
         // Hook into the attachment details view
         var AttachmentDetailsOriginal = wp.media.view.Attachment.Details.TwoColumn;
         
         wp.media.view.Attachment.Details.TwoColumn = AttachmentDetailsOriginal.extend({
-            template: function(view) {
-                var html = AttachmentDetailsOriginal.prototype.template.call(this, view);
+            render: function() {
+                console.log('🖼️ Rendering attachment details');
                 
-                // Only add checkbox for images
-                if (view.model && view.model.get('type') === 'image') {
-                    var attachmentId = view.model.get('id');
-                    var blurValue = view.model.get('blur_sensitive_image') || '';
-                    var isChecked = blurValue === '1' ? 'checked' : '';
-                    
-                    var checkboxHtml = `
-                        <label class="setting blur-sensitive-image-setting" style="padding: 12px 0; border-top: 1px solid #ddd; margin-top: 10px;">
-                            <span class="name" style="min-width: 30%; max-width: 30%;">⚠️ Làm mờ hình ảnh</span>
+                // Call original render
+                AttachmentDetailsOriginal.prototype.render.apply(this, arguments);
+                
+                var model = this.model;
+                if (!model || model.get('type') !== 'image') {
+                    console.log('⏭️ Not an image, skipping');
+                    return this;
+                }
+                
+                var attachmentId = model.get('id');
+                var blurValue = model.get('blur_sensitive_image') || '';
+                var isChecked = blurValue === '1';
+                
+                console.log('📸 Image attachment:', {
+                    id: attachmentId,
+                    blurValue: blurValue,
+                    isChecked: isChecked
+                });
+                
+                // Find the settings container
+                var $settings = this.$el.find('.settings');
+                if ($settings.length === 0) {
+                    $settings = this.$el.find('.attachment-info');
+                }
+                
+                // Remove old checkbox if exists
+                $settings.find('.blur-sensitive-image-setting').remove();
+                
+                // Create checkbox HTML
+                var checkboxHtml = `
+                    <label class="setting blur-sensitive-image-setting" style="padding: 12px 0; border-top: 1px solid #ddd; margin-top: 10px; display: block;">
+                        <span class="name" style="display: inline-block; min-width: 30%; vertical-align: top; font-weight: 600;">⚠️ Làm mờ hình ảnh</span>
+                        <span style="display: inline-block; width: 65%;">
                             <input type="checkbox" 
                                    class="blur-sensitive-checkbox" 
                                    data-attachment-id="${attachmentId}"
                                    value="1" 
-                                   ${isChecked} />
-                            <span style="display: block; font-size: 12px; color: #666; margin-top: 5px; max-width: 65%;">
+                                   ${isChecked ? 'checked' : ''} />
+                            <span style="display: block; font-size: 12px; color: #666; margin-top: 5px;">
                                 Đánh dấu hình ảnh này là nhạy cảm (sẽ bị làm mờ khi hiển thị)
                             </span>
-                        </label>
-                    `;
-                    
-                    // Inject checkbox into the settings area
-                    html = html.replace('</div>', checkboxHtml + '</div>');
-                }
+                        </span>
+                    </label>
+                `;
                 
-                return html;
-            },
-            
-            render: function() {
-                AttachmentDetailsOriginal.prototype.render.apply(this, arguments);
+                // Append checkbox
+                $settings.append(checkboxHtml);
+                console.log('✅ Checkbox added to modal');
                 
                 // Attach change event handler
                 var self = this;
                 this.$el.find('.blur-sensitive-checkbox').on('change', function() {
-                    var attachmentId = $(this).data('attachment-id');
-                    var isChecked = $(this).is(':checked') ? '1' : '0';
+                    var $checkbox = $(this);
+                    var attachmentId = $checkbox.data('attachment-id');
+                    var isChecked = $checkbox.is(':checked') ? '1' : '0';
+                    
+                    console.log('🔄 Checkbox changed:', {
+                        attachmentId: attachmentId,
+                        isChecked: isChecked
+                    });
                     
                     // Update model
                     self.model.set('blur_sensitive_image', isChecked);
@@ -71,14 +98,22 @@
                 return this;
             }
         });
+        
+        console.log('✅ Media modal checkbox initialized');
     }
 
     /**
      * Save blur setting via AJAX
      */
     function saveBlurSetting(attachmentId, value) {
+        console.log('💾 Saving blur setting:', {
+            attachmentId: attachmentId,
+            value: value,
+            nonce: hotNewsSensitiveAdmin.nonce
+        });
+        
         $.ajax({
-            url: ajaxurl,
+            url: hotNewsSensitiveAdmin.ajaxurl || ajaxurl,
             type: 'POST',
             data: {
                 action: 'save_blur_sensitive_image',
@@ -87,19 +122,26 @@
                 nonce: hotNewsSensitiveAdmin.nonce
             },
             success: function(response) {
+                console.log('✅ AJAX Response:', response);
+                
                 if (response.success) {
-                    console.log('Blur setting saved for attachment #' + attachmentId);
+                    console.log('✅ Blur setting saved for attachment #' + attachmentId);
+                    console.log('📊 Saved value:', response.data.saved_value);
                     
                     // Show temporary success message
-                    showSuccessNotice('Cài đặt làm mờ đã được lưu');
+                    showSuccessNotice('Đã lưu cài đặt làm mờ');
                 } else {
-                    console.error('Failed to save blur setting:', response.data);
+                    console.error('❌ Failed to save:', response.data);
                     showErrorNotice('Lỗi khi lưu cài đặt');
                 }
             },
             error: function(xhr, status, error) {
-                console.error('AJAX error:', error);
-                showErrorNotice('Lỗi kết nối');
+                console.error('❌ AJAX error:', {
+                    status: status,
+                    error: error,
+                    response: xhr.responseText
+                });
+                showErrorNotice('Lỗi kết nối: ' + error);
             }
         });
     }
