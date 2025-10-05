@@ -1,7 +1,7 @@
 /**
  * Sensitive Content Handler
  * 
- * Handles revealing blurred sensitive images and videos
+ * Handles revealing blurred sensitive images (per-image basis)
  */
 
 (function($) {
@@ -22,112 +22,93 @@
             const $button = $(this);
             const $overlay = $button.closest('.sensitive-content-overlay');
             const $wrapper = $overlay.parent();
-            const $blurredItem = $wrapper.find('.sensitive-content-blur');
+            const $blurredItem = $wrapper.find('.sensitive-image-blur');
             
             // Reveal the content
             revealContent($overlay, $blurredItem, $wrapper);
         });
 
-        // Apply blur to content images and videos on page load
-        if (typeof hotNewsSensitive !== 'undefined' && hotNewsSensitive.isSensitive) {
-            wrapContentMedia();
-        }
+        // Find and wrap all images with sensitive-image-blur class
+        wrapSensitiveImages();
 
         // Check session storage for previously revealed items
         restoreRevealedState();
     }
 
     /**
-     * Wrap images and videos in content with sensitive wrapper
+     * Find and wrap all images marked as sensitive
      */
-    function wrapContentMedia() {
-        const $content = $('.entry-content, .post-content');
-        
-        if ($content.length === 0) {
-            return;
-        }
-
-        // Wrap images
-        $content.find('img').each(function() {
+    function wrapSensitiveImages() {
+        // Find all images with sensitive-image-blur class
+        $('.sensitive-image-blur, img[data-sensitive="true"]').each(function() {
             const $img = $(this);
             
-            // Skip if already wrapped or is within a link
-            if ($img.parent().hasClass('sensitive-image-wrapper') || 
-                $img.parent().is('a')) {
-                if ($img.parent().is('a')) {
-                    const $link = $img.parent();
-                    if (!$link.parent().hasClass('sensitive-image-wrapper')) {
-                        wrapElement($link);
-                    }
-                }
+            // Skip if already wrapped
+            if ($img.parent().hasClass('sensitive-image-wrapper')) {
                 return;
             }
             
-            wrapElement($img);
-        });
-
-        // Wrap videos
-        $content.find('video').each(function() {
-            const $video = $(this);
-            
-            if ($video.parent().hasClass('sensitive-image-wrapper')) {
-                return;
-            }
-            
-            wrapElement($video);
-        });
-
-        // Wrap iframes (embedded videos)
-        $content.find('iframe').each(function() {
-            const $iframe = $(this);
-            
-            // Check if it's a video iframe (YouTube, Vimeo, etc.)
-            const src = $iframe.attr('src') || '';
-            if (src.includes('youtube.com') || 
-                src.includes('youtu.be') || 
-                src.includes('vimeo.com') ||
-                src.includes('dailymotion.com')) {
-                
-                if ($iframe.parent().hasClass('sensitive-image-wrapper')) {
-                    return;
+            // If image is inside a link, wrap the link instead
+            if ($img.parent().is('a')) {
+                const $link = $img.parent();
+                if (!$link.parent().hasClass('sensitive-image-wrapper')) {
+                    wrapElement($link, $img);
                 }
+            } else {
+                wrapElement($img, $img);
+            }
+        });
+
+        // Also check for featured image if it has sensitive class
+        $('.post-featured-image img.sensitive-image-blur').each(function() {
+            const $img = $(this);
+            const $container = $img.closest('.post-featured-image');
+            
+            if ($container.length && !$container.find('.sensitive-content-overlay').length) {
+                const itemId = 'sensitive-featured-' + Math.random().toString(36).substr(2, 9);
+                $container.attr('data-item-id', itemId);
                 
-                wrapElement($iframe);
+                const overlayHtml = createOverlayHtml();
+                $container.css('position', 'relative').append(overlayHtml);
             }
         });
     }
 
     /**
-     * Wrap an element with sensitive content wrapper
+     * Create overlay HTML
      */
-    function wrapElement($element) {
-        const itemId = 'sensitive-' + Math.random().toString(36).substr(2, 9);
-        
-        const $wrapper = $('<div>', {
-            'class': 'sensitive-image-wrapper',
-            'data-item-id': itemId
-        });
-
-        // Add blur class to element
-        $element.addClass('sensitive-content-blur');
-
-        // Wrap the element
-        $element.wrap($wrapper);
-
-        // Add overlay
-        const overlayHtml = `
+    function createOverlayHtml() {
+        return `
             <div class="sensitive-content-overlay">
                 <div class="sensitive-content-warning">
                     <i class="fas fa-exclamation-triangle"></i>
-                    <p>${hotNewsSensitive.warningText || 'Nội dung nhạy cảm'}</p>
+                    <p>${hotNewsSensitive.warningText || 'Hình ảnh nhạy cảm'}</p>
                     <button class="btn btn-light btn-sm sensitive-view-btn">
                         <i class="fas fa-eye"></i> ${hotNewsSensitive.viewButtonText || 'Nhấn để xem'}
                     </button>
                 </div>
             </div>
         `;
+    }
 
-        $element.parent().append(overlayHtml);
+    /**
+     * Wrap an element with sensitive content wrapper
+     */
+    function wrapElement($elementToWrap, $imageElement) {
+        const itemId = 'sensitive-' + Math.random().toString(36).substr(2, 9);
+        const attachmentId = $imageElement.data('attachment-id') || '';
+        
+        const $wrapper = $('<div>', {
+            'class': 'sensitive-image-wrapper',
+            'data-item-id': itemId,
+            'data-attachment-id': attachmentId
+        });
+
+        // Wrap the element
+        $elementToWrap.wrap($wrapper);
+
+        // Add overlay
+        $elementToWrap.parent().append(createOverlayHtml());
     }
 
     /**

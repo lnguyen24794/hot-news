@@ -46,23 +46,9 @@ while (have_posts()) :
                         <?php hot_news_display_meta(); ?>
                     </div>
                     
-                    <?php if (has_post_thumbnail()) :
-                        $sensitive_class = hot_news_get_sensitive_class();
-                        $is_sensitive = hot_news_is_sensitive_content();
-                        ?>
-                        <div class="post-featured-image <?php echo $is_sensitive ? 'sensitive-wrapper' : ''; ?>" <?php echo hot_news_get_sensitive_wrapper_attr(); ?>>
-                            <?php
-                                $thumbnail_class = 'img-fluid';
-                        if ($sensitive_class) {
-                            $thumbnail_class .= ' ' . $sensitive_class;
-                        }
-                        the_post_thumbnail('large', array('class' => $thumbnail_class));
-
-                        // Render overlay for sensitive content
-                        if ($is_sensitive) {
-                            echo hot_news_render_sensitive_overlay();
-                        }
-                        ?>
+                    <?php if (has_post_thumbnail()) : ?>
+                        <div class="post-featured-image">
+                            <?php the_post_thumbnail('large', array('class' => 'img-fluid')); ?>
                         </div>
                     <?php endif; ?>
                     

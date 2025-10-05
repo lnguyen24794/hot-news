@@ -5,13 +5,13 @@
  */
 
 /* Blurred image effect */
-.sensitive-content-blur {
+.sensitive-image-blur {
     filter: blur(10px);
     transition: filter 0.3s ease;
     position: relative;
 }
 
-.sensitive-content-blur.revealed {
+.sensitive-image-blur.revealed {
     filter: blur(0);
 }
 
@@ -132,7 +132,7 @@
 /* Animation for reveal */
 @keyframes revealContent {
     from {
-        filter: blur(20px);
+        filter: blur(10px);
         opacity: 0.5;
     }
     to {
@@ -141,12 +141,12 @@
     }
 }
 
-.sensitive-content-blur.revealing {
+.sensitive-image-blur.revealing {
     animation: revealContent 0.5s ease forwards;
 }
 
 /* Thumbnail images - only apply to content images */
-img.sensitive-content-blur {
+img.sensitive-image-blur {
     width: 100%;
     object-fit: cover;
 }

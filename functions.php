@@ -241,16 +241,12 @@ function hot_news_scripts()
     wp_enqueue_script('hot-news-main', get_template_directory_uri() . '/assets/js/main.js', array('jquery', 'bootstrap', 'slick-js'), HOT_NEWS_VERSION, true);
 
     // Enqueue sensitive content styles and scripts only on single post pages
-    if (is_single()) {
+    if (is_single() || is_page()) {
         wp_enqueue_style('hot-news-sensitive-content', get_template_directory_uri() . '/assets/css/sensitive-content.css', array(), HOT_NEWS_VERSION);
         wp_enqueue_script('hot-news-sensitive-content', get_template_directory_uri() . '/assets/js/sensitive-content.js', array('jquery'), HOT_NEWS_VERSION, true);
 
         // Pass sensitive content data to JavaScript
-        $post_id = get_the_ID();
-        $is_sensitive = get_post_meta($post_id, '_sensitive_content', true);
         wp_localize_script('hot-news-sensitive-content', 'hotNewsSensitive', array(
-            'isSensitive' => $is_sensitive === '1',
-            'confirmText' => __('Bạn có chắc muốn xem nội dung nhạy cảm này?', 'hot-news'),
             'viewButtonText' => __('Nhấn để xem', 'hot-news'),
             'warningText' => __('Hình ảnh nhạy cảm, cân nhắc trước khi xem', 'hot-news')
         ));
@@ -538,7 +534,6 @@ function hot_news_featured_post_callback($post)
     wp_nonce_field('hot_news_save_featured_post', 'hot_news_featured_post_nonce');
     $featured = get_post_meta($post->ID, '_featured_post', true);
     $hot_news = get_post_meta($post->ID, '_hot_news', true);
-    $sensitive_content = get_post_meta($post->ID, '_sensitive_content', true);
     ?>
     <p>
         <label for="hot_news_featured_post">
@@ -553,12 +548,10 @@ function hot_news_featured_post_callback($post)
         </label>
     </p>
     <p style="border-top: 1px solid #ddd; padding-top: 10px; margin-top: 10px;">
-        <label for="hot_news_sensitive_content">
-            <input type="checkbox" id="hot_news_sensitive_content" name="hot_news_sensitive_content" value="1" <?php checked($sensitive_content, '1'); ?> />
-            <strong style="color: #d63638;"><?php _e('⚠️ Bài viết nhạy cảm', 'hot-news'); ?></strong>
-        </label>
-        <br>
-        <small style="color: #646970;"><?php _e('Làm mờ hình ảnh/video nhạy cảm. Người xem cần xác nhận để xem rõ.', 'hot-news'); ?></small>
+        <small style="color: #646970;">
+            <i class="dashicons dashicons-info"></i> 
+            <?php _e('Để làm mờ hình ảnh nhạy cảm: Click chỉnh sửa hình trong bài viết và tick "Làm mờ hình ảnh" trong phần cài đặt.', 'hot-news'); ?>
+        </small>
     </p>
     <?php
 }
@@ -630,13 +623,6 @@ function hot_news_save_featured_post($post_id)
         update_post_meta($post_id, '_hot_news', '1');
     } else {
         delete_post_meta($post_id, '_hot_news');
-    }
-
-    // Save sensitive content field
-    if (isset($_POST['hot_news_sensitive_content'])) {
-        update_post_meta($post_id, '_sensitive_content', '1');
-    } else {
-        delete_post_meta($post_id, '_sensitive_content');
     }
 }
 add_action('save_post', 'hot_news_save_featured_post');
@@ -1661,61 +1647,70 @@ add_action('wp_ajax_hot_news_load_more_posts', 'hot_news_load_more_posts');
 add_action('wp_ajax_nopriv_hot_news_load_more_posts', 'hot_news_load_more_posts');
 
 /**
- * Check if post has sensitive content
+ * Add custom field to media attachment (image blur setting)
  */
-function hot_news_is_sensitive_content($post_id = null)
+function hot_news_attachment_field_blur($form_fields, $post)
 {
-    if (!$post_id) {
-        $post_id = get_the_ID();
+    // Only show for images
+    if (strpos($post->post_mime_type, 'image') === false) {
+        return $form_fields;
     }
-    return get_post_meta($post_id, '_sensitive_content', true) === '1';
+
+    $blur_image = get_post_meta($post->ID, '_blur_sensitive_image', true);
+
+    $form_fields['blur_sensitive_image'] = array(
+        'label' => __('⚠️ Làm mờ hình ảnh', 'hot-news'),
+        'input' => 'html',
+        'html' => '<label for="attachments-' . $post->ID . '-blur_sensitive_image">
+                    <input type="checkbox" 
+                           id="attachments-' . $post->ID . '-blur_sensitive_image" 
+                           name="attachments[' . $post->ID . '][blur_sensitive_image]" 
+                           value="1" ' . checked($blur_image, '1', false) . ' />
+                    ' . __('Đánh dấu hình ảnh này là nhạy cảm (sẽ bị làm mờ khi hiển thị)', 'hot-news') . '
+                   </label>',
+        'helps' => __('Hình ảnh sẽ bị làm mờ và yêu cầu người xem click để xem rõ', 'hot-news'),
+    );
+
+    return $form_fields;
+}
+add_filter('attachment_fields_to_edit', 'hot_news_attachment_field_blur', 10, 2);
+
+/**
+ * Save attachment field blur setting
+ */
+function hot_news_attachment_field_blur_save($post, $attachment)
+{
+    if (isset($attachment['blur_sensitive_image'])) {
+        update_post_meta($post['ID'], '_blur_sensitive_image', '1');
+    } else {
+        delete_post_meta($post['ID'], '_blur_sensitive_image');
+    }
+
+    return $post;
+}
+add_filter('attachment_fields_to_save', 'hot_news_attachment_field_blur_save', 10, 2);
+
+/**
+ * Check if image attachment should be blurred
+ */
+function hot_news_is_image_sensitive($attachment_id)
+{
+    return get_post_meta($attachment_id, '_blur_sensitive_image', true) === '1';
 }
 
 /**
- * Get sensitive content class for images
+ * Add data attribute to images that should be blurred (via filter)
  */
-function hot_news_get_sensitive_class($post_id = null)
+function hot_news_add_blur_attribute_to_images($attr, $attachment, $size)
 {
-    if (hot_news_is_sensitive_content($post_id)) {
-        return 'sensitive-content-blur';
+    if (hot_news_is_image_sensitive($attachment->ID)) {
+        $attr['class'] = isset($attr['class']) ? $attr['class'] . ' sensitive-image-blur' : 'sensitive-image-blur';
+        $attr['data-sensitive'] = 'true';
+        $attr['data-attachment-id'] = $attachment->ID;
     }
-    return '';
+    return $attr;
 }
-
-/**
- * Get sensitive content wrapper attributes
- */
-function hot_news_get_sensitive_wrapper_attr($post_id = null)
-{
-    if (hot_news_is_sensitive_content($post_id)) {
-        return ' data-sensitive="true"';
-    }
-    return '';
-}
-
-/**
- * Render sensitive content overlay button
- */
-function hot_news_render_sensitive_overlay($post_id = null)
-{
-    if (!hot_news_is_sensitive_content($post_id)) {
-        return '';
-    }
-
-    ob_start();
-    ?>
-    <div class="sensitive-content-overlay">
-        <div class="sensitive-content-warning">
-            <i class="fas fa-exclamation-triangle"></i>
-            <p><?php _e('Nội dung nhạy cảm', 'hot-news'); ?></p>
-            <button class="btn btn-light btn-sm sensitive-view-btn">
-                <i class="fas fa-eye"></i> <?php _e('Nhấn để xem', 'hot-news'); ?>
-            </button>
-        </div>
-    </div>
-    <?php
-    return ob_get_clean();
-}
+add_filter('wp_get_attachment_image_attributes', 'hot_news_add_blur_attribute_to_images', 10, 3);
 
 /**
  * Analytics dashboard widget content
