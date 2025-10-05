@@ -8,7 +8,7 @@
  */
 
 if (!defined('HOT_NEWS_VERSION')) {
-    define('HOT_NEWS_VERSION', '1.1.1');
+    define('HOT_NEWS_VERSION', '1.1.2');
 }
 
 /**
@@ -252,7 +252,7 @@ function hot_news_scripts()
             'isSensitive' => $is_sensitive === '1',
             'confirmText' => __('Bạn có chắc muốn xem nội dung nhạy cảm này?', 'hot-news'),
             'viewButtonText' => __('Nhấn để xem', 'hot-news'),
-            'warningText' => __('Nội dung nhạy cảm', 'hot-news')
+            'warningText' => __('Hình ảnh nhạy cảm, cân nhắc trước khi xem', 'hot-news')
         ));
     }
 

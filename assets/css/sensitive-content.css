@@ -6,7 +6,7 @@
 
 /* Blurred image effect */
 .sensitive-content-blur {
-    filter: blur(20px);
+    filter: blur(10px);
     transition: filter 0.3s ease;
     position: relative;
 }
@@ -36,7 +36,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.05);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -99,16 +99,7 @@
     display: block;
 }
 
-/* Single post page images (related, sidebar widgets) */
-.related-post-image,
-.tab-news-item {
-    position: relative;
-}
-
-.related-post-image a {
-    display: block;
-    position: relative;
-}
+/* Single post page - only for main content */
 
 /* Content images and videos */
 .entry-content img,
@@ -154,75 +145,9 @@
     animation: revealContent 0.5s ease forwards;
 }
 
-/* Thumbnail images in single post page */
+/* Thumbnail images - only apply to content images */
 img.sensitive-content-blur {
     width: 100%;
     object-fit: cover;
 }
 
-/* Small overlay for related posts */
-.related-post-image .sensitive-content-overlay {
-    background: rgba(0, 0, 0, 0.8);
-}
-
-.related-post-image .sensitive-content-warning {
-    padding: 10px;
-}
-
-.related-post-image .sensitive-content-warning i {
-    font-size: 24px;
-    margin-bottom: 5px;
-}
-
-.related-post-image .sensitive-content-warning p {
-    font-size: 12px;
-    margin-bottom: 8px;
-}
-
-.related-post-image .sensitive-view-btn {
-    padding: 5px 10px;
-    font-size: 11px;
-}
-
-/* Very small thumbnails (sidebar tab widgets in single post) */
-.tab-news-item .sensitive-content-overlay {
-    background: rgba(0, 0, 0, 0.85);
-}
-
-.tab-news-item .sensitive-content-warning {
-    padding: 5px;
-}
-
-.tab-news-item .sensitive-content-warning i {
-    font-size: 18px;
-    margin-bottom: 3px;
-}
-
-.tab-news-item .sensitive-content-warning p {
-    font-size: 10px;
-    margin-bottom: 5px;
-}
-
-.tab-news-item .sensitive-view-btn {
-    padding: 3px 8px;
-    font-size: 10px;
-}
-
-/* Badge for sensitive posts */
-.single-post .sensitive-badge {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: #d63638;
-    color: #fff;
-    padding: 4px 8px;
-    border-radius: 3px;
-    font-size: 11px;
-    font-weight: 600;
-    z-index: 5;
-    text-transform: uppercase;
-}
-
-.single-post .sensitive-badge i {
-    margin-right: 3px;
-}
