@@ -1647,6 +1647,65 @@ add_action('wp_ajax_hot_news_load_more_posts', 'hot_news_load_more_posts');
 add_action('wp_ajax_nopriv_hot_news_load_more_posts', 'hot_news_load_more_posts');
 
 /**
+ * Enqueue admin scripts for media modal
+ */
+function hot_news_enqueue_admin_media_scripts($hook)
+{
+    // Only load on post editor and media pages
+    if (!in_array($hook, array('post.php', 'post-new.php', 'upload.php'))) {
+        return;
+    }
+
+    wp_enqueue_script(
+        'hot-news-admin-sensitive',
+        get_template_directory_uri() . '/assets/js/admin-sensitive-content.js',
+        array('jquery', 'media-views'),
+        HOT_NEWS_VERSION,
+        true
+    );
+
+    wp_localize_script('hot-news-admin-sensitive', 'hotNewsSensitiveAdmin', array(
+        'nonce' => wp_create_nonce('hot_news_blur_sensitive_nonce'),
+        'ajaxurl' => admin_url('admin-ajax.php')
+    ));
+}
+add_action('admin_enqueue_scripts', 'hot_news_enqueue_admin_media_scripts');
+
+/**
+ * AJAX handler to save blur setting
+ */
+function hot_news_save_blur_sensitive_ajax()
+{
+    check_ajax_referer('hot_news_blur_sensitive_nonce', 'nonce');
+
+    if (!current_user_can('edit_posts')) {
+        wp_send_json_error('Permission denied');
+        return;
+    }
+
+    $attachment_id = isset($_POST['attachment_id']) ? intval($_POST['attachment_id']) : 0;
+    $blur_value = isset($_POST['blur_value']) ? sanitize_text_field($_POST['blur_value']) : '0';
+
+    if ($attachment_id <= 0) {
+        wp_send_json_error('Invalid attachment ID');
+        return;
+    }
+
+    if ($blur_value === '1') {
+        update_post_meta($attachment_id, '_blur_sensitive_image', '1');
+    } else {
+        delete_post_meta($attachment_id, '_blur_sensitive_image');
+    }
+
+    wp_send_json_success(array(
+        'message' => 'Blur setting saved',
+        'attachment_id' => $attachment_id,
+        'blur_value' => $blur_value
+    ));
+}
+add_action('wp_ajax_save_blur_sensitive_image', 'hot_news_save_blur_sensitive_ajax');
+
+/**
  * Add custom field to media attachment (image blur setting)
  */
 function hot_news_attachment_field_blur($form_fields, $post)
@@ -1711,6 +1770,18 @@ function hot_news_add_blur_attribute_to_images($attr, $attachment, $size)
     return $attr;
 }
 add_filter('wp_get_attachment_image_attributes', 'hot_news_add_blur_attribute_to_images', 10, 3);
+
+/**
+ * Add blur setting to attachment data for JavaScript
+ */
+function hot_news_attachment_to_js_blur($response, $attachment, $meta)
+{
+    if (isset($attachment->ID)) {
+        $response['blur_sensitive_image'] = get_post_meta($attachment->ID, '_blur_sensitive_image', true);
+    }
+    return $response;
+}
+add_filter('wp_prepare_attachment_for_js', 'hot_news_attachment_to_js_blur', 10, 3);
 
 /**
  * Analytics dashboard widget content

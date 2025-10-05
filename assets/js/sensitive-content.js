@@ -39,12 +39,21 @@
      * Find and wrap all images marked as sensitive
      */
     function wrapSensitiveImages() {
+        // Debug: Log all images found
+        const $allImages = $('img');
+        console.log('🔍 Total images found:', $allImages.length);
+        
         // Find all images with sensitive-image-blur class
-        $('.sensitive-image-blur, img[data-sensitive="true"]').each(function() {
+        const $sensitiveImages = $('.sensitive-image-blur, img[data-sensitive="true"]');
+        console.log('🔍 Sensitive images found:', $sensitiveImages.length);
+        
+        $sensitiveImages.each(function(index) {
             const $img = $(this);
+            console.log('📸 Processing sensitive image #' + (index + 1), $img.attr('src'));
             
             // Skip if already wrapped
             if ($img.parent().hasClass('sensitive-image-wrapper')) {
+                console.log('⏭️ Already wrapped, skipping');
                 return;
             }
             
@@ -52,19 +61,25 @@
             if ($img.parent().is('a')) {
                 const $link = $img.parent();
                 if (!$link.parent().hasClass('sensitive-image-wrapper')) {
+                    console.log('🔗 Wrapping link instead of image');
                     wrapElement($link, $img);
                 }
             } else {
+                console.log('🖼️ Wrapping image directly');
                 wrapElement($img, $img);
             }
         });
 
         // Also check for featured image if it has sensitive class
-        $('.post-featured-image img.sensitive-image-blur').each(function() {
+        const $featuredSensitive = $('.post-featured-image img.sensitive-image-blur');
+        console.log('🎯 Featured sensitive images:', $featuredSensitive.length);
+        
+        $featuredSensitive.each(function() {
             const $img = $(this);
             const $container = $img.closest('.post-featured-image');
             
             if ($container.length && !$container.find('.sensitive-content-overlay').length) {
+                console.log('✨ Adding overlay to featured image');
                 const itemId = 'sensitive-featured-' + Math.random().toString(36).substr(2, 9);
                 $container.attr('data-item-id', itemId);
                 
@@ -72,6 +87,8 @@
                 $container.css('position', 'relative').append(overlayHtml);
             }
         });
+        
+        console.log('✅ Sensitive images processing complete');
     }
 
     /**
