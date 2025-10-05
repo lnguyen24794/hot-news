@@ -240,12 +240,12 @@ function hot_news_scripts()
     // Enqueue main theme script
     wp_enqueue_script('hot-news-main', get_template_directory_uri() . '/assets/js/main.js', array('jquery', 'bootstrap', 'slick-js'), HOT_NEWS_VERSION, true);
 
-    // Enqueue sensitive content styles and scripts
-    wp_enqueue_style('hot-news-sensitive-content', get_template_directory_uri() . '/assets/css/sensitive-content.css', array(), HOT_NEWS_VERSION);
-    wp_enqueue_script('hot-news-sensitive-content', get_template_directory_uri() . '/assets/js/sensitive-content.js', array('jquery'), HOT_NEWS_VERSION, true);
+    // Enqueue sensitive content styles and scripts only on single post pages
+    if (is_single()) {
+        wp_enqueue_style('hot-news-sensitive-content', get_template_directory_uri() . '/assets/css/sensitive-content.css', array(), HOT_NEWS_VERSION);
+        wp_enqueue_script('hot-news-sensitive-content', get_template_directory_uri() . '/assets/js/sensitive-content.js', array('jquery'), HOT_NEWS_VERSION, true);
 
-    // Pass sensitive content data to JavaScript
-    if (is_single() || is_page()) {
+        // Pass sensitive content data to JavaScript
         $post_id = get_the_ID();
         $is_sensitive = get_post_meta($post_id, '_sensitive_content', true);
         wp_localize_script('hot-news-sensitive-content', 'hotNewsSensitive', array(
@@ -1591,34 +1591,22 @@ function hot_news_load_more_posts()
         $post_count++;
 
         ob_start();
-        $sensitive_class = hot_news_get_sensitive_class();
-        $is_sensitive = hot_news_is_sensitive_content();
-        $thumbnail_class = 'img-fluid';
-        if ($sensitive_class) {
-            $thumbnail_class .= ' ' . $sensitive_class;
-        }
         ?>
-        <div class="news-feed-item" data-post-id="<?php echo get_the_ID(); ?>" <?php echo hot_news_get_sensitive_wrapper_attr(); ?>>
+        <div class="news-feed-item" data-post-id="<?php echo get_the_ID(); ?>">
             <div class="news-item-card">
                 <div class="row">
                     <div class="col-md-4">
-                        <div class="news-image" style="position: relative;">
+                        <div class="news-image">
                             <?php if (has_post_thumbnail()) : ?>
                                 <a href="<?php the_permalink(); ?>">
-                                    <?php the_post_thumbnail('news-medium', array('class' => $thumbnail_class)); ?>
+                                    <?php the_post_thumbnail('news-medium', array('class' => 'img-fluid')); ?>
                                 </a>
                             <?php else : ?>
                                 <a href="<?php the_permalink(); ?>">
                                     <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/news-350x223-' . (($post_count % 5) + 1) . '.jpg'); ?>" 
-                                         alt="<?php the_title_attribute(); ?>" class="<?php echo $thumbnail_class; ?>">
+                                         alt="<?php the_title_attribute(); ?>" class="img-fluid">
                                 </a>
                             <?php endif; ?>
-                            <?php
-                            // Render overlay for sensitive content
-                            if ($is_sensitive) {
-                                echo hot_news_render_sensitive_overlay();
-                            }
-        ?>
                         </div>
                     </div>
                     <div class="col-md-8">

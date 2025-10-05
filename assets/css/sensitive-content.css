@@ -99,17 +99,12 @@
     display: block;
 }
 
-/* Archive/list images */
-.news-image,
-.hot-news-image,
+/* Single post page images (related, sidebar widgets) */
 .related-post-image,
-.popular-post-item,
 .tab-news-item {
     position: relative;
 }
 
-.news-image a,
-.hot-news-image a,
 .related-post-image a {
     display: block;
     position: relative;
@@ -159,78 +154,62 @@
     animation: revealContent 0.5s ease forwards;
 }
 
-/* Thumbnail images in lists */
-.card-img-top.sensitive-content-blur,
+/* Thumbnail images in single post page */
 img.sensitive-content-blur {
     width: 100%;
     object-fit: cover;
 }
 
-/* Small overlay for thumbnails */
-.news-image .sensitive-content-overlay,
-.hot-news-image .sensitive-content-overlay,
+/* Small overlay for related posts */
 .related-post-image .sensitive-content-overlay {
     background: rgba(0, 0, 0, 0.8);
 }
 
-.news-image .sensitive-content-warning,
-.hot-news-image .sensitive-content-warning,
 .related-post-image .sensitive-content-warning {
     padding: 10px;
 }
 
-.news-image .sensitive-content-warning i,
-.hot-news-image .sensitive-content-warning i,
 .related-post-image .sensitive-content-warning i {
     font-size: 24px;
     margin-bottom: 5px;
 }
 
-.news-image .sensitive-content-warning p,
-.hot-news-image .sensitive-content-warning p,
 .related-post-image .sensitive-content-warning p {
     font-size: 12px;
     margin-bottom: 8px;
 }
 
-.news-image .sensitive-view-btn,
-.hot-news-image .sensitive-view-btn,
 .related-post-image .sensitive-view-btn {
     padding: 5px 10px;
     font-size: 11px;
 }
 
-/* Very small thumbnails (sidebar, related posts) */
-.tab-news-item .sensitive-content-overlay,
-.popular-post-item .sensitive-content-overlay {
+/* Very small thumbnails (sidebar tab widgets in single post) */
+.tab-news-item .sensitive-content-overlay {
     background: rgba(0, 0, 0, 0.85);
 }
 
-.tab-news-item .sensitive-content-warning,
-.popular-post-item .sensitive-content-warning {
+.tab-news-item .sensitive-content-warning {
     padding: 5px;
 }
 
-.tab-news-item .sensitive-content-warning i,
-.popular-post-item .sensitive-content-warning i {
+.tab-news-item .sensitive-content-warning i {
     font-size: 18px;
     margin-bottom: 3px;
 }
 
-.tab-news-item .sensitive-content-warning p,
-.popular-post-item .sensitive-content-warning p {
+.tab-news-item .sensitive-content-warning p {
     font-size: 10px;
     margin-bottom: 5px;
 }
 
-.tab-news-item .sensitive-view-btn,
-.popular-post-item .sensitive-view-btn {
+.tab-news-item .sensitive-view-btn {
     padding: 3px 8px;
     font-size: 10px;
 }
 
-/* Badge for sensitive posts in lists */
-.sensitive-badge {
+/* Badge for sensitive posts */
+.single-post .sensitive-badge {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -244,6 +223,6 @@ img.sensitive-content-blur {
     text-transform: uppercase;
 }
 
-.sensitive-badge i {
+.single-post .sensitive-badge i {
     margin-right: 3px;
 }

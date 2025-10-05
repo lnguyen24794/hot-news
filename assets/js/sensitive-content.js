@@ -203,30 +203,12 @@
         return match ? match[1] : '0';
     }
 
-    /**
-     * Handle featured image blur on archive pages
-     */
-    function initArchiveSensitiveImages() {
-        // Add data attribute to identify sensitive posts in lists
-        $('.news-feed-item, .news-item-card, .card, .related-post-item, .tab-news-item, .popular-post-item').each(function() {
-            const $item = $(this);
-            const $sensitiveImg = $item.find('img.sensitive-content-blur, .sensitive-image-wrapper');
-            
-            if ($sensitiveImg.length > 0) {
-                $item.attr('data-has-sensitive', 'true');
-            }
-        });
-    }
-
     // Initialize on document ready
     $(document).ready(function() {
-        initSensitiveContent();
-        initArchiveSensitiveImages();
-    });
-
-    // Re-initialize after AJAX loads (for infinite scroll)
-    $(document).on('hot_news_posts_loaded', function() {
-        initArchiveSensitiveImages();
+        // Only run on single post pages
+        if ($('body').hasClass('single') || $('body').hasClass('single-post')) {
+            initSensitiveContent();
+        }
     });
 
 })(jQuery);
