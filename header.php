@@ -86,13 +86,13 @@ if (has_custom_logo()) {
                                 <h1 class="site-title"><?php bloginfo('name'); ?></h1>
                             </a>
                             <?php
-    $description = get_bloginfo('description', 'display');
-    if ($description || is_customize_preview()) :
-        ?>
+                                $description = get_bloginfo('description', 'display');
+                                if ($description || is_customize_preview()) :
+                                    ?>
                                 <p class="site-description"><?php echo $description; ?></p>
                             <?php endif;
-}
-?>
+                            }
+                            ?>
                     </div>
                 </div>
                 <div class="col-lg-8 col-md-6 col-8">
