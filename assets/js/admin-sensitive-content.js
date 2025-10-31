@@ -282,5 +282,47 @@
         
         console.log('✅ Block Editor support initialized');
     }
+    
+    /**
+     * Hook into media insertion for Classic Editor
+     */
+    function initClassicEditorSupport() {
+        console.log('📝 Initializing Classic Editor support');
+        
+        // Hook into the media modal's insert function
+        if (wp.media && wp.media.editor) {
+            var originalInsert = wp.media.editor.insert;
+            
+            wp.media.editor.insert = function(html) {
+                console.log('📤 Inserting media into editor:', html.substring(0, 100));
+                
+                // Call original insert function
+                originalInsert.apply(this, arguments);
+            };
+        }
+        
+        // Listen for media modal close after insertion
+        $(document).on('click', '.media-modal .media-button-insert', function() {
+            var selectedAttachments = wp.media.frame.state().get('selection');
+            
+            if (selectedAttachments) {
+                selectedAttachments.each(function(attachment) {
+                    var id = attachment.get('id');
+                    var type = attachment.get('type');
+                    var blurMeta = type === 'image' ? 'blur_sensitive_image' : 'blur_sensitive_video';
+                    var blurValue = attachment.get(blurMeta);
+                    
+                    console.log('🎯 Inserting ' + type + ' #' + id + ' with blur:', blurValue);
+                });
+            }
+        });
+        
+        console.log('✅ Classic Editor support initialized');
+    }
+    
+    // Initialize classic editor support
+    if ($(document).ready) {
+        initClassicEditorSupport();
+    }
 
 })(jQuery);

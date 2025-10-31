@@ -8,7 +8,7 @@
  */
 
 if (!defined('HOT_NEWS_VERSION')) {
-    define('HOT_NEWS_VERSION', '1.2.6');
+    define('HOT_NEWS_VERSION', '1.2.7');
 }
 
 /**
@@ -1719,9 +1719,19 @@ add_action('wp_ajax_save_blur_sensitive_video', 'hot_news_save_blur_sensitive_aj
 
 /**
  * Add custom field to media attachment (image/video blur setting)
+ * NOTE: This is only for Classic Editor attachment edit page
+ * Media Modal checkbox is handled by JavaScript (admin-sensitive-content.js)
  */
 function hot_news_attachment_field_blur($form_fields, $post)
 {
+    // Only show in attachment edit page, not in media modal
+    // Media modal is handled by JavaScript
+    global $pagenow;
+    if ($pagenow !== 'post.php' || !isset($_GET['action']) || $_GET['action'] !== 'edit') {
+        // Don't show in media modal - JS will handle it
+        return $form_fields;
+    }
+
     $is_image = strpos($post->post_mime_type, 'image') !== false;
     $is_video = strpos($post->post_mime_type, 'video') !== false;
     
@@ -1869,48 +1879,8 @@ function hot_news_image_send_to_editor($html, $id, $caption, $title, $align, $ur
 add_filter('image_send_to_editor', 'hot_news_image_send_to_editor', 10, 8);
 
 /**
- * Add sensitive class to videos in content
- */
-function hot_news_video_send_to_editor($html, $id)
-{
-    // Check if this video should be blurred
-    if (hot_news_is_video_sensitive($id)) {
-        // Use DOMDocument to properly modify the HTML
-        $dom = new DOMDocument();
-        libxml_use_internal_errors(true);
-        $dom->loadHTML('<?xml encoding="utf-8" ?>' . $html);
-        libxml_clear_errors();
-        
-        $videos = $dom->getElementsByTagName('video');
-        if ($videos->length > 0) {
-            $video = $videos->item(0);
-            
-            // Add class
-            $existing_class = $video->getAttribute('class');
-            if ($existing_class) {
-                $video->setAttribute('class', $existing_class . ' sensitive-video-blur');
-            } else {
-                $video->setAttribute('class', 'sensitive-video-blur');
-            }
-            
-            // Add data attributes
-            $video->setAttribute('data-sensitive', 'true');
-            $video->setAttribute('data-attachment-id', $id);
-            
-            // Get the modified HTML
-            $body = $dom->getElementsByTagName('body')->item(0);
-            $html = '';
-            foreach ($body->childNodes as $node) {
-                $html .= $dom->saveHTML($node);
-            }
-        }
-    }
-    return $html;
-}
-add_filter('video_send_to_editor', 'hot_news_video_send_to_editor', 10, 2);
-
-/**
- * Alternative: Handle all media (images and videos) being sent to editor
+ * Handle all media (images and videos) being sent to editor
+ * This filter runs when inserting media into the editor
  */
 function hot_news_media_send_to_editor($html, $id, $attachment)
 {
@@ -1921,22 +1891,80 @@ function hot_news_media_send_to_editor($html, $id, $attachment)
     
     $mime_type = $post->post_mime_type;
     
+    // Debug logging (only for admin)
+    if (current_user_can('manage_options') && isset($_GET['debug_media_insert'])) {
+        error_log('=== Media Insert Debug ===');
+        error_log('Attachment ID: ' . $id);
+        error_log('MIME Type: ' . $mime_type);
+        error_log('HTML (first 200 chars): ' . substr($html, 0, 200));
+    }
+    
     // Handle video
-    if (strpos($mime_type, 'video') !== false && hot_news_is_video_sensitive($id)) {
-        // Add class and data attributes to video tags
+    if (strpos($mime_type, 'video') !== false) {
+        $is_sensitive = hot_news_is_video_sensitive($id);
+        
+        if (current_user_can('manage_options') && isset($_GET['debug_media_insert'])) {
+            error_log('Is video sensitive: ' . ($is_sensitive ? 'YES' : 'NO'));
+        }
+        
+        if ($is_sensitive) {
+            // Check if it's a video shortcode
+            if (strpos($html, '[video') !== false) {
+                // Add class to video shortcode
+                $original_html = $html;
+                $html = preg_replace(
+                    '/\[video/',
+                    '[video class="sensitive-video-blur"',
+                    $html
+                );
+                
+                if (current_user_can('manage_options') && isset($_GET['debug_media_insert'])) {
+                    error_log('Modified shortcode: ' . $html);
+                }
+            } else {
+                // Handle video HTML tag
+                // First try to add to existing class attribute
+                $count = 0;
+                $html = preg_replace(
+                    '/<video([^>]*)class="([^"]*)"/',
+                    '<video$1class="$2 sensitive-video-blur" data-sensitive="true" data-attachment-id="' . $id . '"',
+                    $html,
+                    1,
+                    $count
+                );
+                
+                // If no class attribute exists, add it after the video tag
+                if ($count === 0) {
+                    $html = preg_replace(
+                        '/<video/',
+                        '<video class="sensitive-video-blur" data-sensitive="true" data-attachment-id="' . $id . '"',
+                        $html,
+                        1
+                    );
+                }
+                
+                if (current_user_can('manage_options') && isset($_GET['debug_media_insert'])) {
+                    error_log('Modified HTML (first 200 chars): ' . substr($html, 0, 200));
+                }
+            }
+        }
+    }
+    
+    // Handle image (backup for images not caught by image_send_to_editor)
+    if (strpos($mime_type, 'image') !== false && hot_news_is_image_sensitive($id)) {
+        $count = 0;
         $html = preg_replace(
-            '/<video([^>]*)class="([^"]*)"/',
-            '<video$1class="$2 sensitive-video-blur" data-sensitive="true" data-attachment-id="' . $id . '"',
+            '/<img([^>]*)class="([^"]*)"/',
+            '<img$1class="$2 sensitive-image-blur" data-sensitive="true" data-attachment-id="' . $id . '"',
             $html,
             1,
             $count
         );
         
-        // If no class attribute exists, add it
         if ($count === 0) {
             $html = preg_replace(
-                '/<video/',
-                '<video class="sensitive-video-blur" data-sensitive="true" data-attachment-id="' . $id . '"',
+                '/<img/',
+                '<img class="sensitive-image-blur" data-sensitive="true" data-attachment-id="' . $id . '"',
                 $html,
                 1
             );
@@ -1956,41 +1984,60 @@ function hot_news_add_blur_to_videos_in_content($content)
         return $content;
     }
     
-    // Find all video tags with wp-video class or attachment-id
-    if (preg_match_all('/<video[^>]*class="[^"]*wp-video[^"]*"[^>]*>/i', $content, $matches)) {
-        foreach ($matches[0] as $video_tag) {
-            // Try to extract attachment ID
-            if (preg_match('/id="wp-video-(\d+)/', $video_tag, $id_match)) {
+    // Process all video tags (including WordPress native video tags)
+    if (preg_match_all('/<video[^>]*>/i', $content, $video_matches)) {
+        foreach ($video_matches[0] as $video_tag) {
+            $attachment_id = null;
+            
+            // Try multiple ways to extract attachment ID
+            // Method 1: data-attachment-id attribute
+            if (preg_match('/data-attachment-id="(\d+)"/', $video_tag, $id_match)) {
                 $attachment_id = $id_match[1];
-                
-                // Check if this video should be blurred
-                if (hot_news_is_video_sensitive($attachment_id)) {
-                    // Add sensitive class if not already there
-                    if (strpos($video_tag, 'sensitive-video-blur') === false) {
-                        $new_video_tag = str_replace('class="', 'class="sensitive-video-blur ', $video_tag);
-                        $new_video_tag = str_replace('<video', '<video data-sensitive="true" data-attachment-id="' . $attachment_id . '"', $new_video_tag);
-                        $content = str_replace($video_tag, $new_video_tag, $content);
-                    }
+            }
+            // Method 2: wp-video-{id} in id attribute
+            elseif (preg_match('/id="[^"]*wp-video-(\d+)/', $video_tag, $id_match)) {
+                $attachment_id = $id_match[1];
+            }
+            // Method 3: Look for attachment ID in source URL
+            elseif (preg_match('/src="[^"]*\/uploads\/[^"]*"/', $video_tag, $src_match)) {
+                // Try to find the attachment by URL
+                preg_match('/src="([^"]+)"/', $video_tag, $url_match);
+                if (!empty($url_match[1])) {
+                    global $wpdb;
+                    $attachment_id = $wpdb->get_var($wpdb->prepare(
+                        "SELECT ID FROM {$wpdb->posts} WHERE guid = %s AND post_type = 'attachment'",
+                        $url_match[1]
+                    ));
                 }
             }
-        }
-    }
-    
-    // Also handle video shortcodes
-    if (preg_match_all('/\[video[^\]]*\]/i', $content, $shortcode_matches)) {
-        foreach ($shortcode_matches[0] as $shortcode) {
-            // Extract ID from shortcode if present
-            if (preg_match('/\[video[^\]]*id="(\d+)"/', $shortcode, $id_match) || 
-                preg_match('/\[video[^\]]*\s+(\d+)/', $shortcode, $id_match)) {
-                $attachment_id = $id_match[1];
-                
-                if (hot_news_is_video_sensitive($attachment_id)) {
-                    // Add class parameter to shortcode
-                    if (strpos($shortcode, 'class=') === false) {
-                        $new_shortcode = str_replace('[video', '[video class="sensitive-video-blur"', $shortcode);
-                        $content = str_replace($shortcode, $new_shortcode, $content);
-                    }
+            
+            // If we found an attachment ID, check if it should be blurred
+            if ($attachment_id && hot_news_is_video_sensitive($attachment_id)) {
+                // Skip if already has sensitive class
+                if (strpos($video_tag, 'sensitive-video-blur') !== false) {
+                    continue;
                 }
+                
+                // Add sensitive class
+                $new_video_tag = $video_tag;
+                
+                // Add to existing class attribute or create new one
+                if (preg_match('/class="([^"]*)"/', $video_tag, $class_match)) {
+                    $new_class = $class_match[1] . ' sensitive-video-blur';
+                    $new_video_tag = str_replace('class="' . $class_match[1] . '"', 'class="' . $new_class . '"', $new_video_tag);
+                } else {
+                    $new_video_tag = str_replace('<video', '<video class="sensitive-video-blur"', $new_video_tag);
+                }
+                
+                // Add data attributes if not present
+                if (strpos($new_video_tag, 'data-sensitive=') === false) {
+                    $new_video_tag = str_replace('<video', '<video data-sensitive="true"', $new_video_tag);
+                }
+                if (strpos($new_video_tag, 'data-attachment-id=') === false) {
+                    $new_video_tag = str_replace('<video', '<video data-attachment-id="' . $attachment_id . '"', $new_video_tag);
+                }
+                
+                $content = str_replace($video_tag, $new_video_tag, $content);
             }
         }
     }
