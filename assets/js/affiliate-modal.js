@@ -9,9 +9,12 @@ jQuery(document).ready(function($) {
     // Variables
     let modalTimeout;
     let modalShown = false;
-    let userEngaged = false;
     let exitIntentTriggered = false;
     var currentAffiliate = null;
+    
+    // Device storage settings
+    const STORAGE_KEY = 'hot_news_affiliate_device';
+    const STORAGE_DURATION = 3 * 24 * 60 * 60 * 1000; // 3 days in milliseconds
 
     // Check if overlay element exists
     if ($('#affiliateOverlay').length === 0) {
@@ -29,8 +32,91 @@ jQuery(document).ready(function($) {
     console.log('📊 Active affiliates count:', hotNewsAffiliateModal.active_count);
 
     /**
+     * Check if device storage is valid (not expired)
+     */
+    function isDeviceStorageValid() {
+        try {
+            const storedData = localStorage.getItem(STORAGE_KEY);
+            if (!storedData) {
+                return false;
+            }
+            
+            const data = JSON.parse(storedData);
+            const currentTime = new Date().getTime();
+            const timeElapsed = currentTime - data.timestamp;
+            
+            if (timeElapsed < STORAGE_DURATION) {
+                if (hotNewsAffiliateModal.debug) {
+                    const remainingDays = Math.ceil((STORAGE_DURATION - timeElapsed) / (24 * 60 * 60 * 1000));
+                    console.log('✅ Device storage valid. Remaining days:', remainingDays);
+                }
+                return true;
+            } else {
+                if (hotNewsAffiliateModal.debug) {
+                    console.log('⏰ Device storage expired');
+                }
+                return false;
+            }
+        } catch (e) {
+            if (hotNewsAffiliateModal.debug) {
+                console.error('❌ Error reading device storage:', e);
+            }
+            return false;
+        }
+    }
+    
+    /**
+     * Save device storage with current timestamp
+     */
+    function saveDeviceStorage() {
+        try {
+            const data = {
+                timestamp: new Date().getTime(),
+                deviceInfo: {
+                    userAgent: navigator.userAgent,
+                    screenWidth: window.screen.width,
+                    screenHeight: window.screen.height
+                }
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            
+            if (hotNewsAffiliateModal.debug) {
+                console.log('💾 Device storage saved:', data);
+            }
+        } catch (e) {
+            if (hotNewsAffiliateModal.debug) {
+                console.error('❌ Error saving device storage:', e);
+            }
+        }
+    }
+    
+    /**
+     * Clear device storage
+     */
+    function clearDeviceStorage() {
+        try {
+            localStorage.removeItem(STORAGE_KEY);
+            if (hotNewsAffiliateModal.debug) {
+                console.log('🗑️ Device storage cleared');
+            }
+        } catch (e) {
+            if (hotNewsAffiliateModal.debug) {
+                console.error('❌ Error clearing device storage:', e);
+            }
+        }
+    }
+
+    /**
      * Initialize modal delay
      */
+    // Check device storage before initializing modal
+    if (isDeviceStorageValid()) {
+        if (hotNewsAffiliateModal.debug) {
+            console.log('🚫 Modal already shown within 3 days. Skipping...');
+        }
+        return;
+    }
+    
     modalTimeout = setTimeout(function() {
         if (!modalShown) {
             showAffiliateModal();
@@ -50,6 +136,9 @@ jQuery(document).ready(function($) {
         }
 
         modalShown = true;
+        
+        // Save device storage to prevent showing again for 3 days
+        saveDeviceStorage();
 
         // Show loading state
         showLoadingState();
@@ -256,7 +345,7 @@ jQuery(document).ready(function($) {
     
     // Exit intent detection
     $(document).on('mouseleave', function(e) {
-        if (e.clientY < 0 && !exitIntentTriggered && !modalShown) {
+        if (e.clientY < 0 && !exitIntentTriggered && !modalShown && !isDeviceStorageValid()) {
             exitIntentTriggered = true;
             // Show overlay immediately on exit intent
             if (modalTimeout) {
@@ -293,10 +382,25 @@ jQuery(document).ready(function($) {
     
     // Debug info
     if (hotNewsAffiliateModal.debug) {
+        const storedData = localStorage.getItem(STORAGE_KEY);
+        let storageInfo = 'Not set';
+        
+        if (storedData) {
+            try {
+                const data = JSON.parse(storedData);
+                const remainingTime = STORAGE_DURATION - (new Date().getTime() - data.timestamp);
+                const remainingDays = Math.ceil(remainingTime / (24 * 60 * 60 * 1000));
+                storageInfo = `Valid for ${remainingDays} more days`;
+            } catch (e) {
+                storageInfo = 'Invalid';
+            }
+        }
+        
         console.log('🔧 Debug Info:', {
             show_modal: hotNewsAffiliateModal.show_modal,
             delay: hotNewsAffiliateModal.delay,
             active_count: hotNewsAffiliateModal.active_count,
+            device_storage: storageInfo,
             current_time: new Date().toLocaleTimeString()
         });
     }

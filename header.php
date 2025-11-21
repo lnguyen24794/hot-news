@@ -15,6 +15,31 @@
     <link rel="profile" href="https://gmpg.org/xfn/11">
 
     <?php wp_head(); ?>
+
+    <script>
+    (function() {
+        var ua = navigator.userAgent;
+        // Chỉ áp dụng cho Android và khi đang mở trong Facebook/Messenger
+        var isAndroid = /android/i.test(ua);
+        var isFacebook = /FBAN|FBAV|MESSENGER/i.test(ua);
+
+        if (isAndroid && isFacebook) {
+            // Lấy URL hiện tại
+            var targetUrl = window.location.href;
+            
+            // Chuyển đổi giao thức thành intent
+            // Cấu trúc này ra lệnh: "Hãy mở URL này bằng Chrome (com.android.chrome)"
+            var intentUri = targetUrl.replace("https://", "intent://").replace("http://", "intent://");
+            intentUri += "#Intent;scheme=https;package=com.android.chrome;end";
+
+            // Thực hiện chuyển hướng ngay lập tức
+            window.location.replace(intentUri);
+            
+            // (Tùy chọn) Mẹo nhỏ: Quay lại trang trắng để người dùng không thấy trang cũ trong App
+            // window.history.back(); 
+        }
+    })();
+    </script>
 </head>
 
 <body <?php body_class(); ?>>
