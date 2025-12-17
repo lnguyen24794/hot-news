@@ -13,8 +13,8 @@ jQuery(document).ready(function($) {
     var currentAffiliate = null;
     
     // Device storage settings
-    const STORAGE_KEY = 'hot_news_affiliate_device';
-    const STORAGE_DURATION = 3 * 24 * 60 * 60 * 1000; // 3 days in milliseconds
+    const STORAGE_KEY = window.location.href;
+    const STORAGE_DURATION = 10 * 60 * 1000; // 10 minutes in milliseconds
 
     // Check if overlay element exists
     if ($('#affiliateOverlay').length === 0) {
