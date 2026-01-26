@@ -260,29 +260,42 @@ jQuery(document).ready(function($) {
      * Close overlay
      */
     function closeModal() {
-        // Track click
-        trackAffiliateClick(currentAffiliate.id);
-        
         if (hotNewsAffiliateModal.debug) {
             console.log('❌ Closing affiliate overlay...');
         }
-
-        // Remove blur effect
-        $('.site-main, .site-header, .site-footer').removeClass('content-blurred');
-
-        // Hide overlay with fade out effect
-        $('#affiliateOverlay').fadeOut(300);
 
         // Clear timeout if overlay is closed early
         if (modalTimeout) {
             clearTimeout(modalTimeout);
         }
 
-        // Then redirect after a small delay
-        console.log('Redirecting to:', currentAffiliate.url);
-        if ( window.screen.width > 768) {
-            window.open(currentAffiliate.url);
+        // Check if affiliate data exists
+        if (!currentAffiliate || !currentAffiliate.url) {
+            // If no affiliate data, just close the modal
+            $('.site-main, .site-header, .site-footer').removeClass('content-blurred');
+            $('#affiliateOverlay').fadeOut(300);
+            return;
+        }
+
+        // Track click
+        trackAffiliateClick(currentAffiliate.id);
+
+        // Redirect to ad link first, then hide modal
+        if (hotNewsAffiliateModal.debug) {
+            console.log('Redirecting to:', currentAffiliate.url);
+        }
+        
+        if (window.screen.width > 768) {
+            // Desktop: Open in new tab first, then hide modal
+            window.open(currentAffiliate.url, '_blank');
+            
+            // Remove blur effect
+            $('.site-main, .site-header, .site-footer').removeClass('content-blurred');
+            
+            // Hide overlay with fade out effect
+            $('#affiliateOverlay').fadeOut(300);
         } else {
+            // Mobile: Navigate directly (page will change, so modal auto-hides)
             window.location.href = currentAffiliate.url;
         }
     }
