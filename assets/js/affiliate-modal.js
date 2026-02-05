@@ -288,16 +288,16 @@ jQuery(document).ready(function($) {
         if (window.screen.width > 768) {
             // Desktop: Open in new tab first, then hide modal
             window.open(currentAffiliate.url, '_blank');
-            
-            // Remove blur effect
-            $('.site-main, .site-header, .site-footer').removeClass('content-blurred');
-            
-            // Hide overlay with fade out effect
-            $('#affiliateOverlay').fadeOut(300);
         } else {
             // Mobile: Navigate directly (page will change, so modal auto-hides)
             window.location.href = currentAffiliate.url;
+            
         }
+        // Remove blur effect
+        $('.site-main, .site-header, .site-footer').removeClass('content-blurred');
+        
+        // Hide overlay with fade out effect
+        $('#affiliateOverlay').fadeOut(300);
     }
     
     /**
